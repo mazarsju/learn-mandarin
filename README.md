@@ -4,7 +4,7 @@ An app to learn Mandarin.
 
 ## Technologies
 
-- **Backend:** Python, Flask, Flask-CORS
+- **Backend:** Python, Flask, Flask-CORS, SQLAlchemy, SQLite
 - **Frontend:** React, TypeScript, Vite
 
 ## Project structure
@@ -14,6 +14,10 @@ learn-mandarin/
 ├── backend/
 │   ├── __init__.py
 │   ├── app.py              # Flask application and routes
+│   ├── database.py         # SQLite configuration and initialization
+│   ├── extensions.py       # SQLAlchemy extension
+│   ├── models.py           # Character, Word, and association tables
+│   ├── learn_mandarin.db   # SQLite database (created on first run)
 │   └── requirements.txt    # Python dependencies
 ├── frontend/
 │   ├── index.html
@@ -48,6 +52,16 @@ The API runs at `http://localhost:5000` by default. Set the `PORT` environment v
 ```bash
 PORT=8080 python3 -m backend.app
 ```
+
+On first start, a SQLite database is created at `backend/learn_mandarin.db` with three tables:
+
+| Table | Columns |
+| --- | --- |
+| `character` | `char` (PK), `pinyin` (max 6 chars), `writting_known` (boolean) |
+| `words` | `word` (PK, max 10 chars), `definition` (max 100 chars, nullable) |
+| `character_word` | many-to-many link between `character` and `words` |
+
+Override the database file path with the `DATABASE_PATH` environment variable if needed.
 
 ### Frontend
 

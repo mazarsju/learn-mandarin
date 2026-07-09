@@ -3,8 +3,12 @@ import os
 from flask import Flask
 from flask_cors import CORS
 
+from backend.database import configure_database, init_db
+
 app = Flask(__name__)
 CORS(app)
+configure_database(app)
+init_db(app)
 
 
 @app.route("/hello", methods=["POST"])
