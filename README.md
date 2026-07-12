@@ -67,8 +67,8 @@ On first start, a SQLite database is created at `backend/learn_mandarin.db` with
 
 | Table | Columns |
 | --- | --- |
-| `character` | `char` (PK), `pinyin` (max 6 chars), `writting_known` (boolean) |
-| `words` | `word` (PK, max 10 chars), `definition` (max 100 chars, nullable) |
+| `character` | `char` (PK), `pinyin` (max 6 chars), `writting_known` (boolean), `updated_at` (datetime) |
+| `words` | `word` (PK, max 10 chars), `definition` (max 100 chars, nullable), `updated_at` (datetime) |
 | `character_word` | many-to-many link between `character` and `words` |
 
 Override the database file path with the `DATABASE_PATH` environment variable if needed.

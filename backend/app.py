@@ -5,7 +5,7 @@ from flask_cors import CORS
 
 from backend.database import configure_database, init_db
 from backend.extensions import db
-from backend.models import Character, Word
+from backend.models import Character, Word, utcnow
 
 app = Flask(__name__)
 CORS(app)
@@ -16,6 +16,21 @@ init_db(app)
 @app.route("/hello", methods=["POST"])
 def hello():
     return "Hello from backend"
+
+
+@app.route("/characters", methods=["GET"])
+def list_characters():
+    print("call list characters")
+    characters = Character.query.order_by(Character.pinyin).all()
+    return [
+        {
+            "char": character.char,
+            "pinyin": character.pinyin,
+            "writting_known": character.writting_known,
+            "updated_at": character.updated_at.isoformat(),
+        }
+        for character in characters
+    ], 200
 
 
 @app.route("/characters/bulk", methods=["POST"])
@@ -57,6 +72,9 @@ def bulk_characters():
 
             if word_record not in char_record.words:
                 char_record.words.append(word_record)
+                now = utcnow()
+                char_record.updated_at = now
+                word_record.updated_at = now
 
     db.session.commit()
 

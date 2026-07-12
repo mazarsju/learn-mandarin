@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from sqlalchemy import inspect, text
 
 from backend.extensions import db
 
@@ -15,8 +16,32 @@ def configure_database(app: Flask) -> None:
     db.init_app(app)
 
 
+def _migrate_updated_at_columns() -> None:
+    inspector = inspect(db.engine)
+    tables = ("character", "words")
+
+    for table_name in tables:
+        column_names = {column["name"] for column in inspector.get_columns(table_name)}
+        if "updated_at" in column_names:
+            continue
+
+        db.session.execute(
+            text(f"ALTER TABLE {table_name} ADD COLUMN updated_at DATETIME")
+        )
+        db.session.execute(
+            text(
+                f"UPDATE {table_name} "
+                "SET updated_at = CURRENT_TIMESTAMP "
+                "WHERE updated_at IS NULL"
+            )
+        )
+
+    db.session.commit()
+
+
 def init_db(app: Flask) -> None:
     import backend.models  # noqa: F401
 
     with app.app_context():
         db.create_all()
+        _migrate_updated_at_columns()

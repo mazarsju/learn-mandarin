@@ -1,6 +1,13 @@
-from sqlalchemy import Boolean, Column, ForeignKey, String, Table
+from datetime import datetime, timezone
+
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, Table
 
 from backend.extensions import db
+
+
+def utcnow() -> datetime:
+    return datetime.now(timezone.utc)
+
 
 character_word = Table(
     "character_word",
@@ -16,6 +23,12 @@ class Character(db.Model):
     char = db.Column(String, primary_key=True)
     pinyin = db.Column(String(6), nullable=False)
     writting_known = db.Column(Boolean, nullable=False, default=False)
+    updated_at = db.Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=utcnow,
+        onupdate=utcnow,
+    )
 
     words = db.relationship(
         "Word",
@@ -29,6 +42,12 @@ class Word(db.Model):
 
     word = db.Column(String(10), primary_key=True)
     definition = db.Column(String(100), nullable=True)
+    updated_at = db.Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=utcnow,
+        onupdate=utcnow,
+    )
 
     characters = db.relationship(
         "Character",
