@@ -1,16 +1,28 @@
-async function callBackend() {
-  const response = await fetch("/hello", { method: "POST" });
-  const message = await response.text();
-  alert(message);
-}
+import { useState, type ComponentType } from "react";
+import "./App.css";
+import Navbar, { type PageId } from "./components/Navbar";
+import ChatPage from "./pages/ChatPage";
+import HomePage from "./pages/HomePage";
+import KnowledgeBasePage from "./pages/KnowledgeBasePage";
+import PreferencesPage from "./pages/PreferencesPage";
+
+const PAGES: Record<PageId, ComponentType> = {
+  home: HomePage,
+  "knowledge-base": KnowledgeBasePage,
+  chat: ChatPage,
+  preferences: PreferencesPage,
+};
 
 export default function App() {
+  const [activePage, setActivePage] = useState<PageId>("home");
+  const ActivePage = PAGES[activePage];
+
   return (
-    <main>
-      <h1>Hello World</h1>
-      <button type="button" onClick={() => void callBackend()}>
-        Call backend
-      </button>
-    </main>
+    <div className="app">
+      <Navbar activePage={activePage} onPageChange={setActivePage} />
+      <main className="app-main">
+        <ActivePage />
+      </main>
+    </div>
   );
 }

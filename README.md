@@ -109,6 +109,7 @@ An overall view of the characters you know, sorted by pinyin.
 
 - [x] Simple frontend connected with backend
 - [x] Database structure for characters, and loading the DB with characters you already know
+- [x] Create different tabs in the frontend: Landing page, Knowledge base, Chat, Preferences
 - [ ] Simple CRUD interface to manage characters
 - [ ] Visualization of characters by pinyin
 - [ ] UI polish with additional options: different color for the tones, a toggle to show or hide characters you only recognize (not write), mouse hover effect...
