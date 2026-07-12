@@ -7,6 +7,7 @@ export default defineConfig({
     proxy: {
       "/hello": "http://127.0.0.1:5000",
       "/characters": "http://127.0.0.1:5000",
+      "/words": "http://127.0.0.1:5000",
     },
   },
 });

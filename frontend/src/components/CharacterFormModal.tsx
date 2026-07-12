@@ -11,6 +11,7 @@ type CharacterFormModalProps = {
   mode: "add" | "edit";
   isOpen: boolean;
   initialCharacter?: Character | null;
+  prefilledChar?: string;
   onConfirm: (values: CharacterFormValues) => void;
   onCancel: () => void;
 };
@@ -19,6 +20,7 @@ export default function CharacterFormModal({
   mode,
   isOpen,
   initialCharacter = null,
+  prefilledChar = "",
   onConfirm,
   onCancel,
 }: CharacterFormModalProps) {
@@ -38,10 +40,10 @@ export default function CharacterFormModal({
       return;
     }
 
-    setChar("");
+    setChar(prefilledChar);
     setPinyin("");
     setWrittingKnown(false);
-  }, [isOpen, mode, initialCharacter]);
+  }, [isOpen, mode, initialCharacter, prefilledChar]);
 
   if (!isOpen) {
     return null;

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import AddWordModal from "../components/AddWordModal";
 import CharacterFormModal, {
   type CharacterFormValues,
 } from "../components/CharacterFormModal";
@@ -54,8 +55,15 @@ export default function KnowledgeBasePage() {
   );
   const [characterToEdit, setCharacterToEdit] = useState<Character | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isAddWordModalOpen, setIsAddWordModalOpen] = useState(false);
+  const [prefilledCharForAdd, setPrefilledCharForAdd] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const knownCharacters = useMemo(
+    () => characters.map((character) => character.char),
+    [characters],
+  );
 
   const filteredCharacters = useMemo(
     () => filterCharacters(characters, searchQuery),
@@ -82,6 +90,16 @@ export default function KnowledgeBasePage() {
   useEffect(() => {
     void loadCharacters();
   }, [loadCharacters]);
+
+  const openAddCharacterModal = useCallback((prefilledChar = "") => {
+    setPrefilledCharForAdd(prefilledChar);
+    setIsAddModalOpen(true);
+  }, []);
+
+  const closeAddCharacterModal = useCallback(() => {
+    setIsAddModalOpen(false);
+    setPrefilledCharForAdd("");
+  }, []);
 
   async function confirmDelete() {
     if (characterToDelete === null) {
@@ -154,7 +172,7 @@ export default function KnowledgeBasePage() {
   }
 
   async function confirmAdd(values: CharacterFormValues) {
-    setIsAddModalOpen(false);
+    closeAddCharacterModal();
 
     try {
       const response = await fetch("/characters", {
@@ -175,23 +193,65 @@ export default function KnowledgeBasePage() {
     }
   }
 
+  async function confirmAddWord(values: { word: string; definition: string }) {
+    setIsAddWordModalOpen(false);
+
+    try {
+      const response = await fetch("/words", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          word: values.word,
+          definition: values.definition || null,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add word.");
+      }
+    } catch (addWordError) {
+      setError(
+        addWordError instanceof Error
+          ? addWordError.message
+          : "Failed to add word.",
+      );
+    }
+  }
+
   return (
     <Page
       title="Knowledge base"
       headerAction={
-        <button
-          type="button"
-          className="page-add-button"
-          onClick={() => setIsAddModalOpen(true)}
-        >
-          Add character
-        </button>
+        <div className="page-header-actions">
+          <button
+            type="button"
+            className="page-add-button"
+            onClick={() => openAddCharacterModal()}
+          >
+            Add character
+          </button>
+          <button
+            type="button"
+            className="page-add-button"
+            onClick={() => setIsAddWordModalOpen(true)}
+          >
+            Add words
+          </button>
+        </div>
       }
     >
+      <AddWordModal
+        isOpen={isAddWordModalOpen}
+        knownCharacters={knownCharacters}
+        onCancel={() => setIsAddWordModalOpen(false)}
+        onConfirm={(values) => void confirmAddWord(values)}
+        onAddCharacter={openAddCharacterModal}
+      />
       <CharacterFormModal
         mode="add"
         isOpen={isAddModalOpen}
-        onCancel={() => setIsAddModalOpen(false)}
+        prefilledChar={prefilledCharForAdd}
+        onCancel={closeAddCharacterModal}
         onConfirm={(values) => void confirmAdd(values)}
       />
       <CharacterFormModal
