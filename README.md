@@ -85,6 +85,10 @@ curl -X POST -F "file=@db.txt" http://127.0.0.1:5000/characters/bulk
 | Method | Route | Description |
 | --- | --- | --- |
 | `POST` | `/hello` | Health check |
+| `GET` | `/characters` | List all characters |
+| `POST` | `/characters` | Create a new character |
+| `PATCH` | `/characters/<char>` | Update a character's `pinyin` and `writting_known` |
+| `DELETE` | `/characters/<char>` | Delete a character and its `character_word` links |
 | `POST` | `/characters/bulk` | Upload a `.txt` file (`multipart/form-data`, field name `file`) |
 
 ### Frontend

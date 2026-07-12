@@ -18,19 +18,112 @@ def hello():
     return "Hello from backend"
 
 
-@app.route("/characters", methods=["GET"])
-def list_characters():
-    print("call list characters")
-    characters = Character.query.order_by(Character.pinyin).all()
-    return [
-        {
-            "char": character.char,
-            "pinyin": character.pinyin,
-            "writting_known": character.writting_known,
-            "updated_at": character.updated_at.isoformat(),
-        }
-        for character in characters
-    ], 200
+@app.route("/characters", methods=["GET", "POST"])
+def characters():
+    if request.method == "GET":
+        character_list = Character.query.order_by(Character.pinyin).all()
+        return [
+            {
+                "char": character.char,
+                "pinyin": character.pinyin,
+                "writting_known": character.writting_known,
+                "updated_at": character.updated_at.isoformat(),
+            }
+            for character in character_list
+        ], 200
+
+    data = request.get_json(silent=True)
+    if data is None:
+        return {"error": "Invalid JSON body"}, 400
+
+    if "char" not in data or "pinyin" not in data or "writting_known" not in data:
+        return {"error": "Missing required fields: char, pinyin, writting_known"}, 400
+
+    char = data["char"]
+    pinyin = data["pinyin"]
+    writting_known = data["writting_known"]
+
+    if not isinstance(char, str) or not char.strip():
+        return {"error": "char must be a non-empty string"}, 400
+
+    if not isinstance(pinyin, str) or not pinyin.strip():
+        return {"error": "pinyin must be a non-empty string"}, 400
+
+    if len(pinyin.strip()) > 6:
+        return {"error": "pinyin must be at most 6 characters"}, 400
+
+    if not isinstance(writting_known, bool):
+        return {"error": "writting_known must be a boolean"}, 400
+
+    char_value = char.strip()
+    if Character.query.filter_by(char=char_value).first() is not None:
+        return {"error": "Character already exists"}, 409
+
+    char_record = Character(
+        char=char_value,
+        pinyin=pinyin.strip(),
+        writting_known=writting_known,
+    )
+    db.session.add(char_record)
+    db.session.commit()
+
+    return {
+        "char": char_record.char,
+        "pinyin": char_record.pinyin,
+        "writting_known": char_record.writting_known,
+        "updated_at": char_record.updated_at.isoformat(),
+    }, 201
+
+
+@app.route("/characters/<path:char>", methods=["DELETE"])
+def delete_character(char: str):
+    char_record = Character.query.filter_by(char=char).first()
+    if char_record is None:
+        return {"error": "Character not found"}, 404
+
+    char_record.words.clear()
+    db.session.delete(char_record)
+    db.session.commit()
+
+    return {"message": "Character deleted"}, 200
+
+
+@app.route("/characters/<path:char>", methods=["PATCH"])
+def update_character(char: str):
+    char_record = Character.query.filter_by(char=char).first()
+    if char_record is None:
+        return {"error": "Character not found"}, 404
+
+    data = request.get_json(silent=True)
+    if data is None:
+        return {"error": "Invalid JSON body"}, 400
+
+    if "pinyin" not in data or "writting_known" not in data:
+        return {"error": "Missing required fields: pinyin, writting_known"}, 400
+
+    pinyin = data["pinyin"]
+    writting_known = data["writting_known"]
+
+    if not isinstance(pinyin, str) or not pinyin.strip():
+        return {"error": "pinyin must be a non-empty string"}, 400
+
+    if len(pinyin.strip()) > 6:
+        return {"error": "pinyin must be at most 6 characters"}, 400
+
+    if not isinstance(writting_known, bool):
+        return {"error": "writting_known must be a boolean"}, 400
+
+    char_record.pinyin = pinyin.strip()
+    char_record.writting_known = writting_known
+    char_record.updated_at = utcnow()
+    db.session.commit()
+
+    return {
+        "char": char_record.char,
+        "pinyin": char_record.pinyin,
+        "writting_known": char_record.writting_known,
+        "updated_at": char_record.updated_at.isoformat(),
+    }, 200
 
 
 @app.route("/characters/bulk", methods=["POST"])
