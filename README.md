@@ -53,6 +53,16 @@ The API runs at `http://localhost:5000` by default. Set the `PORT` environment v
 PORT=8080 python3 -m backend.app
 ```
 
+#### Tests
+
+From the project root (with the virtual environment activated):
+
+```bash
+python3 -m unittest discover -s backend/tests -v
+```
+
+#### Database
+
 On first start, a SQLite database is created at `backend/learn_mandarin.db` with three tables:
 
 | Table | Columns |
@@ -62,6 +72,20 @@ On first start, a SQLite database is created at `backend/learn_mandarin.db` with
 | `character_word` | many-to-many link between `character` and `words` |
 
 Override the database file path with the `DATABASE_PATH` environment variable if needed.
+
+You can use the /character/bulk endpoint to preload the database
+
+Ex:
+```
+curl -X POST -F "file=@db.txt" http://127.0.0.1:5000/characters/bulk
+```
+
+#### API endpoints
+
+| Method | Route | Description |
+| --- | --- | --- |
+| `POST` | `/hello` | Health check |
+| `POST` | `/characters/bulk` | Upload a `.txt` file (`multipart/form-data`, field name `file`) |
 
 ### Frontend
 
@@ -84,7 +108,7 @@ Open the frontend in your browser, click **Call backend**, and an alert should s
 An overall view of the characters you know, sorted by pinyin.
 
 - [x] Simple frontend connected with backend
-- [ ] Database structure for characters, and loading the DB with characters you already know
+- [x] Database structure for characters, and loading the DB with characters you already know
 - [ ] Simple CRUD interface to manage characters
 - [ ] Visualization of characters by pinyin
 - [ ] UI polish with additional options: different color for the tones, a toggle to show or hide characters you only recognize (not write), mouse hover effect...
