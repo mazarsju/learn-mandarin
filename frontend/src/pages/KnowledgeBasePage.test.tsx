@@ -56,12 +56,12 @@ describe("KnowledgeBasePage", () => {
     vi.unstubAllGlobals();
   });
 
-  it("starts in view mode with a modify button and no tables", () => {
+  it("starts in view mode with a modify button and the pinyin grid", async () => {
     render(<KnowledgeBasePage />);
 
     expect(screen.getByRole("button", { name: "Modify" })).toBeInTheDocument();
+    expect(await screen.findByRole("columnheader", { name: "ai" })).toBeInTheDocument();
     expect(screen.queryByPlaceholderText("Search characters...")).not.toBeInTheDocument();
-    expect(screen.queryByPlaceholderText("Search words...")).not.toBeInTheDocument();
   });
 
   it("switches between view and edit modes", async () => {

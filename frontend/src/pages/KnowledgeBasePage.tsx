@@ -6,6 +6,7 @@ import CharacterFormModal, {
 import ConfirmModal from "../components/ConfirmModal";
 import { EyeIcon, PenIcon } from "../components/icons";
 import Page from "../components/Page";
+import PinyinGridView from "../components/PinyinGridView";
 import Table, { type TableColumn } from "../components/Table";
 import type { Character } from "../types/character";
 import type { Word } from "../types/word";
@@ -143,12 +144,8 @@ export default function KnowledgeBasePage() {
   }, []);
 
   useEffect(() => {
-    if (pageMode !== "edit") {
-      return;
-    }
-
     void loadKnowledgeBase();
-  }, [pageMode, loadKnowledgeBase]);
+  }, [loadKnowledgeBase]);
 
   const openAddCharacterModal = useCallback((prefilledChar = "") => {
     setPrefilledCharForAdd(prefilledChar);
@@ -367,6 +364,7 @@ export default function KnowledgeBasePage() {
   return (
     <Page
       title="Knowledge base"
+      fullWidth={pageMode === "view"}
       headerAction={
         pageMode === "view" ? (
           <button
@@ -389,6 +387,13 @@ export default function KnowledgeBasePage() {
         )
       }
     >
+      {pageMode === "view" && (
+        <>
+          {isLoading && <p>Loading knowledge base...</p>}
+          {error && <p className="table-error">{error}</p>}
+          {!isLoading && !error && <PinyinGridView characters={characters} />}
+        </>
+      )}
       {pageMode === "edit" && (
         <>
       <AddWordModal

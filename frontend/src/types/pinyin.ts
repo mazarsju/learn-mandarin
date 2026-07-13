@@ -70,20 +70,27 @@ const VALID_TONES = new Set(["1", "2", "3", "4"]);
 const STARTS_BY_LENGTH = [...START].sort((a, b) => b.length - a.length);
 const FINAL_SET = new Set(FINAL);
 
-export function isValidPinyin(value: string): boolean {
+export type PinyinSyllable = {
+  start: string;
+  final: string;
+};
+
+function stripTone(value: string): string {
+  const tone = value[value.length - 1];
+  return tone !== undefined && VALID_TONES.has(tone)
+    ? value.slice(0, -1)
+    : value;
+}
+
+export function parsePinyinSyllable(value: string): PinyinSyllable | null {
   const trimmed = value.trim().toLowerCase();
   if (trimmed === "") {
-    return false;
+    return null;
   }
 
-  const tone = trimmed[trimmed.length - 1];
-  const pinyin =
-    tone !== undefined && VALID_TONES.has(tone)
-      ? trimmed.slice(0, -1)
-      : trimmed;
-
+  const pinyin = stripTone(trimmed);
   if (pinyin === "") {
-    return false;
+    return null;
   }
 
   for (const start of STARTS_BY_LENGTH) {
@@ -93,9 +100,13 @@ export function isValidPinyin(value: string): boolean {
 
     const remainder = pinyin.slice(start.length);
     if (FINAL_SET.has(remainder)) {
-      return true;
+      return { start, final: remainder };
     }
   }
 
-  return false;
+  return null;
+}
+
+export function isValidPinyin(value: string): boolean {
+  return parsePinyinSyllable(value) !== null;
 }

@@ -4,11 +4,17 @@ type PageProps = {
   title: string;
   children?: ReactNode;
   headerAction?: ReactNode;
+  fullWidth?: boolean;
 };
 
-export default function Page({ title, children, headerAction }: PageProps) {
+export default function Page({
+  title,
+  children,
+  headerAction,
+  fullWidth = false,
+}: PageProps) {
   return (
-    <section className="page">
+    <section className={fullWidth ? "page page--full-width" : "page"}>
       <header className="page-header">
         <h1>{title}</h1>
         {headerAction}
