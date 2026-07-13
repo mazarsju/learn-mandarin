@@ -103,9 +103,15 @@ npm install
 npm run dev
 ```
 
-The app runs at `http://localhost:5173`. Vite proxies `/hello` requests to the backend during development.
+The app runs at `http://localhost:5173`. Vite proxies API requests to the backend during development.
 
-Open the frontend in your browser, click **Call backend**, and an alert should show `Hello from backend`.
+**Tests**
+
+From the `frontend/` directory:
+
+```bash
+npm test
+```
 
 ## Roadmap
 
