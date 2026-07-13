@@ -85,6 +85,7 @@ describe("AddWordModal", () => {
           word: "爱好",
           definition: "old",
           updated_at: "2026-07-12T12:00:00+00:00",
+          characters: ["爱", "好"],
         }}
         knownCharacters={["爱", "好"]}
         onConfirm={onConfirm}

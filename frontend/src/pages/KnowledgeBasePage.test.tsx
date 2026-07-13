@@ -28,6 +28,7 @@ const words = [
     word: "爱好",
     definition: "hobby",
     updated_at: "2026-07-12T12:00:00+00:00",
+    characters: ["爱", "好"],
   },
 ];
 
@@ -155,16 +156,21 @@ describe("KnowledgeBasePage", () => {
 
     render(<KnowledgeBasePage />);
 
-    expect(await screen.findByRole("cell", { name: "爱唉" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "好" })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("button", { name: "爱 associated words" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("唉")).toBeInTheDocument();
+    expect(screen.getByText("好")).toBeInTheDocument();
 
     await user.click(screen.getByRole("switch", { name: "Writting known" }));
 
     await waitFor(() => {
-      expect(screen.queryByRole("cell", { name: "爱唉" })).not.toBeInTheDocument();
-      expect(screen.queryByRole("cell", { name: "好" })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: "爱 associated words" }),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByText("好")).not.toBeInTheDocument();
     });
-    expect(screen.getByRole("cell", { name: "唉" })).toBeInTheDocument();
+    expect(screen.getByText("唉")).toBeInTheDocument();
 
     await user.click(screen.getByRole("switch", { name: "Writting known" }));
     await user.click(
@@ -172,9 +178,25 @@ describe("KnowledgeBasePage", () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByRole("cell", { name: "唉" })).not.toBeInTheDocument();
+      expect(screen.queryByText("唉")).not.toBeInTheDocument();
     });
-    expect(screen.getByRole("cell", { name: "爱" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "好" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "爱 associated words" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("好")).toBeInTheDocument();
+  });
+
+  it("opens the associated words modal when clicking a linked character", async () => {
+    const user = userEvent.setup();
+
+    render(<KnowledgeBasePage />);
+
+    await user.click(
+      await screen.findByRole("button", { name: "爱 associated words" }),
+    );
+
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByText("Associated words:")).toBeInTheDocument();
+    expect(screen.getByText("爱好 (hobby)")).toBeInTheDocument();
   });
 });

@@ -61,21 +61,54 @@ function chunkGridCharacters(
   return lines;
 }
 
-function renderCellCharacters(characters: GridCharacter[]): ReactNode {
+function renderCellCharacters(
+  characters: GridCharacter[],
+  characterHasWords?: (char: string) => boolean,
+  onCharacterClick?: (char: string) => void,
+): ReactNode {
   const lines = chunkGridCharacters(characters);
 
   return (
     <span className="pinyin-grid-cell-content">
       {lines.map((line, lineIndex) => (
         <span key={lineIndex} className="pinyin-grid-cell-line">
-          {line.map((item, itemIndex) => (
-            <span
-              key={`${item.char}-${item.tone ?? "none"}-${lineIndex}-${itemIndex}`}
-              className={getToneClassName(item.tone)}
-            >
-              {item.char}
-            </span>
-          ))}
+          {line.map((item, itemIndex) => {
+            const hasWords = characterHasWords?.(item.char) ?? false;
+            const toneClassName = getToneClassName(item.tone);
+
+            return (
+              <span
+                key={`${item.char}-${item.tone ?? "none"}-${lineIndex}-${itemIndex}`}
+                className={
+                  hasWords
+                    ? `${toneClassName} pinyin-grid-char-clickable`
+                    : toneClassName
+                }
+                role={hasWords ? "button" : undefined}
+                tabIndex={hasWords ? 0 : undefined}
+                aria-label={
+                  hasWords ? `${item.char} associated words` : undefined
+                }
+                onClick={
+                  hasWords
+                    ? () => onCharacterClick?.(item.char)
+                    : undefined
+                }
+                onKeyDown={
+                  hasWords
+                    ? (event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          onCharacterClick?.(item.char);
+                        }
+                      }
+                    : undefined
+                }
+              >
+                {item.char}
+              </span>
+            );
+          })}
         </span>
       ))}
     </span>
@@ -110,9 +143,15 @@ function groupCharactersByPinyin(
 
 type PinyinGridViewProps = {
   characters: Character[];
+  characterHasWords?: (char: string) => boolean;
+  onCharacterClick?: (char: string) => void;
 };
 
-export default function PinyinGridView({ characters }: PinyinGridViewProps) {
+export default function PinyinGridView({
+  characters,
+  characterHasWords,
+  onCharacterClick,
+}: PinyinGridViewProps) {
   const [hoveredCell, setHoveredCell] = useState<HoveredCell | null>(null);
   const grid = useMemo(
     () => groupCharactersByPinyin(characters),
@@ -184,7 +223,11 @@ export default function PinyinGridView({ characters }: PinyinGridViewProps) {
                     }
                   >
                     {cellCharacters.length > 0
-                      ? renderCellCharacters(cellCharacters)
+                      ? renderCellCharacters(
+                          cellCharacters,
+                          characterHasWords,
+                          onCharacterClick,
+                        )
                       : null}
                   </td>
                 );

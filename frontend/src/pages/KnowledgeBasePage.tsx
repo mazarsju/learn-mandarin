@@ -3,6 +3,7 @@ import AddWordModal, { type WordFormValues } from "../components/AddWordModal";
 import CharacterFormModal, {
   type CharacterFormValues,
 } from "../components/CharacterFormModal";
+import CharacterWordsModal from "../components/CharacterWordsModal";
 import ConfirmModal from "../components/ConfirmModal";
 import { EyeIcon, PenIcon } from "../components/icons";
 import Page from "../components/Page";
@@ -11,6 +12,7 @@ import Table, { type TableColumn } from "../components/Table";
 import type { Character } from "../types/character";
 import type { Word } from "../types/word";
 import { formatDateTime } from "../utils/formatDateTime";
+import { buildWordsByCharacter } from "../utils/wordsByCharacter";
 
 const CHARACTER_COLUMNS: TableColumn<Character>[] = [
   { key: "char", header: "char" },
@@ -105,6 +107,7 @@ export default function KnowledgeBasePage() {
   const [words, setWords] = useState<Word[]>([]);
   const [showWritingKnown, setShowWritingKnown] = useState(true);
   const [showWritingUnknown, setShowWritingUnknown] = useState(true);
+  const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
   const [characterSearchQuery, setCharacterSearchQuery] = useState("");
   const [wordSearchQuery, setWordSearchQuery] = useState("");
   const [characterToDelete, setCharacterToDelete] = useState<Character | null>(
@@ -143,6 +146,16 @@ export default function KnowledgeBasePage() {
       ),
     [characters, showWritingKnown, showWritingUnknown],
   );
+
+  const wordsByCharacter = useMemo(
+    () => buildWordsByCharacter(words),
+    [words],
+  );
+
+  const selectedCharacterWords =
+    selectedCharacter === null
+      ? []
+      : (wordsByCharacter.get(selectedCharacter) ?? []);
 
   const loadKnowledgeBase = useCallback(async () => {
     setError(null);
@@ -449,10 +462,22 @@ export default function KnowledgeBasePage() {
     >
       {pageMode === "view" && (
         <>
+          <CharacterWordsModal
+            isOpen={selectedCharacter !== null}
+            character={selectedCharacter}
+            words={selectedCharacterWords}
+            onClose={() => setSelectedCharacter(null)}
+          />
           {isLoading && <p>Loading knowledge base...</p>}
           {error && <p className="table-error">{error}</p>}
           {!isLoading && !error && (
-            <PinyinGridView characters={viewModeCharacters} />
+            <PinyinGridView
+              characters={viewModeCharacters}
+              characterHasWords={(char) =>
+                (wordsByCharacter.get(char)?.length ?? 0) > 0
+              }
+              onCharacterClick={setSelectedCharacter}
+            />
           )}
         </>
       )}

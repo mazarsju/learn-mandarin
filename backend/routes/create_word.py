@@ -68,4 +68,5 @@ def create_word():
         "word": word_record.word,
         "definition": word_record.definition,
         "updated_at": word_record.updated_at.isoformat(),
+        "characters": [character for character in word_text],
     }, 201

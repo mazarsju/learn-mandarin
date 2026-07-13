@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import PinyinGridView, {
   chunkCharacters,
   getColumnMinWidthCh,
@@ -132,6 +133,63 @@ describe("PinyinGridView", () => {
     expect(container.querySelector(".pinyin-grid-char-tone-none")).toHaveTextContent(
       "吗",
     );
+  });
+
+  it("renders clickable buttons only for characters with associated words", () => {
+    const onCharacterClick = vi.fn();
+
+    render(
+      <PinyinGridView
+        characters={[
+          {
+            char: "爱",
+            pinyin: "ai4",
+            writting_known: true,
+            updated_at: "2026-07-12T12:00:00+00:00",
+          },
+          {
+            char: "好",
+            pinyin: "hao3",
+            writting_known: true,
+            updated_at: "2026-07-12T12:00:00+00:00",
+          },
+        ]}
+        characterHasWords={(char) => char === "爱"}
+        onCharacterClick={onCharacterClick}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: "爱 associated words" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "好 associated words" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getAllByRole("button")).toHaveLength(1);
+  });
+
+  it("calls onCharacterClick when a clickable character is pressed", async () => {
+    const user = userEvent.setup();
+    const onCharacterClick = vi.fn();
+
+    render(
+      <PinyinGridView
+        characters={[
+          {
+            char: "爱",
+            pinyin: "ai4",
+            writting_known: true,
+            updated_at: "2026-07-12T12:00:00+00:00",
+          },
+        ]}
+        characterHasWords={() => true}
+        onCharacterClick={onCharacterClick}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "爱 associated words" }));
+
+    expect(onCharacterClick).toHaveBeenCalledWith("爱");
   });
 
   it("marks invalid pinyin cells and keeps them unhighlighted on hover", () => {

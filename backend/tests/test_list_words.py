@@ -24,11 +24,13 @@ class TestListWordsEndpoint(unittest.TestCase):
             word="爱好",
             definition="hobby",
             updated_at=MagicMock(isoformat=MagicMock(return_value=updated_at)),
+            characters=[MagicMock(char="爱"), MagicMock(char="好")],
         )
         second = MagicMock(
             word="爱",
             definition=None,
             updated_at=MagicMock(isoformat=MagicMock(return_value=updated_at)),
+            characters=[MagicMock(char="爱")],
         )
         self.mock_word_cls.query.order_by.return_value.all.return_value = [
             first,
@@ -45,11 +47,13 @@ class TestListWordsEndpoint(unittest.TestCase):
                     "word": "爱好",
                     "definition": "hobby",
                     "updated_at": updated_at,
+                    "characters": ["爱", "好"],
                 },
                 {
                     "word": "爱",
                     "definition": None,
                     "updated_at": updated_at,
+                    "characters": ["爱"],
                 },
             ],
         )
