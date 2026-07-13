@@ -195,9 +195,9 @@ body {
   position: sticky;
   top: 0;
   z-index: 2;
-  background: #f9fafb;
+  background: #374151;
   font-weight: 600;
-  color: #374151;
+  color: #ffffff;
   white-space: nowrap;
 }
 
@@ -214,6 +214,8 @@ body {
   left: 0;
   z-index: 3;
   width: 4.5rem;
+  background: #374151;
+  color: #ffffff;
 }
 
 .pinyin-grid-row-header {
@@ -221,14 +223,42 @@ body {
   left: 0;
   z-index: 1;
   width: 4.5rem;
-  background: #f9fafb;
+  background: #374151;
   font-weight: 600;
-  color: #374151;
+  color: #ffffff;
   text-align: left;
 }
 
 .pinyin-grid tbody td {
   color: #111827;
+}
+
+.pinyin-grid-cell-invalid {
+  background: #f3f4f6;
+}
+
+.pinyin-grid-cell-highlight {
+  background: #fef9c3;
+}
+
+.pinyin-grid-char-tone-1 {
+  color: #f59e0b;
+}
+
+.pinyin-grid-char-tone-2 {
+  color: #16a34a;
+}
+
+.pinyin-grid-char-tone-3 {
+  color: #2563eb;
+}
+
+.pinyin-grid-char-tone-4 {
+  color: #dc2626;
+}
+
+.pinyin-grid-char-tone-none {
+  color: #000000;
 }
 
 .pinyin-grid-cell-content {
@@ -240,10 +270,6 @@ body {
   display: block;
   line-height: 1.4;
   white-space: nowrap;
-}
-
-.pinyin-grid tbody tr:hover td {
-  background: #f9fafb;
 }
 
 .form-warning {

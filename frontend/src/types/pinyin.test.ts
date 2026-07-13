@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { isValidPinyin, parsePinyinSyllable } from "./pinyin";
+import {
+  isInvalidPinyinSyllable,
+  isValidPinyin,
+  parsePinyinSyllable,
+  parseTone,
+} from "./pinyin";
 
 describe("parsePinyinSyllable", () => {
   it.each([
@@ -13,6 +18,42 @@ describe("parsePinyinSyllable", () => {
 
   it.each(["", "xyz", "ai5"])("returns null for invalid pinyin %s", (value) => {
     expect(parsePinyinSyllable(value)).toBeNull();
+  });
+});
+
+describe("parseTone", () => {
+  it.each([
+    ["ai1", 1],
+    ["bei2", 2],
+    ["zhong3", 3],
+    ["üe4", 4],
+  ])("parses tone from %s", (value, expected) => {
+    expect(parseTone(value)).toBe(expected);
+  });
+
+  it.each(["ai", "zhong", "", "   "])(
+    "returns null when pinyin has no tone %s",
+    (value) => {
+      expect(parseTone(value)).toBeNull();
+    },
+  );
+});
+
+describe("isInvalidPinyinSyllable", () => {
+  it.each([
+    ["b", "e"],
+    ["", "ong"],
+    ["f", "ai"],
+  ])("marks %s + %s as invalid", (start, final) => {
+    expect(isInvalidPinyinSyllable(start, final)).toBe(true);
+  });
+
+  it.each([
+    ["", "ai"],
+    ["b", "ei"],
+    ["h", "ao"],
+  ])("marks %s + %s as valid", (start, final) => {
+    expect(isInvalidPinyinSyllable(start, final)).toBe(false);
   });
 });
 

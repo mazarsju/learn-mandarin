@@ -1,6 +1,23 @@
-import { useMemo, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import type { Character } from "../types/character";
-import { FINAL, parsePinyinSyllable, START } from "../types/pinyin";
+import {
+  FINAL,
+  isInvalidPinyinSyllable,
+  parsePinyinSyllable,
+  parseTone,
+  START,
+  type PinyinTone,
+} from "../types/pinyin";
+
+type GridCharacter = {
+  char: string;
+  tone: PinyinTone | null;
+};
+
+type HoveredCell = {
+  rowIndex: number;
+  colIndex: number;
+};
 
 function formatStartLabel(start: string): string {
   return start === "" ? "—" : start;
@@ -23,14 +40,42 @@ export function chunkCharacters(
   return lines;
 }
 
-function renderCellCharacters(characters: string[]): ReactNode {
-  const lines = chunkCharacters(characters);
+function getToneClassName(tone: PinyinTone | null): string {
+  if (tone === null) {
+    return "pinyin-grid-char-tone-none";
+  }
+
+  return `pinyin-grid-char-tone-${tone}`;
+}
+
+function chunkGridCharacters(
+  characters: GridCharacter[],
+  lineSize = 3,
+): GridCharacter[][] {
+  const lines: GridCharacter[][] = [];
+
+  for (let index = 0; index < characters.length; index += lineSize) {
+    lines.push(characters.slice(index, index + lineSize));
+  }
+
+  return lines;
+}
+
+function renderCellCharacters(characters: GridCharacter[]): ReactNode {
+  const lines = chunkGridCharacters(characters);
 
   return (
     <span className="pinyin-grid-cell-content">
-      {lines.map((line, index) => (
-        <span key={`${line}-${index}`} className="pinyin-grid-cell-line">
-          {line}
+      {lines.map((line, lineIndex) => (
+        <span key={lineIndex} className="pinyin-grid-cell-line">
+          {line.map((item, itemIndex) => (
+            <span
+              key={`${item.char}-${item.tone ?? "none"}-${lineIndex}-${itemIndex}`}
+              className={getToneClassName(item.tone)}
+            >
+              {item.char}
+            </span>
+          ))}
         </span>
       ))}
     </span>
@@ -39,8 +84,8 @@ function renderCellCharacters(characters: string[]): ReactNode {
 
 function groupCharactersByPinyin(
   characters: Character[],
-): Map<string, Map<string, string[]>> {
-  const grid = new Map<string, Map<string, string[]>>();
+): Map<string, Map<string, GridCharacter[]>> {
+  const grid = new Map<string, Map<string, GridCharacter[]>>();
 
   for (const character of characters) {
     const syllable = parsePinyinSyllable(character.pinyin);
@@ -49,10 +94,13 @@ function groupCharactersByPinyin(
     }
 
     const { start, final } = syllable;
-    const finalsForStart = grid.get(start) ?? new Map<string, string[]>();
+    const finalsForStart = grid.get(start) ?? new Map<string, GridCharacter[]>();
     const charsForCell = finalsForStart.get(final) ?? [];
 
-    charsForCell.push(character.char);
+    charsForCell.push({
+      char: character.char,
+      tone: parseTone(character.pinyin),
+    });
     finalsForStart.set(final, charsForCell);
     grid.set(start, finalsForStart);
   }
@@ -65,6 +113,7 @@ type PinyinGridViewProps = {
 };
 
 export default function PinyinGridView({ characters }: PinyinGridViewProps) {
+  const [hoveredCell, setHoveredCell] = useState<HoveredCell | null>(null);
   const grid = useMemo(
     () => groupCharactersByPinyin(characters),
     [characters],
@@ -73,7 +122,10 @@ export default function PinyinGridView({ characters }: PinyinGridViewProps) {
   return (
     <div className="pinyin-grid-bleed">
       <div className="pinyin-grid-wrapper">
-        <table className="pinyin-grid">
+        <table
+          className="pinyin-grid"
+          onMouseLeave={() => setHoveredCell(null)}
+        >
           <colgroup>
             <col className="pinyin-grid-corner-col" />
             {FINAL.map((finalValue) => (
@@ -99,17 +151,38 @@ export default function PinyinGridView({ characters }: PinyinGridViewProps) {
           </tr>
         </thead>
         <tbody>
-          {START.map((startValue) => (
+          {START.map((startValue, rowIndex) => (
             <tr key={startValue || "empty-start"}>
               <th className="pinyin-grid-row-header" scope="row">
                 {formatStartLabel(startValue)}
               </th>
-              {FINAL.map((finalValue) => {
+              {FINAL.map((finalValue, colIndex) => {
                 const cellCharacters =
                   grid.get(startValue)?.get(finalValue) ?? [];
+                const isInvalid = isInvalidPinyinSyllable(
+                  startValue,
+                  finalValue,
+                );
+                const isHighlighted =
+                  !isInvalid &&
+                  hoveredCell !== null &&
+                  (hoveredCell.rowIndex === rowIndex ||
+                    hoveredCell.colIndex === colIndex);
 
                 return (
-                  <td key={finalValue}>
+                  <td
+                    key={finalValue}
+                    className={
+                      isInvalid
+                        ? "pinyin-grid-cell-invalid"
+                        : isHighlighted
+                          ? "pinyin-grid-cell-highlight"
+                          : undefined
+                    }
+                    onMouseEnter={() =>
+                      setHoveredCell({ rowIndex, colIndex })
+                    }
+                  >
                     {cellCharacters.length > 0
                       ? renderCellCharacters(cellCharacters)
                       : null}

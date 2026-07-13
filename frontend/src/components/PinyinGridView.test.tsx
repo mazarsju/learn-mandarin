@@ -1,8 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import PinyinGridView, {
   chunkCharacters,
   getColumnMinWidthCh,
 } from "./PinyinGridView";
+import { FINAL, START } from "../types/pinyin";
 
 describe("PinyinGridView helpers", () => {
   it("uses at least three characters of width for short finals", () => {
@@ -76,5 +77,106 @@ describe("PinyinGridView", () => {
 
     expect(screen.getByRole("cell", { name: "爱艾矮碍" })).toBeInTheDocument();
     expect(container.querySelectorAll(".pinyin-grid-cell-line")).toHaveLength(2);
+  });
+
+  it("colors characters according to their tone", () => {
+    const { container } = render(
+      <PinyinGridView
+        characters={[
+          {
+            char: "妈",
+            pinyin: "ma1",
+            writting_known: true,
+            updated_at: "2026-07-12T12:00:00+00:00",
+          },
+          {
+            char: "麻",
+            pinyin: "ma2",
+            writting_known: true,
+            updated_at: "2026-07-12T12:00:00+00:00",
+          },
+          {
+            char: "马",
+            pinyin: "ma3",
+            writting_known: true,
+            updated_at: "2026-07-12T12:00:00+00:00",
+          },
+          {
+            char: "骂",
+            pinyin: "ma4",
+            writting_known: true,
+            updated_at: "2026-07-12T12:00:00+00:00",
+          },
+          {
+            char: "吗",
+            pinyin: "ma",
+            writting_known: true,
+            updated_at: "2026-07-12T12:00:00+00:00",
+          },
+        ]}
+      />,
+    );
+
+    expect(container.querySelector(".pinyin-grid-char-tone-1")).toHaveTextContent(
+      "妈",
+    );
+    expect(container.querySelector(".pinyin-grid-char-tone-2")).toHaveTextContent(
+      "麻",
+    );
+    expect(container.querySelector(".pinyin-grid-char-tone-3")).toHaveTextContent(
+      "马",
+    );
+    expect(container.querySelector(".pinyin-grid-char-tone-4")).toHaveTextContent(
+      "骂",
+    );
+    expect(container.querySelector(".pinyin-grid-char-tone-none")).toHaveTextContent(
+      "吗",
+    );
+  });
+
+  it("marks invalid pinyin cells and keeps them unhighlighted on hover", () => {
+    const { container } = render(<PinyinGridView characters={[]} />);
+    const bRowIndex = START.indexOf("b");
+    const eColIndex = FINAL.indexOf("e");
+    const invalidCell = container.querySelector(
+      `tbody tr:nth-child(${bRowIndex + 1}) td:nth-child(${eColIndex + 2})`,
+    );
+    const validCellInSameRow = container.querySelector(
+      `tbody tr:nth-child(${bRowIndex + 1}) td:nth-child(${FINAL.indexOf("ei") + 2})`,
+    );
+
+    expect(invalidCell).toHaveClass("pinyin-grid-cell-invalid");
+
+    fireEvent.mouseEnter(validCellInSameRow!);
+    expect(invalidCell).not.toHaveClass("pinyin-grid-cell-highlight");
+    expect(validCellInSameRow).toHaveClass("pinyin-grid-cell-highlight");
+
+    fireEvent.mouseEnter(invalidCell!);
+    expect(invalidCell).not.toHaveClass("pinyin-grid-cell-highlight");
+  });
+
+  it("highlights the hovered row and column for valid cells", () => {
+    const { container } = render(<PinyinGridView characters={[]} />);
+    const hRowIndex = START.indexOf("h");
+    const aoColIndex = FINAL.indexOf("ao");
+    const hoveredCell = container.querySelector(
+      `tbody tr:nth-child(${hRowIndex + 1}) td:nth-child(${aoColIndex + 2})`,
+    );
+    const sameRowCell = container.querySelector(
+      `tbody tr:nth-child(${hRowIndex + 1}) td:nth-child(${FINAL.indexOf("ai") + 2})`,
+    );
+    const sameColumnCell = container.querySelector(
+      `tbody tr:nth-child(${START.indexOf("b") + 1}) td:nth-child(${aoColIndex + 2})`,
+    );
+    const unrelatedCell = container.querySelector(
+      `tbody tr:nth-child(${START.indexOf("b") + 1}) td:nth-child(${FINAL.indexOf("ei") + 2})`,
+    );
+
+    fireEvent.mouseEnter(hoveredCell!);
+
+    expect(hoveredCell).toHaveClass("pinyin-grid-cell-highlight");
+    expect(sameRowCell).toHaveClass("pinyin-grid-cell-highlight");
+    expect(sameColumnCell).toHaveClass("pinyin-grid-cell-highlight");
+    expect(unrelatedCell).not.toHaveClass("pinyin-grid-cell-highlight");
   });
 });
