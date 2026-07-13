@@ -111,7 +111,10 @@ From the `frontend/` directory:
 
 ```bash
 npm test
+npm run test:coverage
 ```
+
+The coverage report is written to `frontend/coverage/` (open `coverage/index.html` in a browser for the HTML report).
 
 ## Roadmap
 
