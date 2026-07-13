@@ -122,7 +122,9 @@ npm test
 npm run test:coverage
 ```
 
-The coverage report is written to `frontend/coverage/` (open `coverage/index.html` in a browser for the HTML report). On GitHub, badges in this README are updated automatically on each push to `main`, and the full HTML report is published at [mazarsju.github.io/learn-mandarin](https://mazarsju.github.io/learn-mandarin/) (requires **Settings → Pages → Build and deployment → Source: GitHub Actions**).
+The coverage report is written to `frontend/coverage/` (open `coverage/index.html` in a browser for the HTML report). On GitHub, badges in this README are updated automatically on each push to `main`, and the full HTML report is published at [mazarsju.github.io/learn-mandarin](https://mazarsju.github.io/learn-mandarin/).
+
+To enable the hosted report, go to **Settings → Pages** and set **Build and deployment → Source** to **Deploy from a branch**, then choose branch **`gh-pages`** and folder **`/ (root)`**. The workflow creates and updates that branch automatically.
 
 ## Roadmap
 
