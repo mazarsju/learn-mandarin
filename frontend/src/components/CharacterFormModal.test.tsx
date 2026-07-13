@@ -27,6 +27,48 @@ describe("CharacterFormModal", () => {
     expect(screen.getByRole("button", { name: "Confirm" })).toBeEnabled();
   });
 
+  it("keeps confirm disabled for invalid pinyin", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <CharacterFormModal
+        mode="add"
+        isOpen
+        prefilledChar="爱"
+        onConfirm={() => {}}
+        onCancel={() => {}}
+      />,
+    );
+
+    await user.type(screen.getByLabelText("pinyin"), "invalid");
+
+    expect(screen.getByRole("button", { name: "Confirm" })).toBeDisabled();
+    expect(screen.getByText("Enter a valid pinyin.")).toBeInTheDocument();
+  });
+
+  it("keeps confirm disabled and shows a warning for multiple characters", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <CharacterFormModal
+        mode="add"
+        isOpen
+        onConfirm={() => {}}
+        onCancel={() => {}}
+      />,
+    );
+
+    await user.type(screen.getByLabelText("character"), "爱");
+    await user.type(screen.getByLabelText("pinyin"), "ai");
+
+    expect(screen.getByRole("button", { name: "Confirm" })).toBeEnabled();
+
+    await user.type(screen.getByLabelText("character"), "好");
+
+    expect(screen.getByRole("button", { name: "Confirm" })).toBeDisabled();
+    expect(screen.getByText("Enter exactly one character.")).toBeInTheDocument();
+  });
+
   it("submits edited values in edit mode", async () => {
     const user = userEvent.setup();
     const onConfirm = vi.fn();

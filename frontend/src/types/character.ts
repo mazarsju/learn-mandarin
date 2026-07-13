@@ -4,3 +4,8 @@ export type Character = {
   writting_known: boolean;
   updated_at: string;
 };
+
+export function isValidCharacter(value: string): boolean {
+  const trimmed = value.trim();
+  return [...trimmed].length === 1;
+}

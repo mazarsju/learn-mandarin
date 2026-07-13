@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
-import type { Character } from "../types/character";
+import { isValidCharacter, type Character } from "../types/character";
+import { isValidPinyin } from "../types/pinyin";
 
 export type CharacterFormValues = {
   char: string;
@@ -49,7 +50,9 @@ export default function CharacterFormModal({
     return null;
   }
 
-  const isConfirmDisabled = char.trim() === "" || pinyin.trim() === "";
+  const isConfirmDisabled = !isValidCharacter(char) || !isValidPinyin(pinyin);
+  const showCharacterWarning = mode === "add" && char.length > 0 && !isValidCharacter(char);
+  const showPinyinWarning = pinyin.trim() !== "" && !isValidPinyin(pinyin);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -84,18 +87,32 @@ export default function CharacterFormModal({
               type="text"
               value={char}
               readOnly={mode === "edit"}
+              aria-invalid={showCharacterWarning}
+              aria-describedby={showCharacterWarning ? "character-warning" : undefined}
               onChange={(event) => setChar(event.target.value)}
             />
           </label>
+          {showCharacterWarning && (
+            <p id="character-warning" className="form-warning">
+              Enter exactly one character.
+            </p>
+          )}
           <label className="modal-field">
             <span className="modal-field-label">pinyin</span>
             <input
               type="text"
               value={pinyin}
               maxLength={6}
+              aria-invalid={showPinyinWarning}
+              aria-describedby={showPinyinWarning ? "pinyin-warning" : undefined}
               onChange={(event) => setPinyin(event.target.value)}
             />
           </label>
+          {showPinyinWarning && (
+            <p id="pinyin-warning" className="form-warning">
+              Enter a valid pinyin.
+            </p>
+          )}
           <div className="modal-field modal-field-toggle">
             <span className="modal-field-label">writting known</span>
             <label className="toggle">
