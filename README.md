@@ -1,9 +1,14 @@
+> 🚧 **Work in progress** — This repository is currently under active development. See the [roadmap](#roadmap) for planned features and progress.
+
 # learn-mandarin
 
+Test coverage frontend:
 ![Statements](.github/badges/coverage-statements.svg)
 ![Branches](.github/badges/coverage-branches.svg)
 ![Functions](.github/badges/coverage-functions.svg)
 ![Lines](.github/badges/coverage-lines.svg)
+Test coverage backend:
+TODO
 
 An app to learn Mandarin.
 
