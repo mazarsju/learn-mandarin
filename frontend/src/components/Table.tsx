@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 export type TableColumn<T> = {
   key: keyof T & string;
@@ -12,6 +12,8 @@ type TableProps<T> = {
   getRowKey: (row: T) => string;
   emptyMessage?: string;
   renderRowActions?: (row: T) => ReactNode;
+  compact?: boolean;
+  maxVisibleRows?: number;
 };
 
 export default function Table<T>({
@@ -20,14 +22,35 @@ export default function Table<T>({
   getRowKey,
   emptyMessage = "No data to display.",
   renderRowActions,
+  compact = false,
+  maxVisibleRows,
 }: TableProps<T>) {
   if (rows.length === 0) {
     return <p className="table-empty">{emptyMessage}</p>;
   }
 
+  const wrapperClassName = [
+    "table-wrapper",
+    compact && "table-wrapper--compact",
+    maxVisibleRows !== undefined && "table-wrapper--scrollable",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const tableClassName = ["table", compact && "table--compact"]
+    .filter(Boolean)
+    .join(" ");
+
+  const wrapperStyle =
+    maxVisibleRows !== undefined
+      ? ({
+          "--table-visible-rows": maxVisibleRows,
+        } as CSSProperties)
+      : undefined;
+
   return (
-    <div className="table-wrapper">
-      <table className="table">
+    <div className={wrapperClassName} style={wrapperStyle}>
+      <table className={tableClassName}>
         <thead>
           <tr>
             {columns.map((column) => (

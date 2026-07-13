@@ -49,4 +49,20 @@ describe("Table", () => {
 
     expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
   });
+
+  it("applies compact and scrollable classes when configured", () => {
+    const { container } = render(
+      <Table<Row>
+        columns={columns}
+        rows={[{ id: "1", name: "Alice" }]}
+        getRowKey={(row) => row.id}
+        compact
+        maxVisibleRows={5}
+      />,
+    );
+
+    expect(container.querySelector(".table-wrapper--compact")).toBeInTheDocument();
+    expect(container.querySelector(".table-wrapper--scrollable")).toBeInTheDocument();
+    expect(container.querySelector(".table--compact")).toBeInTheDocument();
+  });
 });

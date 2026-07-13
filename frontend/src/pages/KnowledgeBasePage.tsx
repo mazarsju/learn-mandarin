@@ -287,6 +287,8 @@ export default function KnowledgeBasePage() {
           <Table
             columns={CHARACTER_COLUMNS}
             rows={filteredCharacters}
+            compact
+            maxVisibleRows={5}
             getRowKey={(row) => row.char}
             emptyMessage={
               characters.length === 0
