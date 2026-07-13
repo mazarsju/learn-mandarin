@@ -1,0 +1,108 @@
+name: Frontend coverage
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/frontend-coverage.yml"
+      - ".github/scripts/generate-coverage-badges.mjs"
+  pull_request:
+    paths:
+      - "frontend/**"
+      - ".github/workflows/frontend-coverage.yml"
+      - ".github/scripts/generate-coverage-badges.mjs"
+
+concurrency:
+  group: frontend-coverage-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Generate coverage badges
+        run: node .github/scripts/generate-coverage-badges.mjs
+        working-directory: .
+
+      - name: Add coverage summary
+        run: |
+          node <<'EOF'
+          const summary = require("./frontend/coverage/coverage-summary.json").total;
+          const rows = ["statements", "branches", "functions", "lines"]
+            .map((key) => `| ${key} | ${summary[key].pct}% |`)
+            .join("\n");
+          const markdown = [
+            "## Frontend test coverage",
+            "",
+            "| Metric | Coverage |",
+            "| --- | --- |",
+            rows,
+            "",
+            `[Open the HTML report](https://mazarsju.github.io/learn-mandarin/)`,
+          ].join("\n");
+          require("fs").appendFileSync(process.env.GITHUB_STEP_SUMMARY, markdown);
+          EOF
+        working-directory: .
+
+      - name: Commit coverage badges
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/badges
+          git diff --staged --quiet || git commit -m "chore: update frontend coverage badges"
+          git push
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload coverage report
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/coverage
+
+  deploy-pages:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: coverage
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy coverage report to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

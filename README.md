@@ -1,5 +1,10 @@
 # learn-mandarin
 
+![Statements](.github/badges/coverage-statements.svg)
+![Branches](.github/badges/coverage-branches.svg)
+![Functions](.github/badges/coverage-functions.svg)
+![Lines](.github/badges/coverage-lines.svg)
+
 An app to learn Mandarin.
 
 ## Technologies
@@ -114,7 +119,7 @@ npm test
 npm run test:coverage
 ```
 
-The coverage report is written to `frontend/coverage/` (open `coverage/index.html` in a browser for the HTML report).
+The coverage report is written to `frontend/coverage/` (open `coverage/index.html` in a browser for the HTML report). On GitHub, badges in this README are updated automatically on each push to `main`, and the full HTML report is published at [mazarsju.github.io/learn-mandarin](https://mazarsju.github.io/learn-mandarin/) (requires **Settings → Pages → Build and deployment → Source: GitHub Actions**).
 
 ## Roadmap
 
