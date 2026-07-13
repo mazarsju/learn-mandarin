@@ -61,7 +61,8 @@ class TestBulkCharactersEndpoint(unittest.TestCase):
             {
                 "error": (
                     "Invalid line format. Should have the format "
-                    "'character;pinyin;is_known;words'"
+                    "'character;pinyin;tone;is_known;words'."
+                    "(error found in line: 啊;∅a;true)"
                 )
             },
         )
@@ -89,7 +90,7 @@ class TestBulkCharactersEndpoint(unittest.TestCase):
         self.mock_character_cls.side_effect = make_character
         self.mock_word_cls.side_effect = make_word
 
-        file_content = b"X;pinyin;true;word1,word2\n"
+        file_content = b"X;pinyin;3;true;word1,word2\n"
         data = {
             "file": (io.BytesIO(file_content), "chars.txt"),
         }
@@ -106,7 +107,7 @@ class TestBulkCharactersEndpoint(unittest.TestCase):
         self.mock_character_cls.query.filter_by.assert_called_once_with(char="X")
         self.mock_character_cls.assert_called_once_with(
             char="X",
-            pinyin="pinyin",
+            pinyin="pinyin3",
             writting_known=True,
         )
 

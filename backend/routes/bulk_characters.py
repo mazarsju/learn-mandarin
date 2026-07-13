@@ -20,24 +20,26 @@ def bulk_characters():
             continue
 
         parts = line.split(";")
-        if len(parts) != 4:
+        if len(parts) != 5:
             return {
                 "error": (
                     "Invalid line format. Should have the format "
-                    "'character;pinyin;is_known;words'"
-                )
+                    "'character;pinyin;tone;is_known;words'."
+                    "(error found in line: %s)"
+                ) % line
             }, 400
 
         char = parts[0]
         pinyin = parts[1]
-        writting_known = parts[2] == "true"
-        word_strings = [word.strip() for word in parts[3].split(",") if word.strip()]
+        tone = parts[2]
+        writting_known = parts[3] == "true"
+        word_strings = [word.strip() for word in parts[4].split(",") if word.strip()]
 
         char_record = Character.query.filter_by(char=char).first()
         if char_record is None:
             char_record = Character(
                 char=char,
-                pinyin=pinyin,
+                pinyin=pinyin+tone,
                 writting_known=writting_known,
             )
             db.session.add(char_record)
