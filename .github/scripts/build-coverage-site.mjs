@@ -1,4 +1,4 @@
-import { cpSync, mkdirSync, rmSync, writeFileSync } from "fs";
+import { cpSync, existsSync, mkdirSync, rmSync, unlinkSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
@@ -8,8 +8,18 @@ const outDir = join(root, "coverage-site");
 rmSync(outDir, { recursive: true, force: true });
 mkdirSync(outDir, { recursive: true });
 
-cpSync(join(root, "frontend/coverage"), join(outDir, "frontend"), { recursive: true });
-cpSync(join(root, "backend/coverage"), join(outDir, "backend"), { recursive: true });
+function copyCoverageReport(sourceDir, targetDir) {
+  cpSync(sourceDir, targetDir, { recursive: true });
+
+  const gitignore = join(targetDir, ".gitignore");
+  if (existsSync(gitignore)) {
+    unlinkSync(gitignore);
+  }
+}
+
+copyCoverageReport(join(root, "frontend/coverage"), join(outDir, "frontend"));
+copyCoverageReport(join(root, "backend/coverage"), join(outDir, "backend"));
+writeFileSync(join(outDir, ".nojekyll"), "");
 
 writeFileSync(
   join(outDir, "index.html"),

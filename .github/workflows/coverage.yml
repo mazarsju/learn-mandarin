@@ -57,10 +57,10 @@ jobs:
           cache-dependency-path: backend/requirements.txt
 
       - name: Install backend dependencies
-        run: pip install -r backend/requirements.txt
+        run: python -m pip install -r backend/requirements.txt
 
       - name: Run backend tests with coverage
-        run: python3 backend/test_coverage.py
+        run: python backend/test_coverage.py
 
       - name: Generate coverage badges
         run: node .github/scripts/generate-coverage-badges.mjs
