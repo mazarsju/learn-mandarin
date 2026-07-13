@@ -107,6 +107,25 @@ body {
   gap: 0.75rem;
 }
 
+.knowledge-base-section + .knowledge-base-section {
+  margin-top: 2rem;
+}
+
+.knowledge-base-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.knowledge-base-section-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
 .form-warning {
   margin: 0;
   color: #b45309;

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import type { Word } from "../types/word";
 import { getMissingCharacters } from "../utils/wordCharacters";
 
 export type WordFormValues = {
@@ -7,7 +8,9 @@ export type WordFormValues = {
 };
 
 type AddWordModalProps = {
+  mode: "add" | "edit";
   isOpen: boolean;
+  initialWord?: Word | null;
   knownCharacters: string[];
   onConfirm: (values: WordFormValues) => void;
   onCancel: () => void;
@@ -15,7 +18,9 @@ type AddWordModalProps = {
 };
 
 export default function AddWordModal({
+  mode,
   isOpen,
+  initialWord = null,
   knownCharacters,
   onConfirm,
   onCancel,
@@ -30,23 +35,31 @@ export default function AddWordModal({
   );
 
   const missingCharacters = useMemo(
-    () => getMissingCharacters(word, knownCharacterSet),
-    [word, knownCharacterSet],
+    () => (mode === "add" ? getMissingCharacters(word, knownCharacterSet) : []),
+    [mode, word, knownCharacterSet],
   );
 
   useEffect(() => {
-    if (isOpen) {
-      setWord("");
-      setDefinition("");
+    if (!isOpen) {
+      return;
     }
-  }, [isOpen]);
+
+    if (mode === "edit" && initialWord) {
+      setWord(initialWord.word);
+      setDefinition(initialWord.definition ?? "");
+      return;
+    }
+
+    setWord("");
+    setDefinition("");
+  }, [isOpen, mode, initialWord]);
 
   if (!isOpen) {
     return null;
   }
 
   const isConfirmDisabled =
-    word.trim() === "" || missingCharacters.length > 0;
+    mode === "add" && (word.trim() === "" || missingCharacters.length > 0);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -67,11 +80,11 @@ export default function AddWordModal({
         className="modal-dialog"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="add-word-title"
+        aria-labelledby="word-form-title"
         onClick={(event) => event.stopPropagation()}
       >
-        <h2 id="add-word-title" className="modal-title">
-          Add words
+        <h2 id="word-form-title" className="modal-title">
+          {mode === "add" ? "Add word" : "Edit word"}
         </h2>
         <form className="modal-form" onSubmit={handleSubmit}>
           <label className="modal-field">
@@ -79,6 +92,7 @@ export default function AddWordModal({
             <input
               type="text"
               value={word}
+              readOnly={mode === "edit"}
               maxLength={10}
               onChange={(event) => setWord(event.target.value)}
             />

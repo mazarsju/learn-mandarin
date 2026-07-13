@@ -1,0 +1,83 @@
+import bootstrap  # noqa: F401
+import unittest
+from unittest.mock import MagicMock, patch
+
+import backend.database as database_module
+
+database_module.init_db = MagicMock()
+database_module.configure_database = MagicMock()
+
+from backend.app import app  # noqa: E402
+
+
+class TestUpdateWordEndpoint(unittest.TestCase):
+    def setUp(self):
+        self.client = app.test_client()
+        self.session_patcher = patch("backend.routes.update_word.db.session")
+        self.mock_session = self.session_patcher.start()
+        self.addCleanup(self.session_patcher.stop)
+
+        self.word_patcher = patch("backend.routes.update_word.Word")
+        self.mock_word_cls = self.word_patcher.start()
+        self.addCleanup(self.word_patcher.stop)
+
+        self.utcnow_patcher = patch("backend.routes.update_word.utcnow")
+        self.mock_utcnow = self.utcnow_patcher.start()
+        self.addCleanup(self.utcnow_patcher.stop)
+
+        self.mock_word_cls.reset_mock()
+        self.mock_session.reset_mock()
+        self.mock_utcnow.reset_mock()
+
+    def test_update_word_updates_record(self):
+        updated_at = MagicMock(isoformat=MagicMock(return_value="2026-07-12T12:00:00+00:00"))
+        word_record = MagicMock(
+            word="爱好",
+            definition="old",
+            updated_at=updated_at,
+        )
+        self.mock_word_cls.query.filter_by.return_value.first.return_value = (
+            word_record
+        )
+        self.mock_utcnow.return_value = updated_at
+
+        response = self.client.patch(
+            "/words/爱好",
+            json={"definition": "hobby"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.get_json(),
+            {
+                "word": "爱好",
+                "definition": "hobby",
+                "updated_at": "2026-07-12T12:00:00+00:00",
+            },
+        )
+        self.assertEqual(word_record.definition, "hobby")
+        self.mock_session.commit.assert_called_once()
+
+    def test_update_missing_word_returns_not_found(self):
+        self.mock_word_cls.query.filter_by.return_value.first.return_value = None
+
+        response = self.client.patch(
+            "/words/爱好",
+            json={"definition": "hobby"},
+        )
+
+        self.assertEqual(response.status_code, 404)
+        self.mock_session.commit.assert_not_called()
+
+    def test_update_word_with_invalid_body_returns_error(self):
+        response = self.client.patch("/words/爱好", json={})
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.get_json(),
+            {"error": "Missing required field: definition"},
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()

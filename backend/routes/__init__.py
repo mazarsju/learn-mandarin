@@ -7,9 +7,12 @@ def register_routes(app: Flask) -> None:
         create_character,
         create_word,
         delete_character,
+        delete_word,
         health,
         list_characters,
+        list_words,
         update_character,
+        update_word,
     )
 
     app.register_blueprint(health.bp)
@@ -17,5 +20,8 @@ def register_routes(app: Flask) -> None:
     app.register_blueprint(create_character.bp)
     app.register_blueprint(delete_character.bp)
     app.register_blueprint(update_character.bp)
+    app.register_blueprint(list_words.bp)
     app.register_blueprint(create_word.bp)
+    app.register_blueprint(update_word.bp)
+    app.register_blueprint(delete_word.bp)
     app.register_blueprint(bulk_characters.bp)

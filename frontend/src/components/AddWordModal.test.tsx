@@ -8,6 +8,7 @@ describe("AddWordModal", () => {
 
     render(
       <AddWordModal
+        mode="add"
         isOpen
         knownCharacters={["爱"]}
         onConfirm={() => {}}
@@ -32,6 +33,7 @@ describe("AddWordModal", () => {
 
     render(
       <AddWordModal
+        mode="add"
         isOpen
         knownCharacters={["爱"]}
         onConfirm={() => {}}
@@ -52,6 +54,7 @@ describe("AddWordModal", () => {
 
     render(
       <AddWordModal
+        mode="add"
         isOpen
         knownCharacters={["爱", "好"]}
         onConfirm={onConfirm}
@@ -67,6 +70,37 @@ describe("AddWordModal", () => {
     expect(onConfirm).toHaveBeenCalledWith({
       word: "爱好",
       definition: "to like",
+    });
+  });
+
+  it("submits edited definition in edit mode", async () => {
+    const user = userEvent.setup();
+    const onConfirm = vi.fn();
+
+    render(
+      <AddWordModal
+        mode="edit"
+        isOpen
+        initialWord={{
+          word: "爱好",
+          definition: "old",
+          updated_at: "2026-07-12T12:00:00+00:00",
+        }}
+        knownCharacters={["爱", "好"]}
+        onConfirm={onConfirm}
+        onCancel={() => {}}
+        onAddCharacter={() => {}}
+      />,
+    );
+
+    expect(screen.getByDisplayValue("爱好")).toHaveAttribute("readonly");
+    await user.clear(screen.getByLabelText("definition"));
+    await user.type(screen.getByLabelText("definition"), "hobby");
+    await user.click(screen.getByRole("button", { name: "Confirm" }));
+
+    expect(onConfirm).toHaveBeenCalledWith({
+      word: "爱好",
+      definition: "hobby",
     });
   });
 });
