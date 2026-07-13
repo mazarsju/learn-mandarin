@@ -67,6 +67,16 @@ function filterWords(words: Word[], searchQuery: string) {
   );
 }
 
+function filterCharactersForView(
+  characters: Character[],
+  showWritingKnown: boolean,
+  showWritingUnknown: boolean,
+): Character[] {
+  return characters.filter((character) =>
+    character.writting_known ? showWritingKnown : showWritingUnknown,
+  );
+}
+
 async function fetchCharacters() {
   const response = await fetch("/characters", { method: "GET" });
 
@@ -93,6 +103,8 @@ export default function KnowledgeBasePage() {
   const [pageMode, setPageMode] = useState<KnowledgeBaseMode>("view");
   const [characters, setCharacters] = useState<Character[]>([]);
   const [words, setWords] = useState<Word[]>([]);
+  const [showWritingKnown, setShowWritingKnown] = useState(true);
+  const [showWritingUnknown, setShowWritingUnknown] = useState(true);
   const [characterSearchQuery, setCharacterSearchQuery] = useState("");
   const [wordSearchQuery, setWordSearchQuery] = useState("");
   const [characterToDelete, setCharacterToDelete] = useState<Character | null>(
@@ -120,6 +132,16 @@ export default function KnowledgeBasePage() {
   const filteredWords = useMemo(
     () => filterWords(words, wordSearchQuery),
     [words, wordSearchQuery],
+  );
+
+  const viewModeCharacters = useMemo(
+    () =>
+      filterCharactersForView(
+        characters,
+        showWritingKnown,
+        showWritingUnknown,
+      ),
+    [characters, showWritingKnown, showWritingUnknown],
   );
 
   const loadKnowledgeBase = useCallback(async () => {
@@ -365,6 +387,44 @@ export default function KnowledgeBasePage() {
     <Page
       title="Knowledge base"
       fullWidth={pageMode === "view"}
+      headerCenter={
+        pageMode === "view" ? (
+          <div className="page-header-toggles">
+            <label className="page-header-toggle">
+              <span className="page-header-toggle-label">Writting known</span>
+              <span className="toggle">
+                <input
+                  type="checkbox"
+                  role="switch"
+                  aria-label="Writting known"
+                  checked={showWritingKnown}
+                  onChange={(event) =>
+                    setShowWritingKnown(event.target.checked)
+                  }
+                />
+                <span className="toggle-slider" />
+              </span>
+            </label>
+            <label className="page-header-toggle">
+              <span className="page-header-toggle-label">
+                Writting not known
+              </span>
+              <span className="toggle">
+                <input
+                  type="checkbox"
+                  role="switch"
+                  aria-label="Writting not known"
+                  checked={showWritingUnknown}
+                  onChange={(event) =>
+                    setShowWritingUnknown(event.target.checked)
+                  }
+                />
+                <span className="toggle-slider" />
+              </span>
+            </label>
+          </div>
+        ) : undefined
+      }
       headerAction={
         pageMode === "view" ? (
           <button
@@ -391,7 +451,9 @@ export default function KnowledgeBasePage() {
         <>
           {isLoading && <p>Loading knowledge base...</p>}
           {error && <p className="table-error">{error}</p>}
-          {!isLoading && !error && <PinyinGridView characters={characters} />}
+          {!isLoading && !error && (
+            <PinyinGridView characters={viewModeCharacters} />
+          )}
         </>
       )}
       {pageMode === "edit" && (

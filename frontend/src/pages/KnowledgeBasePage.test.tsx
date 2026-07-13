@@ -5,7 +5,19 @@ import KnowledgeBasePage from "./KnowledgeBasePage";
 const characters = [
   {
     char: "爱",
-    pinyin: "ai",
+    pinyin: "ai4",
+    writting_known: true,
+    updated_at: "2026-07-12T12:00:00+00:00",
+  },
+  {
+    char: "唉",
+    pinyin: "ai4",
+    writting_known: false,
+    updated_at: "2026-07-12T12:00:00+00:00",
+  },
+  {
+    char: "好",
+    pinyin: "hao3",
     writting_known: true,
     updated_at: "2026-07-12T12:00:00+00:00",
   },
@@ -86,7 +98,9 @@ describe("KnowledgeBasePage", () => {
     await enterEditMode(user);
 
     expect(await screen.findByRole("cell", { name: "爱" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "ai" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "唉" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "好" })).toBeInTheDocument();
+    expect(screen.getAllByRole("cell", { name: "ai4" })).toHaveLength(2);
     expect(screen.getByRole("cell", { name: "爱好" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "hobby" })).toBeInTheDocument();
   });
@@ -123,5 +137,44 @@ describe("KnowledgeBasePage", () => {
       ).not.toBeInTheDocument();
     });
     expect(screen.getByText("No words match your search.")).toBeInTheDocument();
+  });
+
+  it("shows view mode toggles for writing known and not known", async () => {
+    render(<KnowledgeBasePage />);
+
+    expect(
+      await screen.findByRole("switch", { name: "Writting known" }),
+    ).toBeChecked();
+    expect(
+      screen.getByRole("switch", { name: "Writting not known" }),
+    ).toBeChecked();
+  });
+
+  it("hides characters based on the view mode toggles", async () => {
+    const user = userEvent.setup();
+
+    render(<KnowledgeBasePage />);
+
+    expect(await screen.findByRole("cell", { name: "爱唉" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "好" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("switch", { name: "Writting known" }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole("cell", { name: "爱唉" })).not.toBeInTheDocument();
+      expect(screen.queryByRole("cell", { name: "好" })).not.toBeInTheDocument();
+    });
+    expect(screen.getByRole("cell", { name: "唉" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("switch", { name: "Writting known" }));
+    await user.click(
+      screen.getByRole("switch", { name: "Writting not known" }),
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByRole("cell", { name: "唉" })).not.toBeInTheDocument();
+    });
+    expect(screen.getByRole("cell", { name: "爱" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "好" })).toBeInTheDocument();
   });
 });
