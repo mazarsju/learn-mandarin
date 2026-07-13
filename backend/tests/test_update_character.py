@@ -1,3 +1,4 @@
+import bootstrap  # noqa: F401
 import unittest
 from unittest.mock import MagicMock, patch
 
@@ -12,15 +13,15 @@ from backend.app import app  # noqa: E402
 class TestUpdateCharacterEndpoint(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client()
-        self.session_patcher = patch("backend.app.db.session")
+        self.session_patcher = patch("backend.routes.update_character.db.session")
         self.mock_session = self.session_patcher.start()
         self.addCleanup(self.session_patcher.stop)
 
-        self.character_patcher = patch("backend.app.Character")
+        self.character_patcher = patch("backend.routes.update_character.Character")
         self.mock_character_cls = self.character_patcher.start()
         self.addCleanup(self.character_patcher.stop)
 
-        self.utcnow_patcher = patch("backend.app.utcnow")
+        self.utcnow_patcher = patch("backend.routes.update_character.utcnow")
         self.mock_utcnow = self.utcnow_patcher.start()
         self.addCleanup(self.utcnow_patcher.stop)
 

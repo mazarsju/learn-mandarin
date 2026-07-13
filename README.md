@@ -12,11 +12,12 @@ An app to learn Mandarin.
 ```
 learn-mandarin/
 ├── backend/
-│   ├── __init__.py
-│   ├── app.py              # Flask application and routes
+│   ├── __init__.py         # Application factory (create_app)
+│   ├── app.py              # Flask entry point
 │   ├── database.py         # SQLite configuration and initialization
 │   ├── extensions.py       # SQLAlchemy extension
 │   ├── models.py           # Character, Word, and association tables
+│   ├── routes/             # One endpoint per file (Flask blueprints)
 │   ├── learn_mandarin.db   # SQLite database (created on first run)
 │   └── requirements.txt    # Python dependencies
 ├── frontend/
@@ -55,7 +56,7 @@ PORT=8080 python3 -m backend.app
 
 #### Tests
 
-From the project root (with the virtual environment activated):
+From the project root (requires the project virtual environment at `venv/` with dependencies installed):
 
 ```bash
 python3 -m unittest discover -s backend/tests -v
@@ -84,7 +85,7 @@ curl -X POST -F "file=@db.txt" http://127.0.0.1:5000/characters/bulk
 
 | Method | Route | Description |
 | --- | --- | --- |
-| `POST` | `/hello` | Health check |
+| `GET` | `/health` | Health check |
 | `GET` | `/characters` | List all characters |
 | `POST` | `/characters` | Create a new character |
 | `POST` | `/words` | Create a new word and link it to existing characters |

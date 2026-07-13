@@ -1,3 +1,4 @@
+import bootstrap  # noqa: F401
 import unittest
 from unittest.mock import MagicMock, patch
 
@@ -12,19 +13,19 @@ from backend.app import app  # noqa: E402
 class TestCreateWordEndpoint(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client()
-        self.session_patcher = patch("backend.app.db.session")
+        self.session_patcher = patch("backend.routes.create_word.db.session")
         self.mock_session = self.session_patcher.start()
         self.addCleanup(self.session_patcher.stop)
 
-        self.character_patcher = patch("backend.app.Character")
+        self.character_patcher = patch("backend.routes.create_word.Character")
         self.mock_character_cls = self.character_patcher.start()
         self.addCleanup(self.character_patcher.stop)
 
-        self.word_patcher = patch("backend.app.Word")
+        self.word_patcher = patch("backend.routes.create_word.Word")
         self.mock_word_cls = self.word_patcher.start()
         self.addCleanup(self.word_patcher.stop)
 
-        self.utcnow_patcher = patch("backend.app.utcnow")
+        self.utcnow_patcher = patch("backend.routes.create_word.utcnow")
         self.mock_utcnow = self.utcnow_patcher.start()
         self.addCleanup(self.utcnow_patcher.stop)
 

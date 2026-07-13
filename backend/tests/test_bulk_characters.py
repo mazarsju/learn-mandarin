@@ -1,3 +1,4 @@
+import bootstrap  # noqa: F401
 import io
 import sys
 import unittest
@@ -16,15 +17,15 @@ from backend.app import app  # noqa: E402
 class TestBulkCharactersEndpoint(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client()
-        self.session_patcher = patch("backend.app.db.session")
+        self.session_patcher = patch("backend.routes.bulk_characters.db.session")
         self.mock_session = self.session_patcher.start()
         self.addCleanup(self.session_patcher.stop)
 
-        self.character_patcher = patch("backend.app.Character")
+        self.character_patcher = patch("backend.routes.bulk_characters.Character")
         self.mock_character_cls = self.character_patcher.start()
         self.addCleanup(self.character_patcher.stop)
 
-        self.word_patcher = patch("backend.app.Word")
+        self.word_patcher = patch("backend.routes.bulk_characters.Word")
         self.mock_word_cls = self.word_patcher.start()
         self.addCleanup(self.word_patcher.stop)
 
