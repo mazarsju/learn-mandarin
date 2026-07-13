@@ -152,7 +152,7 @@ An overall view of the characters you know, sorted by pinyin.
 - [x] Create different tabs in the frontend: Landing page, Knowledge base, Chat, Preferences
 - [x] Simple CRUD interface to manage characters
 - [x] Visualization of characters by pinyin
-- [ ] UI polish with additional options: different color for the tones, a toggle to show or hide characters you only recognize (not write), mouse hover effect...
+- [x] UI polish with additional options: different color for the tones, a toggle to show or hide characters you only recognize (not write), mouse hover effect...
 
 ### 2. Chinese-only chatbot (known characters)
 
