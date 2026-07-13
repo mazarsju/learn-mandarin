@@ -2,15 +2,11 @@
 
 # learn-mandarin
 
-Test coverage frontend:
+![Frontend-Statements](.github/badges/coverage-statements.svg)
+![Frontend-Branches](.github/badges/coverage-branches.svg)
+![Frontend-Functions](.github/badges/coverage-functions.svg)
+![Frontend-Lines](.github/badges/coverage-lines.svg)
 
-![Statements](.github/badges/coverage-statements.svg)
-![Branches](.github/badges/coverage-branches.svg)
-![Functions](.github/badges/coverage-functions.svg)
-![Lines](.github/badges/coverage-lines.svg)
-
-Test coverage backend:
-TODO
 
 An app to learn Mandarin.
 
