@@ -3,8 +3,19 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "../..");
-const summaryPath = join(root, "frontend/coverage/coverage-summary.json");
-const summary = JSON.parse(readFileSync(summaryPath, "utf8")).total;
+
+const sources = [
+  {
+    prefix: "Frontend",
+    filePrefix: "frontend",
+    summaryPath: join(root, "frontend/coverage/coverage-summary.json"),
+  },
+  {
+    prefix: "Backend",
+    filePrefix: "backend",
+    summaryPath: join(root, "backend/coverage/coverage-summary.json"),
+  },
+];
 
 function badgeColor(pct) {
   if (pct >= 80) return "#4c1";
@@ -41,6 +52,14 @@ const metrics = [
   ["lines", "coverage-lines"],
 ];
 
-for (const [key, filename] of metrics) {
-  writeFileSync(join(outDir, `${filename}.svg`), badge(key, summary[key].pct));
+for (const { prefix, filePrefix, summaryPath } of sources) {
+  const summary = JSON.parse(readFileSync(summaryPath, "utf8")).total;
+
+  for (const [key, filename] of metrics) {
+    const label = `${prefix}-${key}`;
+    writeFileSync(
+      join(outDir, `${filePrefix}-${filename}.svg`),
+      badge(label, summary[key].pct),
+    );
+  }
 }

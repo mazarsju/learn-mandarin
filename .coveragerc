@@ -1,0 +1,13 @@
+[run]
+branch = True
+source = backend
+omit =
+    backend/tests/*
+
+[report]
+omit =
+    backend/tests/*
+precision = 2
+
+[html]
+directory = backend/coverage

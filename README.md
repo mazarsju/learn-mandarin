@@ -2,10 +2,15 @@
 
 # learn-mandarin
 
-![Frontend-Statements](.github/badges/coverage-statements.svg)
-![Frontend-Branches](.github/badges/coverage-branches.svg)
-![Frontend-Functions](.github/badges/coverage-functions.svg)
-![Frontend-Lines](.github/badges/coverage-lines.svg)
+![Frontend-Statements](.github/badges/frontend-coverage-statements.svg)
+![Frontend-Branches](.github/badges/frontend-coverage-branches.svg)
+![Frontend-Functions](.github/badges/frontend-coverage-functions.svg)
+![Frontend-Lines](.github/badges/frontend-coverage-lines.svg)
+
+![Backend-Statements](.github/badges/backend-coverage-statements.svg)
+![Backend-Branches](.github/badges/backend-coverage-branches.svg)
+![Backend-Functions](.github/badges/backend-coverage-functions.svg)
+![Backend-Lines](.github/badges/backend-coverage-lines.svg)
 
 
 
@@ -69,7 +74,16 @@ From the project root (requires the project virtual environment at `venv/` with 
 
 ```bash
 python3 -m unittest discover -s backend/tests -v
+python3 backend/test_coverage.py
 ```
+
+From the `backend/` directory:
+
+```bash
+make test-coverage
+```
+
+The coverage report is written to `backend/coverage/` (open `coverage/index.html` in a browser for the HTML report).
 
 #### Database
 
@@ -123,7 +137,7 @@ npm test
 npm run test:coverage
 ```
 
-The coverage report is written to `frontend/coverage/` (open `coverage/index.html` in a browser for the HTML report). On GitHub, badges in this README are updated automatically on each push to `main`, and the full HTML report is published at [mazarsju.github.io/learn-mandarin](https://mazarsju.github.io/learn-mandarin/).
+The coverage report is written to `frontend/coverage/` (open `coverage/index.html` in a browser for the HTML report). On GitHub, badges in this README are updated automatically on each push to `main`, and the full HTML reports are published at [mazarsju.github.io/learn-mandarin](https://mazarsju.github.io/learn-mandarin/) ([frontend](https://mazarsju.github.io/learn-mandarin/frontend/), [backend](https://mazarsju.github.io/learn-mandarin/backend/)).
 
 To enable the hosted report, go to **Settings → Pages** and set **Build and deployment → Source** to **Deploy from a branch**, then choose branch **`gh-pages`** and folder **`/ (root)`**. The workflow creates and updates that branch automatically.
 
