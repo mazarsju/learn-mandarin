@@ -20,7 +20,10 @@ def write_summary(coverage_json: Path, output: Path) -> None:
     total_lines = covered_lines + missing_lines
     lines_pct = round(100 * covered_lines / total_lines, 2) if total_lines else 100.0
     statements_pct = round(
-        totals.get("percent_statements_covered", totals["percent_covered"]),
+        totals.get(
+            "percent_statements_covered",
+            totals.get("percent_covered", 0),
+        ),
         2,
     )
 
