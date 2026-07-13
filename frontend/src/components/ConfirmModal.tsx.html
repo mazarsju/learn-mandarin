@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/components/Navbar.tsx</title>
+    <title>Code coverage report for src/components/ConfirmModal.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/components</a> Navbar.tsx</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/components</a> ConfirmModal.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/5</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
                 <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>2/2</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -108,14 +108,7 @@
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L46'></a><a href='#L46'>46</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -124,6 +117,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -143,19 +145,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -164,59 +153,49 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
-  ChatBubbleIcon,
-  HouseIcon,
-  NotebookIcon,
-  SettingsIcon,
-} from "./icons";
-&nbsp;
-export type PageId = "home" | "knowledge-base" | "chat" | "preferences";
-&nbsp;
-type NavItem = {
-  id: PageId;
-  label: string;
-  icon: typeof HouseIcon;
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">type ConfirmModalProps = {
+  isOpen: boolean;
+  message: string;
+  onConfirm: () =&gt; void;
+  onCancel: () =&gt; void;
 };
 &nbsp;
-const NAV_ITEMS: NavItem[] = [
-  { id: "home", label: "Home", icon: HouseIcon },
-  { id: "knowledge-base", label: "Knowledge base", icon: NotebookIcon },
-  { id: "chat", label: "Chat", icon: ChatBubbleIcon },
-  { id: "preferences", label: "Preferences", icon: SettingsIcon },
-];
+export default function ConfirmModal({
+  isOpen,
+  message,
+  onConfirm,
+  onCancel,
+}: ConfirmModalProps) {
+  if (!isOpen) {
+    return null;
+  }
 &nbsp;
-type NavbarProps = {
-  activePage: PageId;
-  onPageChange: (page: PageId) =&gt; void;
-};
-&nbsp;
-export default function Navbar({ activePage, onPageChange }: NavbarProps) {
   return (
-    &lt;nav className="navbar" aria-label="Main navigation"&gt;
-      &lt;ul className="navbar-list"&gt;
-        {NAV_ITEMS.map(({ id, label, icon: Icon }) =&gt; {
-          const isActive = activePage === id;
-&nbsp;
-          return (
-            &lt;li key={id}&gt;
-              &lt;button
-                type="button"
-                className={`navbar-tab${isActive ? " navbar-tab--active" : ""}`}
-                aria-current={isActive ? "page" : undefined}
-                onClick={() =&gt; onPageChange(id)}
-              &gt;
-                &lt;Icon className="navbar-icon" /&gt;
-                &lt;span&gt;{label}&lt;/span&gt;
-              &lt;/button&gt;
-            &lt;/li&gt;
-          );
-        })}
-      &lt;/ul&gt;
-    &lt;/nav&gt;
+    &lt;div className="modal-overlay" onClick={onCancel}&gt;
+      &lt;div
+        className="modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-modal-message"
+        onClick={(event) =&gt; event.stopPropagation()}
+      &gt;
+        &lt;p id="confirm-modal-message" className="modal-message"&gt;
+          {message}
+        &lt;/p&gt;
+        &lt;div className="modal-actions"&gt;
+          &lt;button type="button" className="modal-button-cancel" onClick={onCancel}&gt;
+            Cancel
+          &lt;/button&gt;
+          &lt;button
+            type="button"
+            className="modal-button-confirm"
+            onClick={onConfirm}
+          &gt;
+            Confirm
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
   );
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -226,7 +205,7 @@ export default function Navbar({ activePage, onPageChange }: NavbarProps) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-07-13T10:17:30.873Z
+                at 2026-07-13T10:25:08.254Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
