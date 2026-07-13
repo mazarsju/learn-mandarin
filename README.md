@@ -3,10 +3,12 @@
 # learn-mandarin
 
 Test coverage frontend:
+
 ![Statements](.github/badges/coverage-statements.svg)
 ![Branches](.github/badges/coverage-branches.svg)
 ![Functions](.github/badges/coverage-functions.svg)
 ![Lines](.github/badges/coverage-lines.svg)
+
 Test coverage backend:
 TODO
 
@@ -14,7 +16,7 @@ An app to learn Mandarin.
 
 ## Technologies
 
-- **Backend:** Python, Flask, Flask-CORS, SQLAlchemy, SQLite
+- **Backend:** Python, Flask, SQLAlchemy, SQLite
 - **Frontend:** React, TypeScript, Vite
 
 ## Project structure
