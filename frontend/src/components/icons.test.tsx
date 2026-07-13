@@ -1,8 +1,10 @@
 import { render } from "@testing-library/react";
 import {
   ChatBubbleIcon,
+  EyeIcon,
   HouseIcon,
   NotebookIcon,
+  PenIcon,
   SettingsIcon,
 } from "./icons";
 
@@ -12,6 +14,8 @@ describe("icons", () => {
     ["NotebookIcon", NotebookIcon],
     ["ChatBubbleIcon", ChatBubbleIcon],
     ["SettingsIcon", SettingsIcon],
+    ["PenIcon", PenIcon],
+    ["EyeIcon", EyeIcon],
   ])("renders %s as an accessible decorative svg", (_name, Icon) => {
     const { container } = render(<Icon className="navbar-icon" />);
 

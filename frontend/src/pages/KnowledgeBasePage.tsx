@@ -4,6 +4,7 @@ import CharacterFormModal, {
   type CharacterFormValues,
 } from "../components/CharacterFormModal";
 import ConfirmModal from "../components/ConfirmModal";
+import { EyeIcon, PenIcon } from "../components/icons";
 import Page from "../components/Page";
 import Table, { type TableColumn } from "../components/Table";
 import type { Character } from "../types/character";
@@ -85,7 +86,10 @@ async function fetchWords() {
   return (await response.json()) as Word[];
 }
 
+type KnowledgeBaseMode = "view" | "edit";
+
 export default function KnowledgeBasePage() {
+  const [pageMode, setPageMode] = useState<KnowledgeBaseMode>("view");
   const [characters, setCharacters] = useState<Character[]>([]);
   const [words, setWords] = useState<Word[]>([]);
   const [characterSearchQuery, setCharacterSearchQuery] = useState("");
@@ -139,8 +143,12 @@ export default function KnowledgeBasePage() {
   }, []);
 
   useEffect(() => {
+    if (pageMode !== "edit") {
+      return;
+    }
+
     void loadKnowledgeBase();
-  }, [loadKnowledgeBase]);
+  }, [pageMode, loadKnowledgeBase]);
 
   const openAddCharacterModal = useCallback((prefilledChar = "") => {
     setPrefilledCharForAdd(prefilledChar);
@@ -149,6 +157,17 @@ export default function KnowledgeBasePage() {
 
   const closeAddCharacterModal = useCallback(() => {
     setIsAddCharacterModalOpen(false);
+    setPrefilledCharForAdd("");
+  }, []);
+
+  const switchToViewMode = useCallback(() => {
+    setPageMode("view");
+    setCharacterToDelete(null);
+    setCharacterToEdit(null);
+    setWordToDelete(null);
+    setWordToEdit(null);
+    setIsAddCharacterModalOpen(false);
+    setIsAddWordModalOpen(false);
     setPrefilledCharForAdd("");
   }, []);
 
@@ -346,7 +365,32 @@ export default function KnowledgeBasePage() {
   }
 
   return (
-    <Page title="Knowledge base">
+    <Page
+      title="Knowledge base"
+      headerAction={
+        pageMode === "view" ? (
+          <button
+            type="button"
+            className="page-mode-button"
+            onClick={() => setPageMode("edit")}
+          >
+            <PenIcon className="page-mode-button-icon" />
+            Modify
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="page-mode-button"
+            onClick={switchToViewMode}
+          >
+            <EyeIcon className="page-mode-button-icon" />
+            View
+          </button>
+        )
+      }
+    >
+      {pageMode === "edit" && (
+        <>
       <AddWordModal
         mode="add"
         isOpen={isAddWordModalOpen}
@@ -504,6 +548,8 @@ export default function KnowledgeBasePage() {
               )}
             />
           </section>
+        </>
+      )}
         </>
       )}
     </Page>

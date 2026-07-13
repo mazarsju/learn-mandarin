@@ -19,6 +19,10 @@ const words = [
   },
 ];
 
+async function enterEditMode(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole("button", { name: "Modify" }));
+}
+
 describe("KnowledgeBasePage", () => {
   beforeEach(() => {
     vi.stubGlobal(
@@ -52,10 +56,34 @@ describe("KnowledgeBasePage", () => {
     vi.unstubAllGlobals();
   });
 
-  it("loads and displays characters and words", async () => {
+  it("starts in view mode with a modify button and no tables", () => {
     render(<KnowledgeBasePage />);
 
-    expect(screen.getByText("Loading knowledge base...")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Modify" })).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText("Search characters...")).not.toBeInTheDocument();
+    expect(screen.queryByPlaceholderText("Search words...")).not.toBeInTheDocument();
+  });
+
+  it("switches between view and edit modes", async () => {
+    const user = userEvent.setup();
+
+    render(<KnowledgeBasePage />);
+
+    await enterEditMode(user);
+    expect(await screen.findByPlaceholderText("Search characters...")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "View" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "View" }));
+
+    expect(screen.queryByPlaceholderText("Search characters...")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Modify" })).toBeInTheDocument();
+  });
+
+  it("loads and displays characters and words in edit mode", async () => {
+    const user = userEvent.setup();
+
+    render(<KnowledgeBasePage />);
+    await enterEditMode(user);
 
     expect(await screen.findByRole("cell", { name: "爱" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "ai" })).toBeInTheDocument();
@@ -67,6 +95,7 @@ describe("KnowledgeBasePage", () => {
     const user = userEvent.setup();
 
     render(<KnowledgeBasePage />);
+    await enterEditMode(user);
     await screen.findByRole("cell", { name: "爱" });
 
     await user.type(screen.getByPlaceholderText("Search characters..."), "zz");
@@ -83,6 +112,7 @@ describe("KnowledgeBasePage", () => {
     const user = userEvent.setup();
 
     render(<KnowledgeBasePage />);
+    await enterEditMode(user);
     await screen.findByRole("cell", { name: "爱好" });
 
     await user.type(screen.getByPlaceholderText("Search words..."), "zz");
