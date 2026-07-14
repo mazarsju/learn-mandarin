@@ -183,7 +183,9 @@ An overall view of the characters you know, sorted by pinyin.
 A chatbot that speaks Chinese using only the characters you are supposed to know.
 
 - [x] LLM integration with config management
-- [ ] Chatbot interface that remembers previous conversations
+- [x] Minimalist UI to have a list of chat and navigate through them
+- [ ] AI chatbot remembering the previous answer (non-persistent throught sessions)
+- [ ] AI chatbot remembering the previous answer (persistent throught sessions)
 - [ ] RAG pipeline to update the chat agent's knowledge with the list of vocabulary
 
 ### 3. Multi-agent conversations for specific topics

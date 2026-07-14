@@ -259,6 +259,205 @@ body {
   font-size: 0.95rem;
 }
 
+.chat-intro {
+  margin: 0 0 1.5rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+.chat-character-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+}
+
+.chat-character-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.chat-character-card:hover {
+  border-color: #bfdbfe;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  transform: translateY(-1px);
+}
+
+.chat-character-card:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+.chat-character-avatar-image {
+  width: 6rem;
+  height: 6rem;
+}
+
+.chat-character-avatar-image--compact {
+  width: 3rem;
+  height: 3rem;
+}
+
+.chat-character-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chat-character-card-name {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.chat-character-card-chinese-name {
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.chat-character-card-description {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.chat-modal-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(48rem, 100%);
+  height: min(40rem, calc(100vh - 2rem));
+  padding: 0;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15);
+  overflow: hidden;
+}
+
+.chat-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.chat-modal-participant {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.chat-modal-participant-text {
+  min-width: 0;
+}
+
+.chat-modal-participant-name {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.chat-modal-participant-chinese-name {
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.chat-modal-close-button {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #6b7280;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.chat-modal-close-button:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.chat-modal-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem;
+  background: #ffffff;
+}
+
+.chat-modal-empty-state {
+  margin: 0;
+  color: #6b7280;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.chat-modal-composer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem 1.25rem;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.chat-modal-composer-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.chat-modal-composer-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.chat-modal-composer-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  color: #111827;
+  background: #ffffff;
+}
+
+.chat-modal-composer-row input:focus {
+  outline: 2px solid #bfdbfe;
+  border-color: #60a5fa;
+}
+
+.chat-modal-composer-row .page-add-button {
+  flex-shrink: 0;
+}
+
 .pinyin-grid-bleed {
   width: 100vw;
   margin-left: calc(50% - 50vw);
