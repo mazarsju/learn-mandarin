@@ -32,6 +32,8 @@ learn-mandarin/
 │   ├── extensions.py       # SQLAlchemy extension
 │   ├── llm.py              # LangChain LLM integration (get_llm)
 │   ├── llm_config.py       # Read/write LLM settings in .config.txt
+│   ├── chat_agents.py      # Chat character prompts
+│   ├── chat_service.py     # LLM chat reply generation
 │   ├── models.py           # Character, Word, and association tables
 │   ├── routes/             # One endpoint per file (Flask blueprints)
 │   ├── learn_mandarin.db   # SQLite database (created on first run)
@@ -133,6 +135,7 @@ curl -X POST -F "file=@db.txt" http://127.0.0.1:5000/characters/bulk
 | `GET` | `/health` | Health check |
 | `GET` | `/llm-config` | Read LLM API key and model from `.config.txt` |
 | `POST` | `/llm-config` | Update LLM API key and/or model in `.config.txt` |
+| `POST` | `/chat` | Send a chat message to the selected AI character |
 | `GET` | `/characters` | List all characters |
 | `POST` | `/characters` | Create a new character |
 | `POST` | `/words` | Create a new word and link it to existing characters |
@@ -184,7 +187,7 @@ A chatbot that speaks Chinese using only the characters you are supposed to know
 
 - [x] LLM integration with config management
 - [x] Minimalist UI to have a list of chat and navigate through them
-- [ ] AI chatbot remembering the previous answer (non-persistent throught sessions)
+- [X] AI chatbot remembering the previous answer (non-persistent throught sessions)
 - [ ] AI chatbot remembering the previous answer (persistent throught sessions)
 - [ ] RAG pipeline to update the chat agent's knowledge with the list of vocabulary
 

@@ -403,6 +403,8 @@ body {
   overflow-y: auto;
   padding: 1.25rem;
   background: #ffffff;
+  display: flex;
+  flex-direction: column;
 }
 
 .chat-modal-empty-state {
@@ -410,6 +412,50 @@ body {
   color: #6b7280;
   text-align: center;
   line-height: 1.5;
+}
+
+.chat-message-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chat-message {
+  max-width: 80%;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.chat-message--user {
+  align-self: flex-end;
+  margin-left: auto;
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
+.chat-message--assistant {
+  align-self: flex-start;
+  margin-right: auto;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.chat-modal-typing-indicator {
+  margin: 0.75rem 0 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+.chat-modal-error {
+  margin: 0;
+  padding: 0 1.25rem;
 }
 
 .chat-modal-composer {
