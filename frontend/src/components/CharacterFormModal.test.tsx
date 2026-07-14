@@ -46,6 +46,28 @@ describe("CharacterFormModal", () => {
     expect(screen.getByText("Enter a valid pinyin.")).toBeInTheDocument();
   });
 
+  it("keeps confirm disabled and shows a warning when character already exists", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <CharacterFormModal
+        mode="add"
+        isOpen
+        existingCharacters={["爱"]}
+        onConfirm={() => {}}
+        onCancel={() => {}}
+      />,
+    );
+
+    await user.type(screen.getByLabelText("character"), "爱");
+    await user.type(screen.getByLabelText("pinyin"), "ai");
+
+    expect(screen.getByRole("button", { name: "Confirm" })).toBeDisabled();
+    expect(
+      screen.getByText("This character already exists in the database."),
+    ).toBeInTheDocument();
+  });
+
   it("keeps confirm disabled and shows a warning for multiple characters", async () => {
     const user = userEvent.setup();
 

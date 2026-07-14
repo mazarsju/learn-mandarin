@@ -127,6 +127,11 @@ export default function KnowledgeBasePage() {
     [characters],
   );
 
+  const existingWords = useMemo(
+    () => words.map((word) => word.word),
+    [words],
+  );
+
   const filteredCharacters = useMemo(
     () => filterCharacters(characters, characterSearchQuery),
     [characters, characterSearchQuery],
@@ -487,6 +492,7 @@ export default function KnowledgeBasePage() {
         mode="add"
         isOpen={isAddWordModalOpen}
         knownCharacters={knownCharacters}
+        existingWords={existingWords}
         onCancel={() => setIsAddWordModalOpen(false)}
         onConfirm={(values) => void confirmAddWord(values)}
         onAddCharacter={openAddCharacterModal}
@@ -504,6 +510,7 @@ export default function KnowledgeBasePage() {
         mode="add"
         isOpen={isAddCharacterModalOpen}
         prefilledChar={prefilledCharForAdd}
+        existingCharacters={knownCharacters}
         onCancel={closeAddCharacterModal}
         onConfirm={(values) => void confirmAddCharacter(values)}
       />

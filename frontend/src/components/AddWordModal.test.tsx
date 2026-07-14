@@ -48,6 +48,29 @@ describe("AddWordModal", () => {
     expect(onAddCharacter).toHaveBeenCalledWith("好");
   });
 
+  it("shows a warning and disables confirm when the word already exists", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <AddWordModal
+        mode="add"
+        isOpen
+        knownCharacters={["爱", "好"]}
+        existingWords={["爱好"]}
+        onConfirm={() => {}}
+        onCancel={() => {}}
+        onAddCharacter={() => {}}
+      />,
+    );
+
+    await user.type(screen.getByLabelText("words"), "爱好");
+
+    expect(
+      screen.getByText("This word already exists in the database."),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Confirm" })).toBeDisabled();
+  });
+
   it("submits the word when all characters exist", async () => {
     const user = userEvent.setup();
     const onConfirm = vi.fn();

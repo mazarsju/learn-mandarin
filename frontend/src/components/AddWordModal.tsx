@@ -12,6 +12,7 @@ type AddWordModalProps = {
   isOpen: boolean;
   initialWord?: Word | null;
   knownCharacters: string[];
+  existingWords?: string[];
   onConfirm: (values: WordFormValues) => void;
   onCancel: () => void;
   onAddCharacter: (character: string) => void;
@@ -22,6 +23,7 @@ export default function AddWordModal({
   isOpen,
   initialWord = null,
   knownCharacters,
+  existingWords = [],
   onConfirm,
   onCancel,
   onAddCharacter,
@@ -32,6 +34,11 @@ export default function AddWordModal({
   const knownCharacterSet = useMemo(
     () => new Set(knownCharacters),
     [knownCharacters],
+  );
+
+  const existingWordSet = useMemo(
+    () => new Set(existingWords),
+    [existingWords],
   );
 
   const missingCharacters = useMemo(
@@ -58,8 +65,12 @@ export default function AddWordModal({
     return null;
   }
 
+  const trimmedWord = word.trim();
+  const isDuplicateWord =
+    mode === "add" && trimmedWord !== "" && existingWordSet.has(trimmedWord);
   const isConfirmDisabled =
-    mode === "add" && (word.trim() === "" || missingCharacters.length > 0);
+    mode === "add" &&
+    (trimmedWord === "" || missingCharacters.length > 0 || isDuplicateWord);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -112,6 +123,11 @@ export default function AddWordModal({
               </button>
             </div>
           ))}
+          {isDuplicateWord && (
+            <p className="form-warning">
+              This word already exists in the database.
+            </p>
+          )}
           <label className="modal-field">
             <span className="modal-field-label">definition</span>
             <input

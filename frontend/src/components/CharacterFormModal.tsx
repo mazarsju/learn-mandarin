@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { isValidCharacter, type Character } from "../types/character";
 import { isValidPinyin } from "../types/pinyin";
 
@@ -13,6 +13,7 @@ type CharacterFormModalProps = {
   isOpen: boolean;
   initialCharacter?: Character | null;
   prefilledChar?: string;
+  existingCharacters?: string[];
   onConfirm: (values: CharacterFormValues) => void;
   onCancel: () => void;
 };
@@ -22,12 +23,18 @@ export default function CharacterFormModal({
   isOpen,
   initialCharacter = null,
   prefilledChar = "",
+  existingCharacters = [],
   onConfirm,
   onCancel,
 }: CharacterFormModalProps) {
   const [char, setChar] = useState("");
   const [pinyin, setPinyin] = useState("");
   const [writtingKnown, setWrittingKnown] = useState(false);
+
+  const existingCharacterSet = useMemo(
+    () => new Set(existingCharacters),
+    [existingCharacters],
+  );
 
   useEffect(() => {
     if (!isOpen) {
@@ -50,8 +57,15 @@ export default function CharacterFormModal({
     return null;
   }
 
-  const isConfirmDisabled = !isValidCharacter(char) || !isValidPinyin(pinyin);
+  const trimmedChar = char.trim();
+  const isDuplicateCharacter =
+    mode === "add" &&
+    isValidCharacter(trimmedChar) &&
+    existingCharacterSet.has(trimmedChar);
+  const isConfirmDisabled =
+    !isValidCharacter(char) || !isValidPinyin(pinyin) || isDuplicateCharacter;
   const showCharacterWarning = mode === "add" && char.length > 0 && !isValidCharacter(char);
+  const showDuplicateCharacterWarning = isDuplicateCharacter;
   const showPinyinWarning = pinyin.trim() !== "" && !isValidPinyin(pinyin);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -95,6 +109,11 @@ export default function CharacterFormModal({
           {showCharacterWarning && (
             <p id="character-warning" className="form-warning">
               Enter exactly one character.
+            </p>
+          )}
+          {showDuplicateCharacterWarning && (
+            <p className="form-warning">
+              This character already exists in the database.
             </p>
           )}
           <label className="modal-field">
