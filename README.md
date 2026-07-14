@@ -30,6 +30,8 @@ learn-mandarin/
 │   ├── app.py              # Flask entry point
 │   ├── database.py         # SQLite configuration and initialization
 │   ├── extensions.py       # SQLAlchemy extension
+│   ├── llm.py              # LangChain LLM integration (get_llm)
+│   ├── llm_config.py       # Read/write LLM settings in .config.txt
 │   ├── models.py           # Character, Word, and association tables
 │   ├── routes/             # One endpoint per file (Flask blueprints)
 │   ├── learn_mandarin.db   # SQLite database (created on first run)
@@ -97,6 +99,26 @@ On first start, a SQLite database is created at `backend/learn_mandarin.db` with
 
 Override the database file path with the `DATABASE_PATH` environment variable if needed.
 
+#### LLM configuration
+
+LLM settings are stored in `.config.txt` at the project root (gitignored). Values can also be provided through environment variables as a fallback.
+
+| Key / variable | Description |
+| --- | --- |
+| `LLM_API_KEY` | API key for the LLM provider |
+| `LLM_MODEL` | Model name to use (for example `gpt-4o-mini`) |
+
+Use `backend.llm.get_llm()` to obtain a cached chat model instance. Configuration is read from `.config.txt` first, then from environment variables.
+
+Example:
+
+```bash
+curl http://127.0.0.1:5000/llm-config
+curl -X POST http://127.0.0.1:5000/llm-config \
+  -H "Content-Type: application/json" \
+  -d '{"LLM_API_KEY":"your-api-key","LLM_MODEL":"gpt-4o-mini"}'
+```
+
 You can use the /character/bulk endpoint to preload the database
 
 Ex:
@@ -109,6 +131,8 @@ curl -X POST -F "file=@db.txt" http://127.0.0.1:5000/characters/bulk
 | Method | Route | Description |
 | --- | --- | --- |
 | `GET` | `/health` | Health check |
+| `GET` | `/llm-config` | Read LLM API key and model from `.config.txt` |
+| `POST` | `/llm-config` | Update LLM API key and/or model in `.config.txt` |
 | `GET` | `/characters` | List all characters |
 | `POST` | `/characters` | Create a new character |
 | `POST` | `/words` | Create a new word and link it to existing characters |
@@ -158,7 +182,7 @@ An overall view of the characters you know, sorted by pinyin.
 
 A chatbot that speaks Chinese using only the characters you are supposed to know.
 
-- [ ] Integration with an LLM
+- [x] LLM integration with config management
 - [ ] Chatbot interface that remembers previous conversations
 - [ ] RAG pipeline to update the chat agent's knowledge with the list of vocabulary
 

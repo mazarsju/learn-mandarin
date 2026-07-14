@@ -11,11 +11,13 @@ def register_routes(app: Flask) -> None:
         health,
         list_characters,
         list_words,
+        llm_config,
         update_character,
         update_word,
     )
 
     app.register_blueprint(health.bp)
+    app.register_blueprint(llm_config.bp)
     app.register_blueprint(list_characters.bp)
     app.register_blueprint(create_character.bp)
     app.register_blueprint(delete_character.bp)
