@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import type { ChatCharacter } from "./ChatCharacterCard";
 import ChatCharacterAvatar from "./ChatCharacterAvatar";
 import type { ChatMessage } from "../types/chat";
-import { sendChatMessage } from "../utils/chatApi";
+import { fetchChatHistory, sendChatMessage } from "../utils/chatApi";
 
 type ChatModalProps = {
   character: ChatCharacter | null;
@@ -13,14 +13,47 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isSending, setIsSending] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (character === null) {
+      return;
+    }
+
+    let isMounted = true;
+
     setMessage("");
     setMessages([]);
     setError(null);
     setIsSending(false);
-  }, [character?.id]);
+    setIsLoadingHistory(true);
+
+    void fetchChatHistory(character.id)
+      .then((history) => {
+        if (isMounted) {
+          setMessages(history);
+        }
+      })
+      .catch((historyError) => {
+        if (isMounted) {
+          setError(
+            historyError instanceof Error
+              ? historyError.message
+              : "Failed to load chat history.",
+          );
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoadingHistory(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [character]);
 
   if (character === null) {
     return null;
@@ -94,7 +127,9 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
         </header>
 
         <div className="chat-modal-messages" aria-live="polite">
-          {messages.length === 0 ? (
+          {isLoadingHistory ? (
+            <p className="chat-modal-empty-state">Loading conversation...</p>
+          ) : messages.length === 0 ? (
             <p className="chat-modal-empty-state">
               Start a conversation with {character.name}.
             </p>

@@ -19,6 +19,13 @@ describe("ChatModal", () => {
         const url = String(input);
         const method = init?.method ?? "GET";
 
+        if (url.endsWith("/chat/history/teacher-wang") && method === "GET") {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({ messages: [] }),
+          });
+        }
+
         if (url.endsWith("/chat") && method === "POST") {
           return Promise.resolve({
             ok: true,
@@ -48,11 +55,18 @@ describe("ChatModal", () => {
 
     render(<ChatModal character={teacherWang} onClose={() => undefined} />);
 
+    expect(
+      await screen.findByText("Start a conversation with Teacher Wang."),
+    ).toBeInTheDocument();
+
     await user.type(screen.getByLabelText("Message"), "Hello");
     await user.click(screen.getByRole("button", { name: "Send" }));
 
     expect(await screen.findByText("Hello")).toBeInTheDocument();
     expect(await screen.findByText("你好！")).toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledWith("/chat/history/teacher-wang", {
+      method: "GET",
+    });
     expect(fetch).toHaveBeenCalledWith("/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -63,15 +77,57 @@ describe("ChatModal", () => {
     });
   });
 
+  it("loads and displays saved chat history", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: RequestInfo, init?: RequestInit) => {
+        const url = String(input);
+        const method = init?.method ?? "GET";
+
+        if (url.endsWith("/chat/history/teacher-wang") && method === "GET") {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({
+              messages: [
+                { role: "user", content: "Earlier message" },
+                { role: "assistant", content: "Earlier reply" },
+              ],
+            }),
+          });
+        }
+
+        return Promise.resolve({
+          ok: false,
+          json: async () => ({}),
+        });
+      }),
+    );
+
+    render(<ChatModal character={teacherWang} onClose={() => undefined} />);
+
+    expect(await screen.findByText("Earlier message")).toBeInTheDocument();
+    expect(screen.getByText("Earlier reply")).toBeInTheDocument();
+  });
+
   it("shows an error when the chat request fails", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn(() =>
-        Promise.resolve({
+      vi.fn((input: RequestInfo, init?: RequestInit) => {
+        const url = String(input);
+        const method = init?.method ?? "GET";
+
+        if (url.endsWith("/chat/history/teacher-wang") && method === "GET") {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({ messages: [] }),
+          });
+        }
+
+        return Promise.resolve({
           ok: false,
           json: async () => ({ error: "LLM_API_KEY must be set" }),
-        }),
-      ),
+        });
+      }),
     );
 
     const user = userEvent.setup();

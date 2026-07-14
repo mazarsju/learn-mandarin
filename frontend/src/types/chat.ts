@@ -11,3 +11,7 @@ export type ChatRequest = {
 export type ChatResponse = {
   message: ChatMessage;
 };
+
+export type ChatHistoryResponse = {
+  messages: ChatMessage[];
+};

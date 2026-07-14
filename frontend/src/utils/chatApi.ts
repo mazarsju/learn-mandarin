@@ -1,4 +1,28 @@
-import type { ChatMessage, ChatRequest, ChatResponse } from "../types/chat";
+import type {
+  ChatHistoryResponse,
+  ChatMessage,
+  ChatRequest,
+  ChatResponse,
+} from "../types/chat";
+
+export async function fetchChatHistory(
+  characterId: string,
+): Promise<ChatMessage[]> {
+  const response = await fetch(
+    `/chat/history/${encodeURIComponent(characterId)}`,
+    { method: "GET" },
+  );
+
+  if (!response.ok) {
+    const data = (await response.json().catch(() => null)) as {
+      error?: string;
+    } | null;
+    throw new Error(data?.error ?? "Failed to load chat history.");
+  }
+
+  const data = (await response.json()) as ChatHistoryResponse;
+  return data.messages;
+}
 
 export async function sendChatMessage(
   characterId: string,

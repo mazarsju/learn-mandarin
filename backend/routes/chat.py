@@ -1,10 +1,14 @@
 from flask import Blueprint, request
 
 from backend.chat_service import generate_chat_reply
+from backend.conversation_logs import (
+    VALID_CHARACTER_IDS,
+    append_message,
+    load_conversation,
+    should_append_user_message,
+)
 
 bp = Blueprint("chat", __name__)
-
-VALID_CHARACTER_IDS = {"teacher-wang", "xiao-ming"}
 
 
 @bp.post("/chat")
@@ -49,8 +53,14 @@ def chat():
     if normalized_messages[-1]["role"] != "user":
         return {"error": "The last message must be from the user"}, 400
 
+    last_user_message = normalized_messages[-1]
+
     try:
+        if should_append_user_message(character_id, last_user_message):
+            append_message(character_id, "user", last_user_message["content"])
+
         reply = generate_chat_reply(character_id, normalized_messages)
+        append_message(character_id, "assistant", reply)
     except ValueError as error:
         return {"error": str(error)}, 400
     except Exception:
@@ -62,3 +72,11 @@ def chat():
             "content": reply,
         }
     }, 200
+
+
+@bp.get("/chat/history/<character_id>")
+def chat_history(character_id: str):
+    if character_id not in VALID_CHARACTER_IDS:
+        return {"error": "Invalid character_id"}, 400
+
+    return {"messages": load_conversation(character_id)}, 200

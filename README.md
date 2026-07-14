@@ -189,7 +189,7 @@ A chatbot that speaks Chinese using only the characters you are supposed to know
 - [x] LLM integration with config management
 - [x] Minimalist UI to have a list of chat and navigate through them
 - [X] AI chatbot remembering the previous answer (non-persistent throught sessions)
-- [ ] AI chatbot remembering the previous answer (persistent throught sessions)
+- [x] AI chatbot remembering the previous answer (persistent throught sessions)
 - [ ] Add constraint for the agent to use only the known vocabulary
 
 ### 3. Multi-agent conversations for specific topics
