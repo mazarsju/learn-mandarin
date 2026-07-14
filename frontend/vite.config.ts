@@ -25,6 +25,7 @@ export default defineConfig({
     proxy: {
       "/health": "http://127.0.0.1:5000",
       "/characters": "http://127.0.0.1:5000",
+      "/database": "http://127.0.0.1:5000",
       "/words": "http://127.0.0.1:5000",
       "/llm-config": "http://127.0.0.1:5000",
       "/chat": "http://127.0.0.1:5000",

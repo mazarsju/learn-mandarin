@@ -1,880 +1,875 @@
 啊;a;;true;
-爱;ai;4;true;相爱, 爱好, 爱情, 可爱
+爱;ai;4;true;可爱, 爱好, 爱情, 相爱
 安;an;1;true;安全套, 安静
-饿;e;4;true;
-儿;er;2;true;一会儿, 儿子, 一点儿
-二;er;2;true;二手
-耳;er;;true;
-而;er;2;true;而且
-欧;ou;1;true;欧洲
-巴;ba;1;true;
+吧;ba;;true;放心吧, 酒吧
 八;ba;1;true;胡说八道
-吧;ba;;true;酒吧, 放心吧
-爸;ba;4;true;
+巴;ba;1;true;
 把;ba;3;true;
-百;bai;3;true;
+爸;ba;4;true;
 白;bai;2;true;
+百;bai;3;true;
 拜;bai;4;true;拜访
+搬;ban;1;true;搬家
+班;ban;1;true;上班, 西班牙
+般;ban;1;true;一般, 一般来说
+板;ban;3;true;地板, 老板
+办;ban;4;true;办公室
+半;ban;4;true;
+帮;bang;1;true;帮助, 帮忙
+包;bao;1;true;书包, 打包, 背包, 钱包, 面包
 宝;bao;3;false;支付宝
 饱;bao;3;true;我(吃)饱了
-包;bao;1;true;背包, 面包, 打包, 钱包, 书包
-报;bao;4;false;申报, 报纸
-班;ban;1;true;西班牙, 上班
-半;ban;4;true;
-办;ban;4;true;办公室
-板;ban;3;true;地板, 老板
-般;ban;1;true;一般, 一般来说
-搬;ban;1;true;搬家
-帮;bang;1;true;帮忙, 帮助
-北;bei;3;true;北美洲
+报;bao;4;false;报纸, 申报
 杯;bei;1;true;干杯, 杯子
-备;bei;4;true;装备, 准备
 背;bei;1;true;背包
-本;ben;3;true;本他人, 日本
-卜;bo;;false;萝卜
-比;bi;3;true;比如, 比如, 比赛, 比利时
+北;bei;3;true;北美洲
+备;bei;4;true;准备, 装备
+本;ben;3;true;日本, 本他人
 鼻;bi;2;true;鼻子
+比;bi;3;true;比利时, 比如, 比赛
 笔;bi;3;true;笔试
-避;bi;4;true;避免
 币;bi;4;true;人民币
 必;bi;4;true;必须
 毕;bi;4;true;毕业
-表;biao;3;true;表示, 表哥, 表亲, 手表
-别;bie;2;true;区别, 别人, 特别
+避;bi;4;true;避免
 边;bian;1;true;旁边
-便;bian;4;true;随便, 方便, 便宜
-遍;bian;4;false;
+便;bian;4;true;便宜, 方便, 随便
 变;bian;4;true;变成
+遍;bian;4;false;
+表;biao;3;true;手表, 表亲, 表哥, 表演, 表示
+别;bie;2;true;别人, 区别, 特别
 宾;bin;1;true;宾馆
-饼;bing;3;true;
 冰;bing;1;true;冰淇淋, 冰箱
+饼;bing;3;true;
 病;bing;4;true;生病
-不;bu;4;true;不错, 好久不见, 不用谢, 不了, 不可以, 不能, 不客气, 对不起
+卜;bo;;false;萝卜
+不;bu;4;true;不了, 不可以, 不客气, 不用谢, 不能, 不错, 好久不见, 对不起
+步;bu;4;true;徒步, 散步, 跑步, 进步
 部;bu;4;true;
-步;bu;4;true;徒步, 进步, 跑步, 散步
-怕;pa;4;true;害怕
-拍;pai;1;true;
-派;pai;4;true;派对
-跑;pao;3;true;跑步
-攀;pan;1;false;攀岩, 攀石
-盘;pan;2;true;盘子
-旁;pang;2;true;旁边
-乓;pang;1;false;打乒乓球
-胖;pang;4;true;
-陪;pei;2;true;
-朋;peng;2;true;朋友
-篷;peng;2;true;帐篷
-破;po;4;true;打破
-啤;pi;2;true;啤酒
-皮;pi;2;true;皮肤
-漂;piao;4;true;漂亮
-票;piao;4;true;门票
-便;pian;2;true;随便, 方便, 便宜
-片;pian;4;false;照片
-频;pin;2;false;视频
-品;pin;3;true;产品, 食品
-苹;ping;2;true;苹果
-乒;ping;1;false;打乒乓球
-瓶;ping;2;true;
-平;ping;2;true;水平, 平时, 平米
-葡;pu;2;false;葡萄
-马;ma;3;true;马戏团, 马马虎虎, 马马虎虎
-吗;ma;;true;你介意吗, 吗上, 真的吗?
-妈;ma;1;true;
-码;ma;3;false;密码
-麻;ma;2;false;麻烦
-买;mai;3;true;买卖, 买单
-卖;mai;4;true;买卖
-帽;mao;4;true;
-毛;mao;2;true;毛巾, 毛衣, 打羽毛球
-慢;man;4;true;
-满;man;3;true;满意
-忙;mang;2;true;帮忙
-么;me;;true;干什么, 这么, 什么时候, 为什么, 怎么, 怎么样, 什么
-没;mei;2;true;没了, 还没有, 没关系
-妹;mei;4;true;兄弟姐妹, 妹妹, 妹妹
-每;mei;3;true;
-美;mei;3;true;北美洲
-霉;mei;2;false;倒霉
-们;men;;true;
-门;men;2;true;门票
-梦;meng;4;false;梦见
-日;mo;4;true;日落, 日本, 生日, 节日, 周日, 周日
-末;mo;4;true;周末
-蘑;mo;2;false;蘑菇
-米;mi;3;true;立方米, 厘米, 平米, 米线
-秘;mi;4;false;秘密
-密;mi;4;false;密码, 秘密
-秒;miao;3;false;
-苗;miao;2;false;苗条
-面;mian;4;true;面包, 外面, 见面, 里面, 外面, 对面, 前面, 后面
-免;mian;3;true;避免, 免费
-民;min;2;true;公民, 人民币
-名;ming;2;true;名字
-明;ming;2;true;明星, 聪明, 明年, 明天
-母;mu;4;true;母语, 母亲节, 父母
-目;mu;4;true;目的地, 节目
-发;fa;4;true;理发店, 发烧, 发现, 出发, 沙发, 头发
-饭;fan;4;true;饭店, 午饭
-返;fan;3;false;往返
-番;fan;1;false;番茄
-繁;fan;2;false;繁体字
-烦;fan;;false;麻烦
-放;fang;4;true;要放, 放心吧
-房;fang;2;true;客房, 厨房, 房东, 房客, 房卡, 房间, 房子
-方;fang;1;true;立方米, 地方, 方便
-飞;fei;1;true;(飞)机场, 飞机
-啡;fei;1;true;咖啡
-非;fei;1;true;非洲
-费;fei;4;true;免费
-肥;fei;2;true;
-分;fen;1;true;分钟
-粉;fen;3;false;粉红色
-风;feng;1;true;一路顺风, 风景
-付;fu;4;true;付钱, 支付, 支付宝
-父;fu;4;true;父母
-复;fu;4;true;回复
-服;fu;1;true;服务台, 服务员, 舒服
-附;fu;4;true;附近
-肤;fu;1;false;皮肤
-夫;fu;;true;前夫, 丈夫
-福;fu;2;true;幸福
-富;fu;4;true;
-府;fu;3;false;政府
-打;da;3;true;打算, 打破, 打折, 打包, 打网球, 打乒乓球, 打羽毛球, 打篮球, 打车
-大;da;4;true;大厅, 大概, 大衣, 年纪大, 意大利, 加拿大, 大学
-答;da;1;true;答应
-戴;dai;4;true;
-呆;dai;1;true;
-带;dai;4;true;
-袋;dai;4;false;
-代;dai;4;false;现代
-到;dao;4;true;到处, 找到, 迟到
-道;dao;4;true;知道, 街道, 胡说八道
-岛;dao;3;false;
-刀;dao;1;true;
-倒;dao;3;false;倒霉
-单;dan;1;true;简单, 单身, 买单, 点单
-但;dan;4;true;但是
-蛋;dan;4;true;蛋糕
-旦;dan;4;true;元旦
-担;dan;1;true;担心
-当;dang;1;true;当然
-的;de;;true;目的地, 的话, 真的吗?
-德;de;2;false;德国
-得;de;;true;显得, 我觉得
-地;de;;true;地瓜, 地址, 目的地, 地方, 地板, 地铁
-得;dei;3;true;显得, 我觉得
-灯;deng;1;true;红路灯
-等;deng;3;true;
-都;dou;1;true;都可以
-豆;dou;4;true;红豆, 土豆
-冬;dong;1;true;冬天
-东;dong;1;true;广东话, 房东, 东西
-动;dong;4;true;感动, 活动, 电动车, 运动, 动物
-懂;dong;3;true;看懂
-弟;di;4;true;兄弟姐妹, 弟弟, 弟弟
-地;di;4;true;地瓜, 地址, 目的地, 地方, 地板, 地铁
-低;di;1;true;
-底;di;3;true;年底
-递;di;4;true;快递
-掉;diao;4;true;
-丢;diu;1;true;
-电;dian;4;true;电视剧, 电梯, 电车, 电视, 电动车, 电影, 电脑
-点;dian;3;true;缺点, 优点, 甜点, 点单, 一点儿
-店;dian;*;true;理发店, 饭店
-订;ding;*;true;
-定;ding;*;true;决定, 一定
-读;du;2;true;
-度;du;4;true;程度, 深度, 度假, 印度
-肚;du;4;true;肚子
-对;dui;4;true;绝对, 派对, 对面, 对不起
-队;dui;4;true;团队
-多;duo;1;true;多久, 多长时间, 多云, 多少
-短;duan;3;true;短袖
-他;ta;1;true;本他人, 弹吉他
-她;ta;1;true;
-太;tai;4;true;
-台;tai;2;true;服务台
-讨;tao;3;true;讨论, 讨厌
-萄;tao;;false;葡萄
-套;tao;4;false;安全套
-弹;tan;2;true;弹吉他
-堂;tang;2;true;堂姐
-汤;tang;1;true;
-糖;tang;;false;
-烫;tang;4;true;
-特;te;4;true;特别
-疼;teng;2;true;疼痛
-头;tou;2;true;头发
-同;tong;2;true;共同, 我同意, 同事
-痛;tong;4;true;疼痛
-通;tong;1;true;通知, 通常
-题;ti;2;true;问题
-踢;ti;1;false;踢足球
-体;ti;3;true;繁体字, 简体字, 体恤衫, 体育
-梯;ti;1;true;楼梯, 电梯
-条;tiao;2;true;苗条, 薯条
-跳;tiao;4;false;跳舞
-调;tiao;2;false;空调
-铁;tie;3;true;高铁, 地铁
-天;tian;1;true;聊天, 阴天, 晴天, 春天, 夏天, 秋天, 冬天, 昨天, 今天, 明天, 天气
-甜;tian;2;true;甜点
-听;ting;1;true;听力
-厅;ting;1;false;大厅, 客厅
-停;ting;2;true;
-土;tu;3;false;土豆
-图;tu;2;true;图书馆
-兔;tu;4;false;兔子
-突;tu;1;true;突然
-徒;tu;2;true;徒步
-推;tui;1;true;推荐
-腿;tui;;true;
-团;tuan;2;true;马戏团, 团队
-哪;na;3;true;
-那;na;4;true;那里
-拿;na;2;true;加拿大
-奶;nai;3;true;牛奶
-脑;nao;3;true;电脑
-闹;nao;4;true;闹钟
-男;nan;2;true;男孩
-难;nan;2;true;
-南;nan;2;true;越南
-呢;ne;;true;
-内;nei;4;true;内向, 内裤
-能;neng;2;true;可能, 不能
-弄;nong;4;false;
-你;ni;3;true;求求你, 你介意吗
-鸟;niao;3;true;
-牛;niu;2;true;牛奶
-年;nian;2;true;年轻, 年底, 年纪大, 去年, 明年
-您;nin;2;true;
-女;nü;3;true;前女人, 女孩
-辣;la;4;false;辣椒
-拉;la;1;true;
-来;lai;2;true;越来越, 未来, 接下来, 看起来, 一般来说, 来玩, 回来, 从...来
-莱;lai;2;true;詹文莱
-老;lao;3;true;老公, 老鼠, 老板, 老是, 老师
-篮;lan;2;true;打篮球
-了;le;;true;了解, 除了。。。以外, 我习惯了, 没了, 算了, 我(吃)饱了, 不了
-乐;le;4;true;音乐, 快乐
-累;lei;4;true;
-冷;leng;3;true;
-楼;lou;2;true;楼梯
-龙;long;2;true;
-里;li;3;true;公里, 夜里, 里面, 这里, 那里
-利;li;4;true;流利, 顺顺利利, 顺顺利利, 顺利, 吉利, 比利时, 意大利
-离;li;2;true;离开
-李;li;3;true;行李
-厉;li;4;true;厉害, 厉害
-礼;li;3;true;礼物, 婚礼
-厘;li;2;false;厘米
-理;li;3;true;经理, 理发店
-梨;li;2;true;梨子
-料;liao;4;true;饮料, 香料
-聊;liao;2;true;聊天, 无聊
-六;liu;4;true;
-留;liu;2;true;居留证
-流;liu;2;true;流利, 交流
-练;lian;4;true;训练, 练习
-亮;liang;;true;漂亮
-两;liang;3;true;
-辆;liang;4;true;
-量;liang;4;false;质量
-林;lin;2;true;森林
-淋;lin;2;true;冰淇淋
-邻;lin;2;true;邻居
-零;ling;2;true;零钱
-路;lu;4;true;一路顺风, 高速公路, 红路灯, 路口
-络;luo;4;true;网络
-萝;luo;2;false;萝卜
-落;luo;4;false;日落
-论;lun;4;true;讨论
-绿;lü;4;true;
-旅;lü;3;true;旅行, 旅游
-侣;lü;3;true;情侣
-杂;za;2;false;
-再;zai;4;true;再见
-在;zai;4;true;在此之后, 正在, 现在
-澡;zao;3;false;
-糟;zao;1;false;糟糕
-脏;zang;1;true;
-择;ze;2;true;选择
-怎;zen;3;true;怎么, 怎么样
-走;zou;3;true;直走
-总;zong;3;true;总是
-棕;zong;1;false;棕色
-子;zi*;;true;梨子, 橘子, 个子, 肚子, 盘子, 袜子, 句子, 汉子, 猴子, 兔子, 鼻子, 饺子, 房子, 裤子, 鞋子, 杯子, 桌子, 椅子, 橙子, 筷子, 孩子, 妻子, 儿子
-自;zi*;4;true;自己, 自行车
-资;zi*;1;false;工资
-紫;zi*;3;false;紫色
-足;zu;2;false;踢足球
-租;zu;1;true;出租车
-最;zui;4;true;
-醉;zui;4;false;喝醉
-作;zuo;4;true;作业, 合作, 工作
-昨;zuo;2;true;昨天
-左;zuo;3;true;左右
-坐;zuo;4;true;乘坐
-做;zuo;4;true;做手术, 做菜
-座;zuo;4;true;座位
-菜;cai;4;true;香菜, 花菜, 做菜, 菜园, 蔬菜
-才;cai;2;true;
 猜;cai;1;true;
-草;cao;3;false;
-参;can;1;true;参观, 参加
+才;cai;2;true;
+菜;cai;4;true;做菜, 花菜, 菜园, 蔬菜, 香菜
+参;can;1;true;参加, 参观
 餐;can;1;true;
+草;cao;3;false;
 厕;ce;4;true;厕所
 层;ceng;2;true;
-从;cong;2;true;从前, 从...来, 从...起
-聪;cong;1;true;聪明
-次;ci*;4;true;下次
-词;ci*;2;true;词语
-辞;ci*;2;true;辞职
-此;ci*;3;true;在此之后
-醋;cu;4;false;
-错;cuo;4;true;不错
-寸;cun;4;true;
-赛;sai;4;false;比赛
-扫;sao;3;true;
-散;san;4;true;散步
-三;san;1;true;
-伞;san;3;true;滑翔伞, 雨伞
-色;se;4;true;紫色, 棕色, 蓝色, 粉红色, 黄色, 橙色, 灰色, 颜色
-森;sen;1;true;森林
-嗽;sou;4;false;咳嗽
-松;song;1;true;轻松
-送;song;4;true;
-四;si*;4;true;
-死;si*;3;true;笑死
-思;si*;;true;意思
-司;si*;1;true;公司
-诉;su;4;true;告诉
-素;su;4;false;素食
-速;su;4;false;高速公路
-岁;sui;4;true;
-随;sui;2;true;随便
-虽;sui;1;true;虽然
-所;suo;3;true;所以, 厕所
-酸;suan;1;false;
-算;suan;1;true;打算, 算了
-照;zhao;4;true;照顾, 照片, 护照
-找;zhao;3;true;找到
-站;zhan;4;true;
-战;zhan;4;false;战胜
-张;zhang;1;true;紧张
-长;zhang;3;true;多长时间
-詹;zhang;1;false;詹文莱
-丈;zhang;4;false;丈夫
-帐;zhang;4;true;帐篷
-这;zhe;4;true;这么, 这里
-者;zhe;3;true;或者
-折;zhe;2;true;打折
-着;zhe;;true;着急
-真;zhen;1;true;认真, 真的吗?
-正;zheng;4;true;正常, 正在
-挣;zheng;4;false;挣钱
-证;zheng;4;false;居留证
-政;zheng;4;false;政府
-整;zheng;3;true;
-周;zhou;1;true;周围, 周末, 周日, 周日
-洲;zhou;1;true;北美洲, 非洲, 欧洲, 亚洲
-钟;zhong;1;true;闹钟, 分钟
-中;zhong;1;true;市中心, 中国
-重;zhong;4;true;严重, 重要
-终;zhong;1;true;终于
-种;zhong;3;true;
-支;zhi*;1;false;支付, 支付宝
-知;zhi*;1;true;通知, 知道
-直;zhi*;2;true;直走, 一直
-只;zhi*;1;true;只有
-纸;zhi*;3;true;报纸
-志;zhi*;4;false;
-汁;zhi*;1;true;果汁
-植;zhi*;2;false;植物
-职;zhi*;2;true;辞职
-址;zhi*;3;true;地址
-质;zhi*;2;false;质量
-住;zhu;4;true;
-助;zhu;4;true;帮助
-祝;zhu;4;true;
-猪;zhu;1;true;猪肉
-注;zhu;4;true;注意
-主;zhu;3;true;主人公, 主意
-桌;zhuo;1;true;桌子
-转;zhuan;3;true;
-装;zhuang;1;true;装备
-准;zhun;3;true;准备
+叉;cha;1;true;
+察;cha;2;false;警察局
+查;cha;2;true;检查
 茶;cha;2;true;
 差;cha;4;true;
-叉;cha;1;true;
-查;cha;2;true;检查
-察;cha;2;false;警察局
-超;chao;1;true;超过, 超市
-炒;chao;3;true;
-吵;chao;3;true;
 产;chan;2;true;产品
-长;chang;2;true;多长时间
-常;chang;2;true;正常, 通常, 经常, 常常, 常常
+尝;chang;2;true;
+常;chang;2;true;常常, 正常, 经常, 通常
 场;chang;3;true;(飞)机场
 唱;chang;4;true;唱歌
-尝;chang;2;true;
-车;che;1;true;货车, 电车, 电动车, 汽车, 出租车, 公共汽车, 火车, 自行车, 打车, 开车
+超;chao;1;true;超市, 超过
+吵;chao;3;true;
+炒;chao;3;true;
+车;che;1;true;公共汽车, 出租车, 开车, 打车, 汽车, 火车, 电动车, 电车, 自行车, 货车
 衬;chen;4;true;衬衫
-程;cheng;2;false;程度, IT工程师
-橙;cheng;2;false;橙色, 橙子
-成;cheng;2;true;变成, 换成
 乘;cheng;2;false;乘坐
-抽;chou;1;false;抽烟
-充;chong;1;false;充实
+成;cheng;2;true;变成, 换成
+橙;cheng;2;false;橙子, 橙色
+程;cheng;2;false;IT工程师, 程度
 吃;chi*;1;true;吃药, 我(吃)饱了
 迟;chi*;2;true;迟到
+充;chong;1;false;充实
+抽;chou;1;false;抽烟
 出;chu;1;true;出发, 出生, 出租车
 初;chu;1;false;月初
 厨;chu;2;false;厨房
-处;chu;4;false;到处
 除;chu;2;false;除了。。。以外
+处;chu;4;false;到处
 穿;chuan;1;true;
-床;chuang;2;true;起床, 双人床
+床;chuang;2;true;双人床, 起床
 春;chun;1;true;春天, 春节
-沙;sha;1;false;沙发
-杀;sha;1;false;
-少;shao;3;true;多少
-绍;shao;4;true;介绍
-勺;shao;;true;
-烧;shao;1;false;发烧
-衫;shan;1;true;体恤衫, 衬衫
-上;shang;4;true;看上去, 吗上, 上衣, 上班, 晚上, 早上, 上午
-商;shang;1;true;
-伤;shang;1;true;伤心
-蛇;she;2;false;
-谁;shei;2;true;
-什;shen;2;true;干什么, 什么时候, 为什么, 什么
-身;shen;1;true;身高, 单身
-深;shen;1;true;深度
-申;shen;1;false;申请, 申报
-神;shen;2;false;精神
-生;sheng;1;true;生气, 先生, 出生, 生病, 生活, 卫生间, 生日, 医生, 学生
-省;sheng;3;false;
-声;sheng;1;true;声音
-胜;sheng;4;false;战胜
-手;shou;3;true;二手, 做手术, 洗手间, 手表, 手机
-瘦;shou;4;true;
-收;shou;1;true;
-师;shi*;1;true;IT工程师, 老师
-识;shi*;;true;认识
-时;shi*;2;true;及时, 有时候, 平时, 小时, 多长时间, 什么时候, 比利时, 时候, 时间
-是;shi*;4;true;于是, 还是, 但是, 总是, 老是
-事;shi*;4;true;故事, 同事
-实;shi*;2;true;其实, 充实, 实习
-试;shi*;4;true;口试, 笔试, 考试
-市;shi*;4;true;市中心, 城市, 超市
-匙;shi*;;true;钥匙
-石;shi*;2;false;岩石, 攀石
-始;shi*;3;true;开始
-试;shi*;4;true;口试, 笔试, 考试
-史;shi*;3;true;历史
-示;shi*;4;false;表示
-世;shi*;4;true;世界
-失;shi*;1;true;失望, 失去
-食;shi*;2;true;素食, 食品, 食物
-士;shi*;4;false;瑞士
-使;shi*;3;true;即使
-书;shu;1;true;图书馆, 书包
-蔬;shu;1;false;蔬菜
-舒;shu;1;true;舒服
-输;shu;1;false;
-鼠;shu;1;false;老鼠
-树;shu;4;true;
-束;shu;4;true;结束
-薯;shu;3;false;薯条
-数;shu;4;true;数学
-术;shu;4;false;做手术
-刷;shua;1;true;刷卡, 刷牙
-谁;shui;2;true;
-水;shui;3;true;潜水, 水平, 水饺, 水果
-睡;shui;4;true;睡觉
-说;shuo;1;true;一般来说, 胡说八道, 说话
-双;shuang;1;false;双人床
-顺;shun;4;true;一路顺风, 顺顺利利, 顺顺利利, 顺利
-然;ran;2;true;突然, 虽然, 当然, 然后
-让;rang;4;true;
-热;re;4;true;
-认;ren;4;true;认真, 认识
-人;ren;2;true;主人公, 本他人, 前女人, 别人, 人民币, 人物, 双人床
-肉;rou;4;true;肌肉, 猪肉, 鸡肉, 鸭肉
-容;rong;3;true;容易
-日;ri*;4;true;日落, 日本, 生日, 节日, 周日, 周日
-如;ru;2;true;比如, 如果, 比如
-瑞;rui;4;false;瑞士
-软;ruan;3;false;软件
-机;ji;1;true;洗碗机, 洗衣机, (飞)机场, 相机, 手机, 飞机
-几;ji;3;true;
-鸡;ji;1;true;鸡尾酒, 鸡肉
-纪;ji;4;false;年纪大
-己;ji;3;true;自己
-急;ji;2;true;着急
-记;ji;4;true;
-吉;ji;2;true;吉利, 弹吉他
-计;ji;4;true;计划
-籍;ji;2;false;国籍
-继;ji;4;true;继续
+词;ci*;2;true;词语
+辞;ci*;2;true;辞职
+此;ci*;3;true;在此之后
+次;ci*;4;true;下次
+聪;cong;1;true;聪明
+从;cong;2;true;从...来, 从...起, 从前
+醋;cu;4;false;
+寸;cun;4;true;
+错;cuo;4;true;不错
+答;da;1;true;答应
+打;da;3;true;打乒乓球, 打包, 打折, 打破, 打算, 打篮球, 打网球, 打羽毛球, 打车
+大;da;4;true;加拿大, 大厅, 大学, 大概, 大衣, 年纪大, 意大利
+呆;dai;1;true;
+代;dai;4;false;现代
+带;dai;4;true;
+戴;dai;4;true;
+袋;dai;4;false;
+单;dan;1;true;买单, 单身, 点单, 简单
+担;dan;1;true;担心
+但;dan;4;true;但是
+旦;dan;4;true;元旦
+蛋;dan;4;true;蛋糕
+当;dang;1;true;当然
+刀;dao;1;true;
+倒;dao;3;false;倒霉
+岛;dao;3;false;
+到;dao;4;true;到处, 找到, 迟到
+道;dao;4;true;知道, 胡说八道, 街道
+地;de;;true;地址, 地方, 地板, 地瓜, 地铁, 目的地
+得;de;;true;我觉得, 显得
+的;de;;true;的话, 目的地, 真的吗?
+德;de;2;false;德国
+灯;deng;1;true;红路灯
+等;deng;3;true;
+低;di;1;true;
+底;di;3;true;年底
+弟;di;4;true;兄弟姐妹, 弟弟
+递;di;4;true;快递
+店;dian*;;true;理发店, 饭店
+点;dian;3;true;一点儿, 优点, 点单, 甜点, 缺点
+电;dian;4;true;电动车, 电影, 电梯, 电脑, 电视, 电视剧, 电车
+掉;diao;4;true;
+定;ding*;;true;一定, 决定
+订;ding*;;true;
+丢;diu;1;true;
+东;dong;1;true;东西, 广东话, 房东
+冬;dong;1;true;冬天
+懂;dong;3;true;看懂
+动;dong;4;true;动物, 感动, 活动, 电动车, 运动
+都;dou;1;true;都可以
+豆;dou;4;true;土豆, 红豆
+读;du;2;true;
+度;du;4;true;印度, 度假, 深度, 程度
+肚;du;4;true;肚子
+短;duan;3;true;短袖
+对;dui;4;true;对不起, 对面, 派对, 绝对
+队;dui;4;true;团队
+多;duo;1;true;多久, 多云, 多少, 多长时间
+饿;e;4;true;
+耳;er;;true;
+二;er;2;true;二手
+儿;er;2;true;一会儿, 一点儿, 儿子
+而;er;2;true;而且
+发;fa;4;true;出发, 发烧, 发现, 头发, 沙发, 理发店
+烦;fan;;false;麻烦
+番;fan;1;false;番茄
+繁;fan;2;false;繁体字
+返;fan;3;false;往返
+饭;fan;4;true;午饭, 饭店
+方;fang;1;true;地方, 方便, 立方米
+房;fang;2;true;厨房, 客房, 房东, 房卡, 房子, 房客, 房间
+放;fang;4;true;放心吧, 要放
+啡;fei;1;true;咖啡
+非;fei;1;true;非洲
+飞;fei;1;true;(飞)机场, 飞机
+肥;fei;2;true;
+费;fei;4;true;免费
+分;fen;1;true;分钟
+粉;fen;3;false;粉红色
+风;feng;1;true;一路顺风, 风景, 风险
+夫;fu;;true;丈夫, 前夫
+服;fu;1;true;服务台, 服务员, 舒服
+肤;fu;1;false;皮肤
+福;fu;2;true;幸福
+府;fu;3;false;政府
+付;fu;4;true;付钱, 支付, 支付宝
+复;fu;4;true;回复
+富;fu;4;true;
+父;fu;4;true;父母
+附;fu;4;true;附近
+该;gai;1;true;应该
+概;gai;4;false;大概
+干;gan;;true;干什么, 干净, 干杯
+感;gan;3;true;感动
+敢;gan;3;false;勇敢
+赶;gan;3;true;赶快
+刚;gang;1;true;
+糕;gao;1;true;糟糕, 蛋糕
+高;gao;1;true;身高, 高兴, 高速公路, 高铁
+告;gao;4;true;告诉
+哥;ge;1;true;哥哥, 表哥
+歌;ge;1;true;唱歌
+格;ge;2;true;价格, 性格
+给;gei;3;true;
+跟;gen;1;true;
+更;geng;4;true;
+公;gong;1;true;(公)园, 主人公, 公共汽车, 公司, 公寓, 公斤, 公民, 公里, 办公室, 老公, 高速公路
+工;gong;1;true;IT工程师, 员工, 工作, 工资
+共;gong;4;true;一共, 公共汽车, 共同
+狗;gou;3;true;
+够;gou;4;true;
+购;gou;4;false;购物
+菇;gu;1;false;蘑菇
+故;gu;4;true;故事
+顾;gu;4;true;照顾
+瓜;gua;;true;地瓜, 黄瓜
+挂;gua;4;true;
+怪;guai;4;true;奇怪
+关;guan;1;true;关于, 开关, 没关系
+观;guan;1;true;参观
+馆;guan;3;true;图书馆, 宾馆
+惯;guan;4;true;习惯, 我习惯了
+光;guang;1;false;眼光
+广;guang;3;false;广东话
+贵;gui;4;true;
+国;guo;2;true;中国, 国家, 国籍, 德国, 泰国
+果;guo;3;true;如果, 开心果, 果汁, 水果, 苹果
+过;guo;4;true;经过, 超过
+孩;hai;2;true;女孩, 孩子, 男孩
+海;hai;3;true;海鲜
+害;hai;4;true;厉害, 害怕, 有害
+汉;han;4;true;汉子, 汉语
+好;hao;3;true;好久不见, 幸好, 爱好, 还好
+号;hao;4;true;
+喝;he;1;true;喝醉
+合;he;2;false;合作
+和;he;2;true;
+河;he;2;true;
+黑;hei;1;true;
+很;hen;3;true;
+红;hong;2;true;粉红色, 红豆, 红路灯, 西红柿
+猴;hou;2;false;猴子
+候;hou;4;true;什么时候, 时候, 有时候
+后;hou;4;true;之后, 以后, 后面, 在此之后, 然后
+湖;hu;2;false;
+胡;hu;2;false;胡说八道
+虎;hu;2;false;马马虎虎
+互;hu;4;true;互相
+户;hu;4;true;客户
+护;hu;4;true;护照
+花;hua;1;true;花园, 花菜
+滑;hua;2;true;滑翔伞, 滑雪
+划;hua;4;true;计划
+化;hua;4;true;文化
+画;hua;4;true;
+话;hua;4;true;广东话, 的话, 说话
+坏;huai;4;true;
+欢;huan;;true;喜欢, 欢迎
+换;huan;4;true;换成
+黄;huang;2;false;黄瓜, 黄色
+灰;hui;1;true;灰色
+回;hui;2;true;回复, 回忆, 回来
+会;hui;4;true;一会儿, 会议, 开会, 聚会
+婚;hun;1;false;婚礼, 未婚妻, 结婚
+火;huo;3;true;火车, 火锅
+或;huo;4;true;或者
+货;huo;4;true;货车
 圾;ji;1;true;垃圾
+机;ji;1;true;(飞)机场, 手机, 洗碗机, 洗衣机, 相机, 飞机
 肌;ji;1;false;肌肉
-及;ji;2;true;及时
+鸡;ji;1;true;鸡尾酒, 鸡肉
 即;ji;2;true;即使
-家;jia;1;true;家具, 家乡, 搬家, 国家
-假;jia;4;true;假期, 度假
-加;jia;1;true;参加, 加油, 新加坡, 加拿大
+及;ji;2;true;及时
+吉;ji;2;true;吉利, 弹吉他
+急;ji;2;true;着急
+籍;ji;2;false;国籍
+几;ji;3;true;
+己;ji;3;true;自己
+纪;ji;4;false;年纪大
+继;ji;4;true;继续
+计;ji;4;true;计划
+记;ji;4;true;
+加;jia;1;true;加拿大, 加油, 参加, 新加坡
 夹;jia;1;false;夹克
+家;jia;1;true;国家, 家乡, 家具, 搬家
 价;jia;4;true;价格
-觉;jiao;4;true;我觉得, 睡觉
-饺;jiao;3;true;饺子, 水饺
-脚;jiao;3;true;
-教;jiao;1;true;教室
-椒;jiao;4;false;辣椒
-叫;jiao;4;true;
-蕉;jiao;1;true;香蕉
-交;jiao;1;true;交流
-姐;jie;3;true;堂姐, 兄弟姐妹, 姐姐, 姐姐
-节;jie;2;true;母亲节, 节目, 节日, 春节
-介;jie;4;true;你介意吗, 介绍
-街;jie;1;true;街道
-接;jie;1;true;接下来
-借;jie;4;true;
-结;jie;2;true;结婚, 结束
-界;jie;4;true;世界
-解;jie;3;true;了解
-酒;jiu;3;true;鸡尾酒, 酒吧, 啤酒
-九;jiu;3;true;
-久;jiu;3;true;多久, 好久不见
-就;jiu;4;true;
-旧;jiu;4;true;
-见;jian;4;true;梦见, 好久不见, 见面, 再见
-间;jian;1;true;房间, 洗手间, 多长时间, 卫生间, 时间
-件;jian;4;true;邮件, 软件
+假;jia;4;true;假期, 度假
+驾;jia;4;false;驾照
+间;jian;1;true;卫生间, 多长时间, 房间, 时间, 洗手间
 剪;jian;3;true;
-检;jian;3;true;检查
-健;jian;4;true;健康, 健行
-简;jian;3;true;简体字, 简单
 捡;jian;3;true;
+检;jian;3;true;检查
+简;jian;3;true;简体字, 简单
+件;jian;4;true;软件, 邮件
+健;jian;4;true;健康, 健行
 荐;jian;4;false;推荐
+见;jian;4;true;再见, 好久不见, 梦见, 见面
 讲;jiang;3;true;
-今;jin;1;true;今天
-金;jin;1;true;现金
+交;jiao;1;true;交流
+教;jiao;1;true;教室
+蕉;jiao;1;true;香蕉
+脚;jiao;3;true;
+饺;jiao;3;true;水饺, 饺子
+叫;jiao;4;true;
+椒;jiao;4;false;辣椒
+觉;jiao;4;true;我觉得, 睡觉
+接;jie;1;true;接下来
+街;jie;1;true;街道
+结;jie;2;true;结婚, 结束
+节;jie;2;true;春节, 母亲节, 节日, 节目
+姐;jie;3;true;兄弟姐妹, 堂姐, 姐姐
+解;jie;3;true;了解
+介;jie;4;true;介绍, 你介意吗
+借;jie;4;true;
+界;jie;4;true;世界
 斤;jin;;true;公斤
+今;jin;1;true;今天
+巾;jin;1;false;围巾, 毛巾
+金;jin;1;true;现金
+紧;jin;3;false;紧张
 近;jin;4;true;附近
 进;jin;4;true;进步
-巾;jin;1;false;毛巾, 围巾
-紧;jin;3;false;紧张
-经;jing;1;true;经过, 经理, 经常, 已经
-静;jing;4;true;安静
-景;jing;3;true;风景
 精;jing;;false;精神
-镜;jing;4;false;眼镜
-净;jing;4;true;干净
-警;jing;3;false;警察局
 惊;jing;1;true;惊讶
-句;ju;4;true;句子
+经;jing;1;true;已经, 经常, 经理, 经过
+景;jing;3;true;风景
+警;jing;3;false;警察局
+净;jing;4;true;干净
+镜;jing;4;false;眼镜
+静;jing;4;true;安静
+久;jiu;3;true;多久, 好久不见
+九;jiu;3;true;
+酒;jiu;3;true;啤酒, 酒吧, 鸡尾酒
+就;jiu;4;true;
+旧;jiu;4;true;
+具;ju;;false;家具
 居;ju;1;true;居留证, 邻居
 局;ju;2;false;警察局
 橘;ju;2;false;橘子
 剧;ju;4;true;剧院, 电视剧
+句;ju;4;true;句子
 聚;ju;4;false;聚会
-具;ju;;false;家具
-气;qi;4;true;空气, 运气, 生气, 不客气, 天气
-起;qi;3;true;看起来, 一起, 起床, 从...起, 对不起
-期;qi;1;true;假期, 星期一, 星期
-妻;qi;1;true;未婚妻, 妻子
-骑;qi;2;true;
-汽;qi;4;true;汽车, 公共汽车
-七;qi;1;true;
-奇;qi;2;true;新奇, 奇怪
-淇;qi;2;true;冰淇淋
-其;qi;2;true;其实
-茄;qie;2;false;番茄
-且;qie;3;true;而且
-秋;qiu;1;true;秋天
-球;qiu;2;true;踢足球, 打网球, 打乒乓球, 打羽毛球, 打篮球
-求;qiu;;false;求求你, 求求你
-钱;qian;2;true;零钱, 钱包, 挣钱, 付钱
-千;qian;1;true;
-前;qian;2;true;前夫, 前女人, 从前, 以前, 前面
-潜;qian;2;false;潜水
-墙;qiang;2;true;
-亲;qin;1;true;母亲节, 表亲
-请;qing;3;true;申请
-晴;qing;2;true;晴天
-情;qing;2;true;情况, 疫情, 情侣, 爱情
-轻;qing;1;true;年轻, 轻松
-穷;qiong;2;false;
-去;qu;4;true;看上去, 失去, 去年
-趣;qu;4;true;有趣
-娶;qu;3;false;
-取;qu;3;true;
-区;qu;1;true;区别
-全;quan;2;true;安全套
-系;xi;;true;没关系
-喜;xi;3;true;喜欢
-习;xi;2;true;习惯, 练习, 我习惯了, 实习, 学习
-洗;xi;3;true;洗碗机, 洗衣机, 洗手间
-西;xi;1;true;西红柿, 西班牙, 东西
-希;xi;1;true;希望
-惜;xi;;true;可惜
-戏;xi;4;false;马戏团, 玩游戏
-息;xi;1;true;信息, 休息
-下;xia;4;true;接下来, 下次, 一下, 下午, 下雨
-夏;xia;4;true;夏天
-小;xiao;3;true;小羚羊, 小时, 小心
-校;xiao;4;true;学校
-笑;xiao;4;true;可笑, 开玩笑, 笑死
-谢;xie;4;true;不用谢, 谢谢, 谢谢
-些;xie;1;true;
-写;xie;3;true;
-鞋;xie;2;false;鞋子
-休;xiu;1;true;休息
-修;xiu;1;true;
-袖;xiu;4;true;短袖
-现;xian;4;true;现代, 发现, 现在, 现金
-线;xian;4;true;米线
-咸;xian;2;true;
-先;xian;1;true;先生
-鲜;xian;1;true;海鲜
-险;xian;1;true;危险
-显;xian;3;true;显得
-想;xiang;3;true;
-香;xiang;1;true;香蕉, 香菜, 香料
-相;xiang;4;true;相爱, 互相, 相信, 相机
-翔;xiang;2;false;滑翔伞
-箱;xiang;1;true;冰箱
-乡;xiang;1;true;家乡
-向;xiang;4;true;外向, 内向
-像;xiang;4;true;
-响;xiang;3;true;
-兴;xin;4;true;高兴
-姓;xin;4;true;
-心;xin;1;true;担心, 市中心, 伤心, 放心吧, 开心, 小心, 开心果
-信;xin;4;true;信息, 相信, 微信, 信用卡
-新;xin;1;true;新奇, 新闻, 新加坡
-星;xing;1;true;明星, 星期一, 星期
-行;xing;2;true;健行, 旅行, 行李, 银行, 自行车
-幸;xing;4;true;幸好, 幸福
-性;xing;4;false;性格
-兄;xiong;1;false;兄弟姐妹
-恤;xu;4;false;体恤衫
-需;xu;1;true;需要
-续;xu;4;true;继续
-须;xu;1;true;必须
-选;xuan;3;true;选择
-训;xun;4;true;训练
-该;gai;1;true;应该
-概;gai;4;false;大概
-高;gao;1;true;身高, 高速公路, 高铁, 高兴
-糕;gao;1;true;糟糕, 蛋糕
-告;gao;4;true;告诉
-干;gan;;true;干净, 干杯, 干什么
-赶;gan;3;true;赶快
-敢;gan;3;false;勇敢
-感;gan;3;true;感动
-刚;gang;1;true;
-哥;ge;1;true;表哥, 哥哥, 哥哥
-歌;ge;1;true;唱歌
-格;ge;2;true;性格, 价格
-给;gei;3;true;
-跟;gen;1;true;
-更;geng;4;true;
-狗;gou;3;true;
-购;gou;4;false;购物
-够;gou;4;true;
-工;gong;1;true;员工, 工资, IT工程师, 工作
-公;gong;1;true;主人公, 高速公路, 公寓, 公民, 老公, 公斤, 公司, 公里, 办公室, (公)园, 公共汽车
-共;gong;4;true;共同, 一共, 公共汽车
-菇;gu;1;false;蘑菇
-故;gu;4;true;故事
-顾;gu;4;true;照顾
-挂;gua;4;true;
-瓜;gua;;true;地瓜, 黄瓜
-怪;guai;4;true;奇怪
-贵;gui;4;true;
-果;guo;3;true;果汁, 如果, 开心果, 苹果, 水果
-国;guo;2;true;国籍, 德国, 国家, 泰国, 中国
-过;guo;4;true;经过, 超过
-关;guan;1;true;关于, 开关, 没关系
-馆;guan;3;true;图书馆, 宾馆
-惯;guan;4;true;习惯, 我习惯了
-观;guan;1;true;参观
-惯;guang;4;true;习惯, 我习惯了
-光;guang;1;false;眼光
-广;guang;3;false;广东话
 咖;ka;1;true;咖啡
-卡;ka;3;true;刷卡, 房卡, 信用卡
-开;kai;1;true;离开, 开会, 开始, 开玩笑, 开心, 开心果, 开关, 开车
-烤;kao;3;false;
-考;kao;3;true;考试
+卡;ka;3;true;信用卡, 刷卡, 房卡
+开;kai;1;true;开会, 开关, 开始, 开心, 开心果, 开玩笑, 开车, 离开
 看;kan;4;true;看上去, 看懂, 看起来
 康;kang;1;true;健康
-客;ke;4;true;客户, 客房, 游客, 客厅, 房客, 不客气
-可;ke;3;true;可惜, 可笑, 都可以, 可能, 不可以, 可爱, 可以
-渴;ke;3;true;
-课;ke;4;true;
-刻;ke;4;true;
-克;ke;4;false;夹克
+烤;kao;3;false;
+考;kao;3;true;考试
 咳;ke;2;false;咳嗽
-口;kou;3;true;路口, 口试
-空;kong;4;true;空调, 空气
+可;ke;3;true;不可以, 可以, 可惜, 可爱, 可笑, 可能, 都可以
+渴;ke;3;true;
+克;ke;4;false;夹克
+刻;ke;4;true;
+客;ke;4;true;不客气, 客厅, 客户, 客房, 房客, 游客
+课;ke;4;true;
+空;kong;4;true;空气, 空调
+口;kou;3;true;口试, 路口
 苦;ku;3;true;
 裤;ku;4;true;内裤, 裤子
 块;kuai;4;true;
+快;kuai;4;true;快乐, 快递, 愉快, 赶快
 筷;kuai;4;true;筷子
-快;kuai;4;true;快递, 赶快, 愉快, 快乐
 款;kuan;4;false;
 况;kuang;4;true;情况
 困;kun;4;true;
-孩;hai;2;true;女孩, 男孩, 孩子
-海;hai;3;true;海鲜
-害;hai;4;true;有害, 害怕, 厉害, 厉害
-好;hao;3;true;幸好, 还好, 好久不见, 爱好
-号;hao;4;true;
-汉;han;4;true;汉子, 汉语
-行;hang;2;true;健行, 旅行, 行李, 银行, 自行车
-喝;he;1;true;喝醉
-和;he;2;true;
-河;he;2;true;
-合;he;2;false;合作
-黑;hei;1;true;
-很;hen;3;true;
-后;hou;4;true;在此之后, 之后, 以后, 后面, 然后
-候;hou;4;true;有时候, 什么时候, 时候
-猴;hou;2;false;猴子
-红;hong;2;true;红豆, 红路灯, 西红柿, 粉红色
-护;hu;4;true;护照
-胡;hu;2;false;胡说八道
-虎;hu;2;false;马马虎虎, 马马虎虎
-湖;hu;2;false;
-户;hu;4;true;客户
-互;hu;4;true;互相
-话;hua;4;true;广东话, 的话, 说话
-花;hua;1;true;花菜, 花园
-滑;hua;2;true;滑雪, 滑翔伞
-画;hua;4;true;
-化;hua;4;true;文化
-划;hua;4;true;计划
-坏;huai;4;true;
-回;hui;2;true;回复, 回忆, 回来
-会;hui;4;true;聚会, 会议, 开会, 一会儿
-灰;hui;1;true;灰色
-或;huo;4;true;或者
-货;huo;4;true;货车
-火;huo;3;true;火锅, 火车
-欢;huan;;true;欢迎, 喜欢
-换;huan;4;true;换成
-黄;huang;2;false;黄瓜, 黄色
-婚;hun;1;false;未婚妻, 结婚, 婚礼
+拉;la;1;true;
+辣;la;4;false;辣椒
+来;lai;2;true;一般来说, 从...来, 回来, 接下来, 未来, 来玩, 看起来, 越来越
+莱;lai;2;true;詹文莱
+篮;lan;2;true;打篮球
+老;lao;3;true;老公, 老师, 老是, 老板, 老鼠
+了;le;;true;不了, 了解, 我(吃)饱了, 我习惯了, 没了, 算了, 除了。。。以外
+乐;le;4;true;快乐, 音乐
+累;lei;4;true;
+冷;leng;3;true;
+厘;li;2;false;厘米
+梨;li;2;true;梨子
+离;li;2;true;离开
+李;li;3;true;行李
+理;li;3;true;理发店, 经理
+礼;li;3;true;婚礼, 礼物
+里;li;3;true;公里, 夜里, 这里, 那里, 里面
+利;li;4;true;吉利, 意大利, 比利时, 流利, 顺利, 顺顺利利
+力;li;4;true;努力
+厉;li;4;true;厉害
+练;lian;4;true;练习, 训练
+亮;liang;;true;漂亮
+两;liang;3;true;
+辆;liang;4;true;
+量;liang;4;false;质量
+聊;liao;2;true;无聊, 聊天
+料;liao;4;true;饮料, 香料
+林;lin;2;true;森林
+淋;lin;2;true;冰淇淋
+邻;lin;2;true;邻居
+零;ling;2;true;零钱
+流;liu;2;true;交流, 流利
+留;liu;2;true;居留证
+六;liu;4;true;
+龙;long;2;true;
+楼;lou;2;true;楼梯
+录;lu;4;true;录取
+路;lu;4;true;一路顺风, 红路灯, 路口, 高速公路
+论;lun;4;true;讨论
+萝;luo;2;false;萝卜
+络;luo;4;true;网络
+落;luo;4;false;日落
+侣;lü;3;true;情侣
+旅;lü;3;true;旅游, 旅行
+绿;lü;4;true;
+吗;ma;;true;你介意吗, 吗上, 真的吗?
+妈;ma;1;true;
+麻;ma;2;false;麻烦
+码;ma;3;false;密码
+马;ma;3;true;马戏团, 马马虎虎
+买;mai;3;true;买单, 买卖
+卖;mai;4;true;买卖
+满;man;3;true;满意
+慢;man;4;true;
+忙;mang;2;true;帮忙
+毛;mao;2;true;打羽毛球, 毛巾, 毛衣
+帽;mao;4;true;
+么;me;;true;为什么, 什么, 什么时候, 干什么, 怎么, 怎么样, 这么
+没;mei;2;true;没了, 没关系, 还没有
+霉;mei;2;false;倒霉
+每;mei;3;true;
+美;mei;3;true;北美洲
+妹;mei;4;true;兄弟姐妹, 妹妹
+们;men;;true;
+门;men;2;true;门票
+梦;meng;4;false;梦见
+米;mi;3;true;厘米, 平米, 立方米, 米线
+密;mi;4;false;密码, 秘密
+秘;mi;4;false;秘密
+免;mian;3;true;免费, 避免
+面;mian;4;true;前面, 后面, 外面, 对面, 见面, 里面, 面包, 面试
+苗;miao;2;false;苗条
+秒;miao;3;false;
+民;min;2;true;人民币, 公民
+名;ming;2;true;名字
+明;ming;2;true;明天, 明年, 明星, 聪明
+蘑;mo;2;false;蘑菇
+日;mo;4;true;周日, 日本, 日落, 生日, 节日
+末;mo;4;true;周末
+母;mu;4;true;母亲节, 母语, 父母
+目;mu;4;true;目的地, 节目
+拿;na;2;true;加拿大
+哪;na;3;true;
+那;na;4;true;那里
+奶;nai;3;true;牛奶
+南;nan;2;true;越南
+男;nan;2;true;男孩
+难;nan;2;true;
+脑;nao;3;true;电脑
+闹;nao;4;true;闹钟
+呢;ne;;true;
+内;nei;4;true;内向, 内裤
+能;neng;2;true;不能, 可能
+你;ni;3;true;你介意吗, 求求你
+年;nian;2;true;去年, 年底, 年纪大, 年轻, 明年
+鸟;niao;3;true;
+您;nin;2;true;
+牛;niu;2;true;牛奶
+弄;nong;4;false;
+努;nu;3;true;努力
+女;nü;3;true;前女人, 女孩
+欧;ou;1;true;欧洲
+怕;pa;4;true;害怕
+拍;pai;1;true;
+派;pai;4;true;派对
+攀;pan;1;false;攀岩, 攀石
+盘;pan;2;true;盘子
+乓;pang;1;false;打乒乓球
+旁;pang;2;true;旁边
+胖;pang;4;true;
+跑;pao;3;true;跑步
+陪;pei;2;true;
+朋;peng;2;true;朋友
+篷;peng;2;true;帐篷
+啤;pi;2;true;啤酒
+皮;pi;2;true;皮肤
+片;pian;4;false;照片
+漂;piao;4;true;漂亮
+票;piao;4;true;门票
+频;pin;2;false;视频
+品;pin;3;true;产品, 食品
+乒;ping;1;false;打乒乓球
+平;ping;2;true;平时, 平米, 水平
+瓶;ping;2;true;
+苹;ping;2;true;苹果
+破;po;4;true;打破
+葡;pu;2;false;葡萄
+七;qi;1;true;
+妻;qi;1;true;妻子, 未婚妻
+期;qi;1;true;假期, 星期, 星期一
+其;qi;2;true;其实
+奇;qi;2;true;奇怪, 新奇
+淇;qi;2;true;冰淇淋
+骑;qi;2;true;
+起;qi;3;true;一起, 从...起, 对不起, 看起来, 起床
+气;qi;4;true;不客气, 天气, 生气, 空气, 运气
+汽;qi;4;true;公共汽车, 汽车
+千;qian;1;true;
+前;qian;2;true;从前, 以前, 前夫, 前女人, 前面
+潜;qian;2;false;潜水
+钱;qian;2;true;付钱, 挣钱, 钱包, 零钱
+墙;qiang;2;true;
+茄;qie;2;false;番茄
+且;qie;3;true;而且
+亲;qin;1;true;母亲节, 表亲
+轻;qing;1;true;年轻, 轻松
+情;qing;2;true;情侣, 情况, 爱情, 疫情
+晴;qing;2;true;晴天
+请;qing;3;true;申请
+穷;qiong;2;false;
+求;qiu;;false;求求你
+秋;qiu;1;true;秋天
+球;qiu;2;true;打乒乓球, 打篮球, 打网球, 打羽毛球, 踢足球
+区;qu;1;true;区别
+取;qu;3;true;录取
+娶;qu;3;false;
+去;qu;4;true;去年, 失去, 看上去
+趣;qu;4;true;有趣
+全;quan;2;true;安全套
+然;ran;2;true;当然, 然后, 突然, 虽然
+让;rang;4;true;
+热;re;4;true;
+人;ren;2;true;主人公, 人民币, 人物, 别人, 前女人, 双人床, 本他人
+认;ren;4;true;认真, 认识
+容;rong;3;true;容易
+肉;rou;4;true;猪肉, 肌肉, 鸡肉, 鸭肉
+如;ru;2;true;如果, 比如
+软;ruan;3;false;软件
+瑞;rui;4;false;瑞士
+赛;sai;4;false;比赛
+三;san;1;true;
+伞;san;3;true;滑翔伞, 雨伞
+散;san;4;true;散步
+扫;sao;3;true;
+色;se;4;true;棕色, 橙色, 灰色, 粉红色, 紫色, 蓝色, 颜色, 黄色
+森;sen;1;true;森林
+杀;sha;1;false;
+沙;sha;1;false;沙发
+衫;shan;1;true;体恤衫, 衬衫
+伤;shang;1;true;伤心
+商;shang;1;true;
+上;shang;4;true;上午, 上班, 上衣, 吗上, 早上, 晚上, 看上去
+勺;shao;;true;
+烧;shao;1;false;发烧
+少;shao;3;true;多少
+绍;shao;4;true;介绍
+蛇;she;2;false;
+谁;shei;2;true;
+深;shen;1;true;深度
+申;shen;1;false;申报, 申请
+身;shen;1;true;单身, 身高
+什;shen;2;true;为什么, 什么, 什么时候, 干什么
+神;shen;2;false;精神
+声;sheng;1;true;声音
+生;sheng;1;true;先生, 出生, 医生, 卫生间, 学生, 生日, 生气, 生活, 生病
+省;sheng;3;false;
+胜;sheng;4;false;战胜
+匙;shi*;;true;钥匙
+识;shi*;;true;认识
+失;shi*;1;true;失去, 失望
+师;shi*;1;true;IT工程师, 老师
+实;shi*;2;true;充实, 其实, 实习
+时;shi*;2;true;什么时候, 及时, 多长时间, 小时, 平时, 时候, 时间, 有时候, 比利时
+石;shi*;2;false;岩石, 攀石
+食;shi*;2;true;素食, 食品, 食物
+使;shi*;3;true;即使
+史;shi*;3;true;历史
+始;shi*;3;true;开始
+世;shi*;4;true;世界
+事;shi*;4;true;同事, 故事
+士;shi*;4;false;瑞士
+市;shi*;4;true;城市, 市中心, 超市
+是;shi*;4;true;于是, 但是, 总是, 老是, 还是
+示;shi*;4;false;表示
+试;shi*;4;true;口试, 笔试, 考试, 面试
+收;shou;1;true;
+手;shou;3;true;二手, 做手术, 手机, 手表, 洗手间
+瘦;shou;4;true;
+书;shu;1;true;书包, 图书馆
+舒;shu;1;true;舒服
+蔬;shu;1;false;蔬菜
+输;shu;1;false;
+鼠;shu;1;false;老鼠
+薯;shu;3;false;薯条
+数;shu;4;true;数学
+术;shu;4;false;做手术
+束;shu;4;true;结束
+树;shu;4;true;
+刷;shua;1;true;刷卡, 刷牙
+双;shuang;1;false;双人床
+水;shui;3;true;水平, 水果, 水饺, 潜水
+睡;shui;4;true;睡觉
+顺;shun;4;true;一路顺风, 顺利, 顺顺利利
+说;shuo;1;true;一般来说, 胡说八道, 说话
+思;si*;;true;意思
+司;si*;1;true;公司
+死;si*;3;true;笑死
+四;si*;4;true;
+松;song;1;true;轻松
+送;song;4;true;
+嗽;sou;4;false;咳嗽
+素;su;4;false;素食
+诉;su;4;true;告诉
+速;su;4;false;高速公路
+算;suan;1;true;打算, 算了
+酸;suan;1;false;
+虽;sui;1;true;虽然
+随;sui;2;true;随便
+岁;sui;4;true;
+所;suo;3;true;厕所, 所以
+他;ta;1;true;弹吉他, 本他人
+她;ta;1;true;
+台;tai;2;true;服务台
+太;tai;4;true;
+弹;tan;2;true;弹吉他
+糖;tang;;false;
+汤;tang;1;true;
+堂;tang;2;true;堂姐
+烫;tang;4;true;
+萄;tao;;false;葡萄
+讨;tao;3;true;讨厌, 讨论
+套;tao;4;false;安全套
+特;te;4;true;特别
+疼;teng;2;true;疼痛
+梯;ti;1;true;楼梯, 电梯
+踢;ti;1;false;踢足球
+题;ti;2;true;问题
+体;ti;3;true;体恤衫, 体育, 简体字, 繁体字
+天;tian;1;true;今天, 冬天, 夏天, 天气, 明天, 春天, 昨天, 晴天, 秋天, 聊天, 阴天
+甜;tian;2;true;甜点
+条;tiao;2;true;苗条, 薯条
+调;tiao;2;false;空调
+跳;tiao;4;false;跳舞
+铁;tie;3;true;地铁, 高铁
+厅;ting;1;false;大厅, 客厅
+听;ting;1;true;听力
+停;ting;2;true;
+通;tong;1;true;通常, 通知
+同;tong;2;true;共同, 同事, 我同意
+痛;tong;4;true;疼痛
+头;tou;2;true;头发
+突;tu;1;true;突然
+图;tu;2;true;图书馆
+徒;tu;2;true;徒步
+土;tu;3;false;土豆
+兔;tu;4;false;兔子
+团;tuan;2;true;团队, 马戏团
+腿;tui;;true;
+推;tui;1;true;推荐
 袜;wa;4;true;袜子
+玩;wan;2;true;开玩笑, 来玩, 玩游戏
 晚;wan;3;true;晚上
-万;wan;4;true;
-玩;wan;2;true;玩游戏, 开玩笑, 来玩
 碗;wan;3;true;洗碗机
+万;wan;4;true;
 往;wang;3;false;往返
+网;wang;3;true;打网球, 网络
 忘;wang;4;true;
-网;wang;3;true;网络, 打网球
 望;wang;4;true;失望, 希望
-喂;wei;4;false;
-为;wei;4;true;以为, 因为, 为什么
-卫;wei;4;false;卫生间
-微;wei;1;false;微信
-未;wei;4;true;未婚妻, 未来
-尾;wei;3;false;鸡尾酒
-危;wei;1;true;危险
-围;wei;2;false;周围, 围巾
 位;wei;;true;座位
-问;wen;4;true;问题
+危;wei;1;true;危险
+微;wei;1;false;微信
+围;wei;2;false;周围, 围巾
+尾;wei;3;false;鸡尾酒
+为;wei;4;true;为什么, 以为, 因为
+卫;wei;4;false;卫生间
+喂;wei;4;false;
+未;wei;4;true;未婚妻, 未来
 文;wen;;true;文化, 詹文莱
 闻;wen;2;true;新闻
-我;wo;3;true;我习惯了, 我同意, 我觉得, 我(吃)饱了
+问;wen;4;true;问题
+我;wo;3;true;我(吃)饱了, 我习惯了, 我同意, 我觉得
 卧;wo;4;true;卧室
-午;wu;3;true;午饭, 上午, 下午
-无;wu;2;true;无聊
-物;wu;4;true;购物, 食物, 礼物, 植物, 动物, 人物
-五;wu;3;true;
-务;wu;4;true;服务台, 服务员
-舞;wu;3;false;跳舞
 屋;wu;1;true;
-牙;ya;2;true;西班牙, 刷牙
-鸭;ya;1;false;鸭肉
+无;wu;2;true;无聊
+五;wu;3;true;
+午;wu;3;true;上午, 下午, 午饭
+舞;wu;3;false;跳舞
+务;wu;4;true;服务台, 服务员
+物;wu;4;true;人物, 动物, 植物, 礼物, 购物, 食物
+惜;xi;;true;可惜
+系;xi;;true;没关系
+希;xi;1;true;希望
+息;xi;1;true;休息, 信息
+西;xi;1;true;东西, 西班牙, 西红柿
+习;xi;2;true;习惯, 学习, 实习, 我习惯了, 练习
+喜;xi;3;true;喜欢
+洗;xi;3;true;洗手间, 洗碗机, 洗衣机
+戏;xi;4;false;玩游戏, 马戏团
+下;xia;4;true;一下, 下午, 下次, 下雨, 接下来
+夏;xia;4;true;夏天
+先;xian;1;true;先生
+险;xian;1;true;危险, 风险
+鲜;xian;1;true;海鲜
+咸;xian;2;true;
+显;xian;3;true;显得
+现;xian;4;true;发现, 现代, 现在, 现金
+线;xian;4;true;米线
+乡;xiang;1;true;家乡
+箱;xiang;1;true;冰箱
+香;xiang;1;true;香料, 香菜, 香蕉
+翔;xiang;2;false;滑翔伞
+响;xiang;3;true;
+想;xiang;3;true;
+像;xiang;4;true;
+向;xiang;4;true;内向, 外向
+相;xiang;4;true;互相, 相信, 相机, 相爱
+小;xiao;3;true;小心, 小时, 小羚羊
+校;xiao;4;true;学校
+笑;xiao;4;true;可笑, 开玩笑, 笑死
+些;xie;1;true;
+鞋;xie;2;false;鞋子
+写;xie;3;true;
+谢;xie;4;true;不用谢, 谢谢
+心;xin;1;true;伤心, 小心, 市中心, 开心, 开心果, 担心, 放心吧
+新;xin;1;true;新加坡, 新奇, 新闻
+信;xin;4;true;信息, 信用卡, 微信, 相信
+兴;xin;4;true;高兴
+姓;xin;4;true;
+星;xing;1;true;明星, 星期, 星期一
+行;xing;2;true;健行, 旅行, 自行车, 行李, 银行
+幸;xing;4;true;幸好, 幸福
+性;xing;4;false;性格
+兄;xiong;1;false;兄弟姐妹
+休;xiu;1;true;休息
+修;xiu;1;true;
+袖;xiu;4;true;短袖
+需;xu;1;true;需要
+须;xu;1;true;必须
+恤;xu;4;false;体恤衫
+续;xu;4;true;继续
+选;xuan;3;true;选择
+训;xun;4;true;训练
 亚;ya;1;true;亚洲
+鸭;ya;1;false;鸭肉
+牙;ya;2;true;刷牙, 西班牙
 讶;ya;4;true;惊讶
-要;yao;4;true;要放, 需要, 重要
-钥;yao;4;true;钥匙
-药;yao;4;true;吃药
-咬;yao;3;true;
-幺;yao;1;false;
-颜;yan;2;true;颜色
-厌;yan;4;true;讨厌
-眼;yan;3;true;眼光, 眼镜, 眼睛
 烟;yan;1;false;抽烟
-盐;yan;2;true;
-岩;yan;2;false;岩石, 攀岩
-言;yan;2;true;言语
 严;yan;2;true;严重
-样;yang;4;true;怎么样
+岩;yan;2;false;岩石, 攀岩
+盐;yan;2;true;
+言;yan;2;true;言语
+颜;yan;2;true;颜色
+演;yan;3;true;表演
+眼;yan;3;true;眼光, 眼睛, 眼镜
+厌;yan;4;true;讨厌
 羊;yang;2;true;小羚羊
 阳;yang;2;false;
+样;yang;4;true;怎么样
+幺;yao;1;false;
+咬;yao;3;true;
+药;yao;4;true;吃药
+要;yao;4;true;要放, 重要, 需要
+钥;yao;4;true;钥匙
+爷;ye;2;false;爷爷
 也;ye;3;true;
-爷;ye;2;false;爷爷, 爷爷
+业;ye;4;true;作业, 毕业
 夜;ye;4;true;夜里
 页;ye;4;true;
-业;ye;4;true;毕业, 作业
-有;you;3;true;有意义, 有时候, 有趣, 有害, 还没有, 只有
-友;you;;true;室友, 朋友
-右;you;4;true;左右
-游;you;2;true;玩游戏, 游客, 游泳, 旅游
-又;you;4;true;
-油;you;2;true;加油
-优;you;1;false;优点
-邮;you;3;false;邮件
-用;yong;4;true;不用谢, 信用卡
-泳;yong;3;true;游泳
-勇;yong;2;false;勇敢
-一;yi;1;true;一路顺风, 一般, 一定, 一般来说, 一共, 一起, 一会儿, 一下, 一直, 星期一, 一点儿
-医;yi;1;true;医生, 医院
-以;yi;3;true;除了。。。以外, 以为, 都可以, 以前, 以后, 所以, 不可以, 可以
 宜;yi;;true;便宜
-意;yi;4;true;主意, 有意义, 注意, 满意, 你介意吗, 意思, 我同意, 意大利
-衣;yi;1;true;雨衣, 大衣, 毛衣, 洗衣机, 上衣
-椅;yi;3;true;椅子
+一;yi;1;true;一下, 一会儿, 一共, 一定, 一点儿, 一直, 一般, 一般来说, 一起, 一路顺风, 星期一
+医;yi;1;true;医生, 医院
+衣;yi;1;true;上衣, 大衣, 毛衣, 洗衣机, 雨衣
+以;yi;3;true;不可以, 以为, 以前, 以后, 可以, 所以, 都可以, 除了。。。以外
 已;yi;3;true;已经
-易;yi;4;true;容易
+椅;yi;3;true;椅子
 义;yi;4;true;有意义
 忆;yi;4;false;回忆
+意;yi;4;true;主意, 你介意吗, 意大利, 意思, 我同意, 有意义, 注意, 满意
+易;yi;4;true;容易
 疫;yi;4;true;疫情
 议;yi;4;false;会议
 因;yin;1;true;因为
-银;yin;2;true;银行
 阴;yin;1;false;阴天
 音;yin;1;true;声音, 音乐
+银;yin;2;true;银行
 饮;yin;3;true;饮料
-影;ying;3;true;电影
 赢;ying;2;false;
 迎;ying;2;true;欢迎
-应;ying;4;true;答应, 应该
-鱼;yü;2;true;
-语;yü;3;true;母语, 言语, 词语, 汉语
-雨;yü;3;true;雨衣, 雨伞, 下雨
-羽;yü;3;false;打羽毛球
-与;yü;3;true;
-育;yü;3;true;体育
+影;ying;3;true;电影
+应;ying;4;true;应该, 答应
+勇;yong;2;false;勇敢
+泳;yong;3;true;游泳
+用;yong;4;true;不用谢, 信用卡
+友;you;;true;室友, 朋友
+优;you;1;false;优点
+油;you;2;true;加油
+游;you;2;true;旅游, 游客, 游泳, 玩游戏
+有;you;3;true;只有, 有害, 有意义, 有时候, 有趣, 还没有
+邮;you;3;false;邮件
+又;you;4;true;
+右;you;4;true;左右
+于;yü;2;true;于是, 关于, 终于
 愉;yü;2;false;愉快
-浴;yü;4;true;浴室
-于;yü;2;true;关于, 终于, 于是
+鱼;yü;2;true;
+与;yü;3;true;
+羽;yü;3;false;打羽毛球
+育;yü;3;true;体育
+语;yü;3;true;母语, 汉语, 言语, 词语
+雨;yü;3;true;下雨, 雨伞, 雨衣
 寓;yü;4;false;公寓
-月;yüe;4;true;月初
-乐;yüe;4;true;音乐, 快乐
-越;yüe;4;true;越来越, 越来越, 越南
-院;yüan;4;true;剧院, 医院
-远;yüan;4;true;
-园;yüan;2;true;(公)园, 花园, 菜园
-员;yüan;2;true;员工, 服务员
+浴;yü;4;true;浴室
 元;yüan;2;true;元旦
+员;yüan;2;true;员工, 服务员
+园;yüan;2;true;(公)园, 花园, 菜园
+远;yüan;4;true;
+院;yüan;4;true;剧院, 医院
+月;yüe;4;true;月初
+越;yüe;4;true;越南, 越来越
 云;yün;2;true;多云
-运;yün;4;true;运气, 运动
+运;yün;4;true;运动, 运气
+杂;za;2;false;
+再;zai;4;true;再见
+在;zai;4;true;在此之后, 正在, 现在
+脏;zang;1;true;
+糟;zao;1;false;糟糕
+澡;zao;3;false;
+择;ze;2;true;选择
+怎;zen;3;true;怎么, 怎么样
+战;zhan;4;false;战胜
+站;zhan;4;true;
+张;zhang;1;true;紧张
+詹;zhang;1;false;詹文莱
+长;zhang;3;true;多长时间
+丈;zhang;4;false;丈夫
+帐;zhang;4;true;帐篷
+找;zhao;3;true;找到
+照;zhao;4;true;护照, 照片, 照顾, 驾照
+着;zhe;;true;着急
+折;zhe;2;true;打折
+者;zhe;3;true;或者
+这;zhe;4;true;这么, 这里
+真;zhen;1;true;真的吗?, 认真
+整;zheng;3;true;
+挣;zheng;4;false;挣钱
+政;zheng;4;false;政府
+正;zheng;4;true;正在, 正常
+证;zheng;4;false;居留证
+只;zhi*;1;true;只有
+支;zhi*;1;false;支付, 支付宝
+汁;zhi*;1;true;果汁
+知;zhi*;1;true;知道, 通知
+植;zhi*;2;false;植物
+直;zhi*;2;true;一直, 直走
+职;zhi*;2;true;辞职
+质;zhi*;2;false;质量
+址;zhi*;3;true;地址
+纸;zhi*;3;true;报纸
+志;zhi*;4;false;
+中;zhong;1;true;中国, 市中心
+终;zhong;1;true;终于
+钟;zhong;1;true;分钟, 闹钟
+种;zhong;3;true;
+重;zhong;4;true;严重, 重要
+周;zhou;1;true;周围, 周日, 周末
+洲;zhou;1;true;亚洲, 北美洲, 欧洲, 非洲
+猪;zhu;1;true;猪肉
+主;zhu;3;true;主人公, 主意
+住;zhu;4;true;
+助;zhu;4;true;帮助
+注;zhu;4;true;注意
+祝;zhu;4;true;
+转;zhuan;3;true;
+装;zhuang;1;true;装备
+准;zhun;3;true;准备
+桌;zhuo;1;true;桌子
+子;zi*;;true;个子, 儿子, 兔子, 句子, 妻子, 孩子, 房子, 杯子, 桌子, 梨子, 椅子, 橘子, 橙子, 汉子, 猴子, 盘子, 筷子, 肚子, 袜子, 裤子, 鞋子, 饺子, 鼻子
+资;zi*;1;false;工资
+紫;zi*;3;false;紫色
+自;zi*;4;true;自己, 自行车
+棕;zong;1;false;棕色
+总;zong;3;true;总是
+走;zou;3;true;直走
+租;zu;1;true;出租车
+足;zu;2;false;踢足球
+最;zui;4;true;
+醉;zui;4;false;喝醉
+昨;zuo;2;true;昨天
+左;zuo;3;true;左右
+作;zuo;4;true;作业, 合作, 工作
+做;zuo;4;true;做手术, 做菜
+坐;zuo;4;true;乘坐
+座;zuo;4;true;座位

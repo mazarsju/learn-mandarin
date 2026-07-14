@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import AddWordModal, { type WordFormValues } from "../components/AddWordModal";
 import CharacterFormModal, {
   type CharacterFormValues,
 } from "../components/CharacterFormModal";
 import CharacterWordsModal from "../components/CharacterWordsModal";
 import ConfirmModal from "../components/ConfirmModal";
-import { EyeIcon, PenIcon } from "../components/icons";
+import { ExportIcon, EyeIcon, ImportIcon, PenIcon } from "../components/icons";
 import Page from "../components/Page";
 import PinyinGridView from "../components/PinyinGridView";
 import Table, { type TableColumn } from "../components/Table";
 import type { Character } from "../types/character";
 import type { Word } from "../types/word";
 import { formatDateTime } from "../utils/formatDateTime";
+import { exportDatabase, importDatabase } from "../utils/knowledgeBaseApi";
 import { buildWordsByCharacter } from "../utils/wordsByCharacter";
 
 const CHARACTER_COLUMNS: TableColumn<Character>[] = [
@@ -121,6 +122,10 @@ export default function KnowledgeBasePage() {
   const [prefilledCharForAdd, setPrefilledCharForAdd] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const importInputRef = useRef<HTMLInputElement>(null);
 
   const knownCharacters = useMemo(
     () => characters.map((character) => character.char),
@@ -206,7 +211,52 @@ export default function KnowledgeBasePage() {
     setIsAddCharacterModalOpen(false);
     setIsAddWordModalOpen(false);
     setPrefilledCharForAdd("");
+    setStatusMessage(null);
   }, []);
+
+  async function handleExportDatabase() {
+    setStatusMessage(null);
+    setIsExporting(true);
+
+    try {
+      await exportDatabase();
+      setStatusMessage('The database has been saved in the "db.txt" file.');
+    } catch (exportError) {
+      setError(
+        exportError instanceof Error
+          ? exportError.message
+          : "Failed to export database.",
+      );
+    } finally {
+      setIsExporting(false);
+    }
+  }
+
+  async function handleImportDatabase(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!file) {
+      return;
+    }
+
+    setStatusMessage(null);
+    setIsImporting(true);
+
+    try {
+      await importDatabase(file);
+      await loadKnowledgeBase();
+      setStatusMessage("The database has been imported successfully.");
+    } catch (importError) {
+      setError(
+        importError instanceof Error
+          ? importError.message
+          : "Failed to import database.",
+      );
+    } finally {
+      setIsImporting(false);
+    }
+  }
 
   async function confirmDeleteCharacter() {
     if (characterToDelete === null) {
@@ -454,14 +504,41 @@ export default function KnowledgeBasePage() {
             Modify
           </button>
         ) : (
-          <button
-            type="button"
-            className="page-mode-button"
-            onClick={switchToViewMode}
-          >
-            <EyeIcon className="page-mode-button-icon" />
-            View
-          </button>
+          <div className="page-header-actions">
+            <button
+              type="button"
+              className="page-mode-button"
+              onClick={() => void handleExportDatabase()}
+              disabled={isExporting}
+            >
+              <ExportIcon className="page-mode-button-icon" />
+              Export
+            </button>
+            <button
+              type="button"
+              className="page-mode-button"
+              onClick={() => importInputRef.current?.click()}
+              disabled={isImporting}
+            >
+              <ImportIcon className="page-mode-button-icon" />
+              Import
+            </button>
+            <input
+              ref={importInputRef}
+              type="file"
+              accept=".txt,text/plain"
+              className="knowledge-base-import-input"
+              onChange={(event) => void handleImportDatabase(event)}
+            />
+            <button
+              type="button"
+              className="page-mode-button"
+              onClick={switchToViewMode}
+            >
+              <EyeIcon className="page-mode-button-icon" />
+              View
+            </button>
+          </div>
         )
       }
     >
@@ -488,6 +565,9 @@ export default function KnowledgeBasePage() {
       )}
       {pageMode === "edit" && (
         <>
+      {statusMessage && (
+        <p className="knowledge-base-status-message">{statusMessage}</p>
+      )}
       <AddWordModal
         mode="add"
         isOpen={isAddWordModalOpen}

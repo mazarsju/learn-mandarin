@@ -7,6 +7,8 @@ import {
   PenIcon,
   SettingsIcon,
   TrophyIcon,
+  ExportIcon,
+  ImportIcon,
 } from "./icons";
 
 describe("icons", () => {
@@ -18,6 +20,8 @@ describe("icons", () => {
     ["PenIcon", PenIcon],
     ["EyeIcon", EyeIcon],
     ["TrophyIcon", TrophyIcon],
+    ["ExportIcon", ExportIcon],
+    ["ImportIcon", ImportIcon],
   ])("renders %s as an accessible decorative svg", (_name, Icon) => {
     const { container } = render(<Icon className="navbar-icon" />);
 

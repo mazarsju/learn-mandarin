@@ -199,4 +199,104 @@ describe("KnowledgeBasePage", () => {
     expect(screen.getByText("Associated words:")).toBeInTheDocument();
     expect(screen.getByText("爱好 (hobby)")).toBeInTheDocument();
   });
+
+  it("exports the database from edit mode", async () => {
+    const user = userEvent.setup();
+    const fetchMock = vi.mocked(fetch);
+
+    render(<KnowledgeBasePage />);
+    await enterEditMode(user);
+
+    fetchMock.mockImplementation((input: RequestInfo) => {
+      const url = String(input);
+
+      if (url.endsWith("/database/export")) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({
+            message: "Database exported to db.txt",
+            filename: "db.txt",
+          }),
+        });
+      }
+
+      if (url.endsWith("/characters")) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => characters,
+        });
+      }
+
+      if (url.endsWith("/words")) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => words,
+        });
+      }
+
+      return Promise.resolve({
+        ok: false,
+        json: async () => ({}),
+      });
+    });
+
+    await user.click(screen.getByRole("button", { name: "Export" }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('The database has been saved in the "db.txt" file.'),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("imports a database file from edit mode", async () => {
+    const user = userEvent.setup();
+    const fetchMock = vi.mocked(fetch);
+
+    render(<KnowledgeBasePage />);
+    await enterEditMode(user);
+
+    fetchMock.mockImplementation((input: RequestInfo, init?: RequestInit) => {
+      const url = String(input);
+
+      if (url.endsWith("/characters/bulk") && init?.method === "POST") {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({ message: "File received" }),
+        });
+      }
+
+      if (url.endsWith("/characters")) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => characters,
+        });
+      }
+
+      if (url.endsWith("/words")) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => words,
+        });
+      }
+
+      return Promise.resolve({
+        ok: false,
+        json: async () => ({}),
+      });
+    });
+
+    const fileInput = document.querySelector(
+      ".knowledge-base-import-input",
+    ) as HTMLInputElement;
+    const file = new File(["好;hao;3;true;"], "db.txt", { type: "text/plain" });
+
+    await user.upload(fileInput, file);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("The database has been imported successfully."),
+      ).toBeInTheDocument();
+    });
+  });
 });

@@ -187,6 +187,16 @@ body {
   margin-top: 2rem;
 }
 
+.knowledge-base-status-message {
+  margin: 0 0 1.25rem;
+  color: #15803d;
+  font-size: 0.95rem;
+}
+
+.knowledge-base-import-input {
+  display: none;
+}
+
 .knowledge-base-section-header {
   display: flex;
   align-items: center;
