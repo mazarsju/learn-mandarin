@@ -180,6 +180,7 @@ An overall view of the characters you know, sorted by pinyin.
 - [x] Simple CRUD interface to manage characters
 - [x] Visualization of characters by pinyin
 - [x] UI polish with additional options: different color for the tones, a toggle to show or hide characters you only recognize (not write), mouse hover effect...
+- [x] Add home page with some progress KPIs
 
 ### 2. Chinese-only chatbot (known characters)
 
@@ -189,11 +190,11 @@ A chatbot that speaks Chinese using only the characters you are supposed to know
 - [x] Minimalist UI to have a list of chat and navigate through them
 - [X] AI chatbot remembering the previous answer (non-persistent throught sessions)
 - [ ] AI chatbot remembering the previous answer (persistent throught sessions)
-- [ ] RAG pipeline to update the chat agent's knowledge with the list of vocabulary
+- [ ] Add constraint for the agent to use only the known vocabulary
 
 ### 3. Multi-agent conversations for specific topics
 
 Several agents collaborating around focused learning scenarios.
 
-- [ ] "Teacher" chatbot agent that corrects your sentences and explains mistakes
+- [ ] Add a grammar checker for each conversation, explaining the mistakes to the user in a separate thread
 - [ ] Conversation scenarios with a defined goal to achieve
