@@ -1,32 +1,41 @@
-import { getMotivationMessages, getNextHskProgress } from "./homeMotivation";
+import { getHskLevelStatus, getMotivationMessages } from "./homeMotivation";
 
-describe("getNextHskProgress", () => {
-  it("returns progress toward HSK 1 when below 300 characters", () => {
-    expect(getNextHskProgress(0)).toEqual({ remaining: 300, level: 1 });
-    expect(getNextHskProgress(250)).toEqual({ remaining: 50, level: 1 });
+describe("getHskLevelStatus", () => {
+  it("returns pre-HSK 1 status when character count is below 300", () => {
+    expect(getHskLevelStatus(2)).toEqual({
+      currentLevel: null,
+      nextLevel: 1,
+      charactersToNextLevel: 298,
+      progressToNextLevel: (2 / 300) * 100,
+    });
   });
 
-  it("returns progress toward the next HSK level after each threshold", () => {
-    expect(getNextHskProgress(300)).toEqual({ remaining: 300, level: 2 });
-    expect(getNextHskProgress(900)).toEqual({ remaining: 300, level: 4 });
+  it("returns the current level and progress toward the next one", () => {
+    expect(getHskLevelStatus(450)).toEqual({
+      currentLevel: 1,
+      nextLevel: 2,
+      charactersToNextLevel: 150,
+      progressToNextLevel: ((450 - 300) / (600 - 300)) * 100,
+    });
   });
 
-  it("returns null when HSK 6 is reached", () => {
-    expect(getNextHskProgress(1800)).toBeNull();
-    expect(getNextHskProgress(2500)).toBeNull();
+  it("returns HSK 6 when the highest threshold is reached", () => {
+    expect(getHskLevelStatus(1800)).toEqual({
+      currentLevel: 6,
+      nextLevel: null,
+      charactersToNextLevel: null,
+      progressToNextLevel: 100,
+    });
   });
 });
 
 describe("getMotivationMessages", () => {
-  it("includes only the HSK message for low counts", () => {
-    expect(getMotivationMessages(100)).toEqual([
-      "200 more to go to reach a general HSK 1 level",
-    ]);
+  it("returns no messages for low character counts", () => {
+    expect(getMotivationMessages(100)).toEqual([]);
   });
 
   it("adds newspaper and school messages at the configured thresholds", () => {
     expect(getMotivationMessages(1001)).toEqual([
-      "199 more to go to reach a general HSK 4 level",
       "You should know more than 90% of the characters in a newspaper",
     ]);
 

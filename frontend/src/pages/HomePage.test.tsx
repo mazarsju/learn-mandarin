@@ -42,22 +42,23 @@ describe("HomePage", () => {
     vi.unstubAllGlobals();
   });
 
-  it("renders character metrics and motivation messages", async () => {
+  it("renders character metrics and HSK level", async () => {
     render(<HomePage />);
 
     expect(screen.getByRole("heading", { name: "Home" })).toBeInTheDocument();
     expect(screen.getByText("Loading your progress...")).toBeInTheDocument();
 
-    expect(await screen.findByText("2")).toBeInTheDocument();
+    expect(await screen.findByText("Your HSK journey starts here")).toBeInTheDocument();
+    expect(
+      screen.getByText("Based on 2 characters you are able to recognize"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("298 characters to reach HSK 1")).toBeInTheDocument();
+    expect(screen.getByLabelText("HSK level")).toBeInTheDocument();
     expect(screen.getByText("Characters you are able to recognize")).toBeInTheDocument();
     expect(screen.getByText("Characters you can write")).toBeInTheDocument();
-    expect(screen.getByText("1")).toBeInTheDocument();
-    expect(
-      screen.getByText("298 more to go to reach a general HSK 1 level"),
-    ).toBeInTheDocument();
   });
 
-  it("shows an error when characters fail to load", async () => {
+  it("shows an error when progress fails to load", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(() =>
@@ -71,7 +72,7 @@ describe("HomePage", () => {
     render(<HomePage />);
 
     await waitFor(() => {
-      expect(screen.getByText("Failed to load characters.")).toBeInTheDocument();
+      expect(screen.getByText(/Failed to load/)).toBeInTheDocument();
     });
   });
 });

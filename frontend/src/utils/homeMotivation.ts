@@ -7,35 +7,50 @@ const HSK_THRESHOLDS = [
   { level: 6, threshold: 1800 },
 ] as const;
 
-export type HskProgress = {
-  remaining: number;
-  level: number;
+export type HskLevelStatus = {
+  currentLevel: number | null;
+  nextLevel: number | null;
+  charactersToNextLevel: number | null;
+  progressToNextLevel: number;
 };
 
-export function getNextHskProgress(recognizedCount: number): HskProgress | null {
-  const nextLevel = HSK_THRESHOLDS.find(
-    ({ threshold }) => recognizedCount < threshold,
-  );
+export function getHskLevelStatus(characterCount: number): HskLevelStatus {
+  let currentLevel: number | null = null;
+  let previousThreshold = 0;
 
-  if (!nextLevel) {
-    return null;
+  for (const { level, threshold } of HSK_THRESHOLDS) {
+    if (characterCount >= threshold) {
+      currentLevel = level;
+      previousThreshold = threshold;
+      continue;
+    }
+
+    return {
+      currentLevel,
+      nextLevel: level,
+      charactersToNextLevel: threshold - characterCount,
+      progressToNextLevel: Math.min(
+        100,
+        Math.max(
+          0,
+          ((characterCount - previousThreshold) /
+            (threshold - previousThreshold)) *
+            100,
+        ),
+      ),
+    };
   }
 
   return {
-    remaining: nextLevel.threshold - recognizedCount,
-    level: nextLevel.level,
+    currentLevel: 6,
+    nextLevel: null,
+    charactersToNextLevel: null,
+    progressToNextLevel: 100,
   };
 }
 
 export function getMotivationMessages(recognizedCount: number): string[] {
   const messages: string[] = [];
-
-  const hskProgress = getNextHskProgress(recognizedCount);
-  if (hskProgress) {
-    messages.push(
-      `${hskProgress.remaining} more to go to reach a general HSK ${hskProgress.level} level`,
-    );
-  }
 
   if (recognizedCount > 1000) {
     messages.push(
