@@ -71,6 +71,28 @@ describe("AddWordModal", () => {
     expect(screen.getByRole("button", { name: "Confirm" })).toBeDisabled();
   });
 
+  it("shows a warning and disables confirm for non-Chinese words", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <AddWordModal
+        mode="add"
+        isOpen
+        knownCharacters={["爱", "好"]}
+        onConfirm={() => {}}
+        onCancel={() => {}}
+        onAddCharacter={() => {}}
+      />,
+    );
+
+    await user.type(screen.getByLabelText("words"), "hello");
+
+    expect(
+      screen.getByText("Word must contain only Chinese characters."),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Confirm" })).toBeDisabled();
+  });
+
   it("submits the word when all characters exist", async () => {
     const user = userEvent.setup();
     const onConfirm = vi.fn();

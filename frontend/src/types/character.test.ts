@@ -6,7 +6,7 @@ describe("isValidCharacter", () => {
     expect(isValidCharacter(value)).toBe(true);
   });
 
-  it.each(["", "   ", "爱好"])("rejects invalid character value %s", (value) => {
+  it.each(["", "   ", "爱好", "a"])("rejects invalid character value %s", (value) => {
     expect(isValidCharacter(value)).toBe(false);
   });
 });

@@ -73,6 +73,20 @@ class TestCreateCharacterEndpoint(unittest.TestCase):
         self.mock_session.add.assert_not_called()
         self.mock_session.commit.assert_not_called()
 
+    def test_create_non_chinese_character_returns_error(self):
+        response = self.client.post(
+            "/characters",
+            json={"char": "a", "pinyin": "ai", "writting_known": True},
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.get_json(),
+            {"error": "char must be a single Chinese character"},
+        )
+        self.mock_session.add.assert_not_called()
+        self.mock_session.commit.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 
+from backend.chinese_validation import is_han_character
 from backend.extensions import db
 from backend.models import Character
 
@@ -32,6 +33,9 @@ def create_character():
         return {"error": "writting_known must be a boolean"}, 400
 
     char_value = char.strip()
+    if not is_han_character(char_value):
+        return {"error": "char must be a single Chinese character"}, 400
+
     if Character.query.filter_by(char=char_value).first() is not None:
         return {"error": "Character already exists"}, 409
 

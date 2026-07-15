@@ -88,7 +88,28 @@ describe("CharacterFormModal", () => {
     await user.type(screen.getByLabelText("character"), "好");
 
     expect(screen.getByRole("button", { name: "Confirm" })).toBeDisabled();
-    expect(screen.getByText("Enter exactly one character.")).toBeInTheDocument();
+    expect(screen.getByText("Enter exactly one Chinese character.")).toBeInTheDocument();
+  });
+
+  it("keeps confirm disabled for non-Chinese characters", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <CharacterFormModal
+        mode="add"
+        isOpen
+        onConfirm={() => {}}
+        onCancel={() => {}}
+      />,
+    );
+
+    await user.type(screen.getByLabelText("character"), "a");
+    await user.type(screen.getByLabelText("pinyin"), "ai");
+
+    expect(screen.getByRole("button", { name: "Confirm" })).toBeDisabled();
+    expect(
+      screen.getByText("Enter exactly one Chinese character."),
+    ).toBeInTheDocument();
   });
 
   it("submits edited values in edit mode", async () => {

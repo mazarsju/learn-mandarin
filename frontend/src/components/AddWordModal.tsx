@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import type { Word } from "../types/word";
+import { isValidChineseWord } from "../utils/chineseCharacters";
 import { getMissingCharacters } from "../utils/wordCharacters";
 
 export type WordFormValues = {
@@ -66,11 +67,16 @@ export default function AddWordModal({
   }
 
   const trimmedWord = word.trim();
+  const hasInvalidChineseCharacters =
+    mode === "add" && trimmedWord !== "" && !isValidChineseWord(word);
   const isDuplicateWord =
     mode === "add" && trimmedWord !== "" && existingWordSet.has(trimmedWord);
   const isConfirmDisabled =
     mode === "add" &&
-    (trimmedWord === "" || missingCharacters.length > 0 || isDuplicateWord);
+    (trimmedWord === "" ||
+      hasInvalidChineseCharacters ||
+      missingCharacters.length > 0 ||
+      isDuplicateWord);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -108,6 +114,11 @@ export default function AddWordModal({
               onChange={(event) => setWord(event.target.value)}
             />
           </label>
+          {hasInvalidChineseCharacters && (
+            <p className="form-warning">
+              Word must contain only Chinese characters.
+            </p>
+          )}
           {missingCharacters.map((character) => (
             <div key={character} className="form-warning-row">
               <p className="form-warning">

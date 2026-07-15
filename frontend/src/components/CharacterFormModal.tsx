@@ -108,7 +108,7 @@ export default function CharacterFormModal({
           </label>
           {showCharacterWarning && (
             <p id="character-warning" className="form-warning">
-              Enter exactly one character.
+              Enter exactly one Chinese character.
             </p>
           )}
           {showDuplicateCharacterWarning && (

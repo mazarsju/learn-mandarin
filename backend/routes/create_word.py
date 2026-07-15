@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 
+from backend.chinese_validation import is_han_text
 from backend.extensions import db
 from backend.models import Character, Word, utcnow
 
@@ -32,6 +33,9 @@ def create_word():
 
     word_text = word_value.strip()
     definition_text = definition.strip() if isinstance(definition, str) else ""
+
+    if not is_han_text(word_text):
+        return {"error": "word must contain only Chinese characters"}, 400
 
     missing_characters = [
         character

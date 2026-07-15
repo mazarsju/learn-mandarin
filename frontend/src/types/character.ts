@@ -5,7 +5,4 @@ export type Character = {
   updated_at: string;
 };
 
-export function isValidCharacter(value: string): boolean {
-  const trimmed = value.trim();
-  return [...trimmed].length === 1;
-}
+export { isValidCharacter } from "../utils/chineseCharacters";
