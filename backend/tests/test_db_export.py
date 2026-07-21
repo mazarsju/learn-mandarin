@@ -18,6 +18,9 @@ class TestDbExport(unittest.TestCase):
         character.char = "爱"
         character.pinyin = "ai4"
         character.writting_known = True
+        character.updated_at = MagicMock(
+            isoformat=MagicMock(return_value="2026-07-12T12:00:00+00:00")
+        )
         first_word = MagicMock()
         first_word.word = "爱好"
         second_word = MagicMock()
@@ -26,7 +29,7 @@ class TestDbExport(unittest.TestCase):
 
         self.assertEqual(
             format_character_line(character),
-            "爱;ai;4;true;爱好, 相爱",
+            "爱;ai;4;true;爱好, 相爱;2026-07-12T12:00:00+00:00",
         )
 
     def test_format_character_line_without_words(self):
@@ -34,18 +37,30 @@ class TestDbExport(unittest.TestCase):
         character.char = "啊"
         character.pinyin = "a"
         character.writting_known = True
+        character.updated_at = MagicMock(
+            isoformat=MagicMock(return_value="2026-07-12T12:00:00+00:00")
+        )
         character.words = []
 
-        self.assertEqual(format_character_line(character), "啊;a;;true;")
+        self.assertEqual(
+            format_character_line(character),
+            "啊;a;;true;;2026-07-12T12:00:00+00:00",
+        )
 
     def test_serialize_database(self):
         character = MagicMock()
         character.char = "爱"
         character.pinyin = "ai4"
         character.writting_known = True
+        character.updated_at = MagicMock(
+            isoformat=MagicMock(return_value="2026-07-12T12:00:00+00:00")
+        )
         character.words = []
 
-        self.assertEqual(serialize_database([character]), "爱;ai;4;true;\n")
+        self.assertEqual(
+            serialize_database([character]),
+            "爱;ai;4;true;;2026-07-12T12:00:00+00:00\n",
+        )
 
 
 if __name__ == "__main__":

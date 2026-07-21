@@ -61,7 +61,7 @@ class TestBulkCharactersEndpoint(unittest.TestCase):
             {
                 "error": (
                     "Invalid line format. Should have the format "
-                    "'character;pinyin;tone;is_known;words'."
+                    "'character;pinyin;tone;is_known;words;updated_at'."
                     "(error found in line: 啊;∅a;true)"
                 )
             },
@@ -69,7 +69,92 @@ class TestBulkCharactersEndpoint(unittest.TestCase):
         self.mock_session.add.assert_not_called()
         self.mock_session.commit.assert_not_called()
 
+    def test_invalid_updated_at_returns_error(self):
+        data = {
+            "file": (
+                io.BytesIO(b"X;pinyin;3;true;word1;not-a-date\n"),
+                "chars.txt",
+            ),
+        }
+
+        response = self.client.post(
+            "/characters/bulk",
+            data=data,
+            content_type="multipart/form-data",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.get_json(),
+            {
+                "error": (
+                    "Invalid updated_at value: not-a-date "
+                    "(error found in line: X;pinyin;3;true;word1;not-a-date)"
+                )
+            },
+        )
+        self.mock_session.add.assert_not_called()
+        self.mock_session.commit.assert_not_called()
+
     def test_valid_file_inserts_records_and_returns_success(self):
+        created_characters = []
+
+        def make_character(**kwargs):
+            record = MagicMock()
+            record.char = kwargs["char"]
+            record.pinyin = kwargs["pinyin"]
+            record.writting_known = kwargs["writting_known"]
+            record.updated_at = kwargs.get("updated_at")
+            record.words = []
+            created_characters.append(record)
+            return record
+
+        def make_word(**kwargs):
+            record = MagicMock()
+            record.word = kwargs["word"]
+            record.definition = kwargs["definition"]
+            return record
+
+        self.mock_character_cls.side_effect = make_character
+        self.mock_word_cls.side_effect = make_word
+
+        file_content = b"X;pinyin;3;true;word1,word2;2026-07-12T12:00:00+00:00\n"
+        data = {
+            "file": (io.BytesIO(file_content), "chars.txt"),
+        }
+
+        response = self.client.post(
+            "/characters/bulk",
+            data=data,
+            content_type="multipart/form-data",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_json(), {"message": "File received"})
+
+        self.mock_character_cls.query.filter_by.assert_called_once_with(char="X")
+        self.mock_character_cls.assert_called_once()
+        create_kwargs = self.mock_character_cls.call_args.kwargs
+        self.assertEqual(create_kwargs["char"], "X")
+        self.assertEqual(create_kwargs["pinyin"], "pinyin3")
+        self.assertEqual(create_kwargs["writting_known"], True)
+        self.assertEqual(
+            create_kwargs["updated_at"].isoformat(),
+            "2026-07-12T12:00:00+00:00",
+        )
+
+        self.mock_word_cls.query.filter_by.assert_any_call(word="word1")
+        self.mock_word_cls.query.filter_by.assert_any_call(word="word2")
+        self.mock_word_cls.assert_any_call(word="word1", definition="")
+        self.mock_word_cls.assert_any_call(word="word2", definition="")
+
+        char_record = created_characters[0]
+        self.assertEqual(len(char_record.words), 2)
+
+        self.assertEqual(self.mock_session.add.call_count, 3)
+        self.mock_session.commit.assert_called_once()
+
+    def test_legacy_five_column_format_still_works(self):
         created_characters = []
 
         def make_character(**kwargs):
@@ -102,24 +187,12 @@ class TestBulkCharactersEndpoint(unittest.TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.get_json(), {"message": "File received"})
-
-        self.mock_character_cls.query.filter_by.assert_called_once_with(char="X")
         self.mock_character_cls.assert_called_once_with(
             char="X",
             pinyin="pinyin3",
             writting_known=True,
         )
-
-        self.mock_word_cls.query.filter_by.assert_any_call(word="word1")
-        self.mock_word_cls.query.filter_by.assert_any_call(word="word2")
-        self.mock_word_cls.assert_any_call(word="word1", definition="")
-        self.mock_word_cls.assert_any_call(word="word2", definition="")
-
-        char_record = created_characters[0]
-        self.assertEqual(len(char_record.words), 2)
-
-        self.assertEqual(self.mock_session.add.call_count, 3)
+        self.assertEqual(len(created_characters[0].words), 2)
         self.mock_session.commit.assert_called_once()
 
 

@@ -24,7 +24,11 @@ def format_character_line(character: Character) -> str:
     pinyin_base, tone = split_pinyin(character.pinyin)
     writting_known = "true" if character.writting_known else "false"
     words_part = ", ".join(word.word for word in character.words)
-    return f"{character.char};{pinyin_base};{tone};{writting_known};{words_part}"
+    updated_at = character.updated_at.isoformat()
+    return (
+        f"{character.char};{pinyin_base};{tone};{writting_known};"
+        f"{words_part};{updated_at}"
+    )
 
 
 def serialize_database(characters: list[Character]) -> str:

@@ -121,7 +121,7 @@ export default function CharacterFormModal({
             <input
               type="text"
               value={pinyin}
-              maxLength={6}
+              maxLength={8}
               aria-invalid={showPinyinWarning}
               aria-describedby={showPinyinWarning ? "pinyin-warning" : undefined}
               onChange={(event) => setPinyin(event.target.value)}
