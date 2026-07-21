@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, Table
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table
 
 from backend.extensions import db
 
@@ -54,3 +54,10 @@ class Word(db.Model):
         secondary=character_word,
         back_populates="words",
     )
+
+
+class HskVocabulary(db.Model):
+    __tablename__ = "hsk_vocabulary"
+
+    character = db.Column(String(1), primary_key=True)
+    level = db.Column(Integer, nullable=False)

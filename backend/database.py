@@ -1,9 +1,12 @@
 import os
+from pathlib import Path
 
 from flask import Flask
 from sqlalchemy import inspect, text
 
 from backend.extensions import db
+
+HSK_CONTENT_DIR = Path(__file__).resolve().parent.parent / "preload" / "hsk-content"
 
 
 def configure_database(app: Flask) -> None:
@@ -39,9 +42,20 @@ def _migrate_updated_at_columns() -> None:
     db.session.commit()
 
 
+def _ensure_hsk_vocabulary_loaded() -> None:
+    from backend.hsk_vocabulary_loader import load_hsk_vocabulary
+    from backend.models import HskVocabulary
+
+    if HskVocabulary.query.first() is not None:
+        return
+
+    load_hsk_vocabulary(HSK_CONTENT_DIR)
+
+
 def init_db(app: Flask) -> None:
     import backend.models  # noqa: F401
 
     with app.app_context():
         db.create_all()
         _migrate_updated_at_columns()
+        _ensure_hsk_vocabulary_loaded()

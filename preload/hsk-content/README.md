@@ -1,6 +1,6 @@
 # HSK content preload
 
-These files are **not** part of the frontend or backend app. They are only used to prepare HSK vocabulary lists offline.
+These files are **not** part of the frontend or backend app. They are only used to prepare HSK vocabulary lists offline and load them into the database.
 
 ## Source data
 
@@ -13,23 +13,26 @@ Download that file into this folder before regenerating the lists.
 | File | Contents |
 | --- | --- |
 | `hsk-1.txt` … `hsk-7.txt` | Simplified words for each HSK 3.0 `new-X` level (one word per line) |
-| `character-hsk-1.txt` … `character-hsk-7.txt` | Unique Han characters used in the matching `hsk-X.txt`, comma-separated |
 
 ## Scripts
 
 1. `groupSimplifiedByNewLevel.ts` — splits `complete.json` entries by `new-1` … `new-7` and writes `hsk-X.txt`
-2. `writeCharacterHskFiles.ts` — reads `hsk-X.txt` and writes `character-hsk-X.txt`
+2. `load_hsk_vocabulary.py` — loads characters from `hsk-X.txt` into the `hsk_vocabulary` table (level 1 → 7, insert-or-ignore so the lowest level wins). The backend also runs this automatically on startup when the table is empty.
 
-Example (from this folder, with Node 22+):
+Regenerate word lists (from this folder, with Node 22+):
 
 ```bash
 node --experimental-strip-types -e '
 import { readFileSync } from "node:fs";
 import { groupSimplifiedByNewLevel } from "./groupSimplifiedByNewLevel.ts";
-import { writeCharacterHskFiles } from "./writeCharacterHskFiles.ts";
 
 const entries = JSON.parse(readFileSync("./complete.json", "utf-8"));
 groupSimplifiedByNewLevel(entries, ".");
-writeCharacterHskFiles(".");
 '
+```
+
+Load characters into SQLite (from the project root, with the venv activated):
+
+```bash
+python3 preload/hsk-content/load_hsk_vocabulary.py
 ```

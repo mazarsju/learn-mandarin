@@ -91,13 +91,14 @@ The coverage report is written to `backend/coverage/` (open `coverage/index.html
 
 #### Database
 
-On first start, a SQLite database is created at `backend/learn_mandarin.db` with three tables:
+On first start, a SQLite database is created at `backend/learn_mandarin.db` with four tables:
 
 | Table | Columns |
 | --- | --- |
 | `character` | `char` (PK), `pinyin` (max 6 chars), `writting_known` (boolean), `updated_at` (datetime) |
 | `words` | `word` (PK, max 10 chars), `definition` (max 100 chars, nullable), `updated_at` (datetime) |
 | `character_word` | many-to-many link between `character` and `words` |
+| `hsk_vocabulary` | `character` (PK, single Han character), `level` (integer, HSK 3.0 level 1–7) |
 
 Override the database file path with the `DATABASE_PATH` environment variable if needed.
 
