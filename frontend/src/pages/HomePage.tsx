@@ -1,8 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
+import MissingHskCharactersModal from "../components/MissingHskCharactersModal";
 import { TrophyIcon } from "../components/icons";
 import Page from "../components/Page";
 import type { Character } from "../types/character";
-import { getHskLevelStatus, getMotivationMessages } from "../utils/homeMotivation";
+import {
+  HSK_MAX_LEVEL,
+  getHskLevelStatus,
+  getMotivationMessages,
+  type HskVocabularyEntry,
+} from "../utils/homeMotivation";
 
 async function fetchCharacters() {
   const response = await fetch("/characters", { method: "GET" });
@@ -14,18 +20,31 @@ async function fetchCharacters() {
   return (await response.json()) as Character[];
 }
 
+async function fetchHskVocabulary() {
+  const response = await fetch("/hsk-vocabulary", { method: "GET" });
+
+  if (!response.ok) {
+    throw new Error("Failed to load HSK vocabulary.");
+  }
+
+  return (await response.json()) as HskVocabularyEntry[];
+}
+
 export default function HomePage() {
   const [characters, setCharacters] = useState<Character[]>([]);
+  const [hskVocabulary, setHskVocabulary] = useState<HskVocabularyEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isMissingModalOpen, setIsMissingModalOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
 
-    void fetchCharacters()
-      .then((loadedCharacters) => {
+    void Promise.all([fetchCharacters(), fetchHskVocabulary()])
+      .then(([loadedCharacters, loadedVocabulary]) => {
         if (isMounted) {
           setCharacters(loadedCharacters);
+          setHskVocabulary(loadedVocabulary);
         }
       })
       .catch((fetchError: unknown) => {
@@ -54,8 +73,12 @@ export default function HomePage() {
     [characters],
   );
   const hskLevelStatus = useMemo(
-    () => getHskLevelStatus(recognizedCount),
-    [recognizedCount],
+    () =>
+      getHskLevelStatus(
+        characters.map((character) => character.char),
+        hskVocabulary,
+      ),
+    [characters, hskVocabulary],
   );
   const motivationMessages = useMemo(
     () => getMotivationMessages(recognizedCount),
@@ -65,14 +88,16 @@ export default function HomePage() {
   const hskTitle =
     hskLevelStatus.currentLevel === null
       ? "Your HSK journey starts here"
-      : hskLevelStatus.currentLevel === 6
-        ? "You've reached the top — HSK 6!"
+      : hskLevelStatus.currentLevel === HSK_MAX_LEVEL
+        ? `You've reached the top — HSK ${HSK_MAX_LEVEL}!`
         : `You're at HSK ${hskLevelStatus.currentLevel}!`;
 
   const hskProgressLabel =
     hskLevelStatus.nextLevel === null
       ? "Maximum HSK level reached. Outstanding work!"
-      : `${hskLevelStatus.charactersToNextLevel} characters to reach HSK ${hskLevelStatus.nextLevel}`;
+      : `${hskLevelStatus.charactersToNextLevel} ${
+          hskLevelStatus.charactersToNextLevel === 1 ? "character" : "characters"
+        } to reach HSK ${hskLevelStatus.nextLevel}`;
 
   return (
     <Page title="Home">
@@ -107,7 +132,18 @@ export default function HomePage() {
                   style={{ width: `${hskLevelStatus.progressToNextLevel}%` }}
                 />
               </div>
-              <p className="home-hsk-progress-label">{hskProgressLabel}</p>
+              <div className="home-hsk-progress-footer">
+                <p className="home-hsk-progress-label">{hskProgressLabel}</p>
+                {hskLevelStatus.nextLevel !== null && (
+                  <button
+                    type="button"
+                    className="home-hsk-missing-button"
+                    onClick={() => setIsMissingModalOpen(true)}
+                  >
+                    Missing characters
+                  </button>
+                )}
+              </div>
             </div>
           </section>
 
@@ -134,6 +170,13 @@ export default function HomePage() {
               ))}
             </ul>
           )}
+
+          <MissingHskCharactersModal
+            isOpen={isMissingModalOpen}
+            level={hskLevelStatus.nextLevel}
+            characters={hskLevelStatus.missingCharacters}
+            onClose={() => setIsMissingModalOpen(false)}
+          />
         </>
       )}
     </Page>

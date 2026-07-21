@@ -1,51 +1,74 @@
-const HSK_THRESHOLDS = [
-  { level: 1, threshold: 300 },
-  { level: 2, threshold: 600 },
-  { level: 3, threshold: 900 },
-  { level: 4, threshold: 1200 },
-  { level: 5, threshold: 1500 },
-  { level: 6, threshold: 1800 },
-] as const;
+export const HSK_MAX_LEVEL = 7;
+
+export type HskVocabularyEntry = {
+  character: string;
+  level: number;
+};
 
 export type HskLevelStatus = {
   currentLevel: number | null;
   nextLevel: number | null;
   charactersToNextLevel: number | null;
   progressToNextLevel: number;
+  missingCharacters: string[];
 };
 
-export function getHskLevelStatus(characterCount: number): HskLevelStatus {
+function charactersForLevel(
+  vocabulary: HskVocabularyEntry[],
+  level: number,
+): string[] {
+  return vocabulary
+    .filter((entry) => entry.level === level)
+    .map((entry) => entry.character);
+}
+
+function isLevelComplete(
+  knownCharacters: Set<string>,
+  vocabulary: HskVocabularyEntry[],
+  level: number,
+): boolean {
+  const required = charactersForLevel(vocabulary, level);
+  return (
+    required.length > 0 && required.every((character) => knownCharacters.has(character))
+  );
+}
+
+export function getHskLevelStatus(
+  knownCharacters: Iterable<string>,
+  vocabulary: HskVocabularyEntry[],
+): HskLevelStatus {
+  const known = new Set(knownCharacters);
+
   let currentLevel: number | null = null;
-  let previousThreshold = 0;
-
-  for (const { level, threshold } of HSK_THRESHOLDS) {
-    if (characterCount >= threshold) {
-      currentLevel = level;
-      previousThreshold = threshold;
-      continue;
+  for (let level = 1; level <= HSK_MAX_LEVEL; level++) {
+    if (!isLevelComplete(known, vocabulary, level)) {
+      break;
     }
+    currentLevel = level;
+  }
 
+  if (currentLevel === HSK_MAX_LEVEL) {
     return {
-      currentLevel,
-      nextLevel: level,
-      charactersToNextLevel: threshold - characterCount,
-      progressToNextLevel: Math.min(
-        100,
-        Math.max(
-          0,
-          ((characterCount - previousThreshold) /
-            (threshold - previousThreshold)) *
-            100,
-        ),
-      ),
+      currentLevel: HSK_MAX_LEVEL,
+      nextLevel: null,
+      charactersToNextLevel: null,
+      progressToNextLevel: 100,
+      missingCharacters: [],
     };
   }
 
+  const nextLevel = currentLevel === null ? 1 : currentLevel + 1;
+  const required = charactersForLevel(vocabulary, nextLevel);
+  const missingCharacters = required.filter((character) => !known.has(character));
+  const knownForNext = required.length - missingCharacters.length;
+
   return {
-    currentLevel: 6,
-    nextLevel: null,
-    charactersToNextLevel: null,
-    progressToNextLevel: 100,
+    currentLevel,
+    nextLevel,
+    charactersToNextLevel: missingCharacters.length,
+    progressToNextLevel:
+      required.length === 0 ? 0 : (knownForNext / required.length) * 100,
+    missingCharacters,
   };
 }
 

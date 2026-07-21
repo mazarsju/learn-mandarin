@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import HomePage from "./HomePage";
 
 const characters = [
@@ -16,6 +17,12 @@ const characters = [
   },
 ];
 
+const hskVocabulary = [
+  { character: "爱", level: 1 },
+  { character: "好", level: 1 },
+  { character: "八", level: 1 },
+];
+
 describe("HomePage", () => {
   beforeEach(() => {
     vi.stubGlobal(
@@ -27,6 +34,13 @@ describe("HomePage", () => {
           return Promise.resolve({
             ok: true,
             json: async () => characters,
+          });
+        }
+
+        if (url.endsWith("/hsk-vocabulary")) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => hskVocabulary,
           });
         }
 
@@ -52,10 +66,23 @@ describe("HomePage", () => {
     expect(
       screen.getByText("Based on 2 characters you are able to recognize"),
     ).toBeInTheDocument();
-    expect(screen.getByText("298 characters to reach HSK 1")).toBeInTheDocument();
+    expect(screen.getByText("1 character to reach HSK 1")).toBeInTheDocument();
     expect(screen.getByLabelText("HSK level")).toBeInTheDocument();
     expect(screen.getByText("Characters you are able to recognize")).toBeInTheDocument();
     expect(screen.getByText("Characters you can write")).toBeInTheDocument();
+  });
+
+  it("opens the missing characters list from the banner", async () => {
+    const user = userEvent.setup();
+    render(<HomePage />);
+
+    await screen.findByText("Your HSK journey starts here");
+    await user.click(screen.getByRole("button", { name: "Missing characters" }));
+
+    expect(
+      screen.getByRole("heading", { name: "Missing characters for HSK 1" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("八")).toBeInTheDocument();
   });
 
   it("shows an error when progress fails to load", async () => {

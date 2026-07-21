@@ -1,30 +1,47 @@
 import { getHskLevelStatus, getMotivationMessages } from "./homeMotivation";
 
+const vocabulary = [
+  { character: "爱", level: 1 },
+  { character: "好", level: 1 },
+  { character: "八", level: 1 },
+  { character: "学", level: 2 },
+  { character: "习", level: 2 },
+];
+
 describe("getHskLevelStatus", () => {
-  it("returns pre-HSK 1 status when character count is below 300", () => {
-    expect(getHskLevelStatus(2)).toEqual({
+  it("returns pre-HSK 1 status when level 1 characters are missing", () => {
+    expect(getHskLevelStatus(["爱"], vocabulary)).toEqual({
       currentLevel: null,
       nextLevel: 1,
-      charactersToNextLevel: 298,
-      progressToNextLevel: (2 / 300) * 100,
+      charactersToNextLevel: 2,
+      progressToNextLevel: (1 / 3) * 100,
+      missingCharacters: ["好", "八"],
     });
   });
 
-  it("returns the current level and progress toward the next one", () => {
-    expect(getHskLevelStatus(450)).toEqual({
+  it("returns the current level once all related characters are known", () => {
+    expect(getHskLevelStatus(["爱", "好", "八", "学"], vocabulary)).toEqual({
       currentLevel: 1,
       nextLevel: 2,
-      charactersToNextLevel: 150,
-      progressToNextLevel: ((450 - 300) / (600 - 300)) * 100,
+      charactersToNextLevel: 1,
+      progressToNextLevel: (1 / 2) * 100,
+      missingCharacters: ["习"],
     });
   });
 
-  it("returns HSK 6 when the highest threshold is reached", () => {
-    expect(getHskLevelStatus(1800)).toEqual({
-      currentLevel: 6,
+  it("returns the max level when every level is complete", () => {
+    const completeVocabulary = [1, 2, 3, 4, 5, 6, 7].map((level) => ({
+      character: ["一", "二", "三", "四", "五", "六", "七"][level - 1],
+      level,
+    }));
+    const known = completeVocabulary.map((entry) => entry.character);
+
+    expect(getHskLevelStatus(known, completeVocabulary)).toEqual({
+      currentLevel: 7,
       nextLevel: null,
       charactersToNextLevel: null,
       progressToNextLevel: 100,
+      missingCharacters: [],
     });
   });
 });

@@ -12,6 +12,7 @@ def register_routes(app: Flask) -> None:
         export_database,
         health,
         list_characters,
+        list_hsk_vocabulary,
         list_words,
         llm_config,
         update_character,
@@ -31,3 +32,4 @@ def register_routes(app: Flask) -> None:
     app.register_blueprint(delete_word.bp)
     app.register_blueprint(bulk_characters.bp)
     app.register_blueprint(export_database.bp)
+    app.register_blueprint(list_hsk_vocabulary.bp)

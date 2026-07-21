@@ -29,6 +29,7 @@ export default defineConfig({
       "/words": "http://127.0.0.1:5000",
       "/llm-config": "http://127.0.0.1:5000",
       "/chat": "http://127.0.0.1:5000",
+      "/hsk-vocabulary": "http://127.0.0.1:5000",
     },
   },
 });
