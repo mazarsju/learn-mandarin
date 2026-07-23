@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/components/Navbar.tsx</title>
+    <title>Code coverage report for src/components/MissingHskCharactersModal.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/components</a> Navbar.tsx</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/components</a> MissingHskCharactersModal.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>5/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -115,7 +115,10 @@
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
 <a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -128,34 +131,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -167,56 +154,78 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
-  ChatBubbleIcon,
-  HouseIcon,
-  NotebookIcon,
-  SettingsIcon,
-} from "./icons";
-&nbsp;
-export type PageId = "home" | "knowledge-base" | "chat" | "preferences";
-&nbsp;
-type NavItem = {
-  id: PageId;
-  label: string;
-  icon: typeof HouseIcon;
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">type MissingHskCharactersModalProps = {
+  isOpen: boolean;
+  level: number | null;
+  characters: string[];
+  onClose: () =&gt; void;
 };
 &nbsp;
-const NAV_ITEMS: NavItem[] = [
-  { id: "home", label: "Home", icon: HouseIcon },
-  { id: "knowledge-base", label: "Knowledge base", icon: NotebookIcon },
-  { id: "chat", label: "Chat", icon: ChatBubbleIcon },
-  { id: "preferences", label: "Preferences", icon: SettingsIcon },
-];
+export default function MissingHskCharactersModal({
+  isOpen,
+  level,
+  characters,
+  onClose,
+}: MissingHskCharactersModalProps) {
+  if (!isOpen || level === null) {
+    return null;
+  }
 &nbsp;
-type NavbarProps = {
-  activePage: PageId;
-  onPageChange: (page: PageId) =&gt; void;
-};
-&nbsp;
-export default function Navbar({ activePage, onPageChange }: NavbarProps) {
   return (
-    &lt;nav className="navbar" aria-label="Main navigation"&gt;
-      &lt;ul className="navbar-list"&gt;
-        {NAV_ITEMS.map(({ id, label, icon: Icon }) =&gt; {
-          const isActive = activePage === id;
-&nbsp;
-          return (
-            &lt;li key={id}&gt;
-              &lt;button
-                type="button"
-                className={`navbar-tab${isActive ? " navbar-tab--active" : ""}`}
-                aria-current={isActive ? "page" : undefined}
-                onClick={() =&gt; onPageChange(id)}
-              &gt;
-                &lt;Icon className="navbar-icon" /&gt;
-                &lt;span&gt;{label}&lt;/span&gt;
-              &lt;/button&gt;
-            &lt;/li&gt;
-          );
-        })}
-      &lt;/ul&gt;
-    &lt;/nav&gt;
+    &lt;div className="modal-overlay" onClick={onClose}&gt;
+      &lt;div
+        className="modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="missing-hsk-characters-title"
+        onClick={<span class="fstat-no" title="function not covered" >(e</span>vent) =&gt; <span class="cstat-no" title="statement not covered" >event.stopPropagation()}</span>
+      &gt;
+        &lt;h2 id="missing-hsk-characters-title" className="modal-title"&gt;
+          Missing characters for HSK {level}
+        &lt;/h2&gt;
+        &lt;div className="character-words-modal-content"&gt;
+          {characters.length === 0 ? (
+<span class="branch-0 cbranch-no" title="branch not covered" >            &lt;p className="character-words-modal-heading"&gt;</span>
+              No missing characters — this level is complete.
+            &lt;/p&gt;
+          ) : (
+            &lt;&gt;
+              &lt;p className="home-missing-characters-hint"&gt;
+                (those characters are ordered by frequency. If you want to learn
+                them, we are suggesting you to learn them in that order)
+              &lt;/p&gt;
+              &lt;p className="home-missing-characters-list"&gt;
+                {characters.join("、")}
+              &lt;/p&gt;
+            &lt;/&gt;
+          )}
+        &lt;/div&gt;
+        &lt;div className="modal-actions"&gt;
+          &lt;button type="button" className="modal-button-cancel" onClick={onClose}&gt;
+            Close
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
   );
 }
 &nbsp;</pre></td></tr></table></pre>
