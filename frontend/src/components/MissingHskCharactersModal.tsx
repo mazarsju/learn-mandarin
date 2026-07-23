@@ -120,20 +120,22 @@ export default function MissingHskCharactersModal({
                   (those characters are ordered by frequency. If you want to learn
                   them, we are suggesting you to learn them in that order)
                 </p>
-                <p className="home-missing-characters-list">
-                  {characters.map((character, index) => (
-                    <span key={character}>
-                      {index > 0 ? "、" : null}
-                      <button
-                        type="button"
-                        className="home-missing-character-button"
-                        onClick={() => setSelectedCharacter(character)}
-                      >
-                        {character}
-                      </button>
-                    </span>
-                  ))}
-                </p>
+                <div className="home-missing-characters-scroll">
+                  <p className="home-missing-characters-list">
+                    {characters.map((character, index) => (
+                      <span key={character}>
+                        {index > 0 ? "、" : null}
+                        <button
+                          type="button"
+                          className="home-missing-character-button"
+                          onClick={() => setSelectedCharacter(character)}
+                        >
+                          {character}
+                        </button>
+                      </span>
+                    ))}
+                  </p>
+                </div>
               </>
             )}
           </div>

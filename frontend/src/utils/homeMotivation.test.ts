@@ -1,4 +1,8 @@
-import { getHskLevelStatus, getMotivationMessages } from "./homeMotivation";
+import {
+  HSK_LEVEL_COMPLETION_RATIO,
+  getHskLevelStatus,
+  getMotivationMessages,
+} from "./homeMotivation";
 
 const vocabulary = [
   { character: "爱", level: 1, frequency: 30 },
@@ -19,12 +23,35 @@ describe("getHskLevelStatus", () => {
     });
   });
 
-  it("returns the current level once all related characters are known", () => {
+  it("treats a level as complete at 85% of cumulative characters", () => {
+    const levelOne = Array.from({ length: 10 }, (_, index) => ({
+      character: String.fromCharCode(0x4e00 + index),
+      level: 1,
+      frequency: index + 1,
+    }));
+    const levelTwo = [
+      { character: "学", level: 2, frequency: 40 },
+      { character: "习", level: 2, frequency: 50 },
+    ];
+    const knownNine = levelOne.slice(0, 9).map((entry) => entry.character);
+    const missingLevelOne = levelOne[9].character;
+
+    expect(getHskLevelStatus(knownNine, [...levelOne, ...levelTwo])).toEqual({
+      currentLevel: 1,
+      nextLevel: 2,
+      charactersToNextLevel: 2,
+      progressToNextLevel: (9 / 11) * 100,
+      missingCharacters: [missingLevelOne, "学", "习"],
+    });
+    expect(HSK_LEVEL_COMPLETION_RATIO).toBe(0.85);
+  });
+
+  it("returns the current level once the cumulative completion threshold is met", () => {
     expect(getHskLevelStatus(["爱", "好", "八", "学"], vocabulary)).toEqual({
       currentLevel: 1,
       nextLevel: 2,
       charactersToNextLevel: 1,
-      progressToNextLevel: (1 / 2) * 100,
+      progressToNextLevel: (4 / 5) * 100,
       missingCharacters: ["习"],
     });
   });

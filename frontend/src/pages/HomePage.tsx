@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import MissingHskCharactersModal from "../components/MissingHskCharactersModal";
-import { TrophyIcon } from "../components/icons";
+import { InfoIcon, TrophyIcon } from "../components/icons";
 import Page from "../components/Page";
 import type { Character } from "../types/character";
 import {
+  HSK_LEVEL_COMPLETION_RATIO,
   HSK_MAX_LEVEL,
   getHskLevelStatus,
   getMotivationMessages,
@@ -36,6 +37,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isMissingModalOpen, setIsMissingModalOpen] = useState(false);
+  const [isHskInfoOpen, setIsHskInfoOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -99,6 +101,8 @@ export default function HomePage() {
           hskLevelStatus.charactersToNextLevel === 1 ? "character" : "characters"
         } to reach HSK ${hskLevelStatus.nextLevel}`;
 
+  const completionPercent = Math.round(HSK_LEVEL_COMPLETION_RATIO * 100);
+
   return (
     <Page title="Home">
       {isLoading && <p>Loading your progress...</p>}
@@ -113,12 +117,17 @@ export default function HomePage() {
               </span>
             </div>
             <div className="home-hsk-content">
-              <p className="home-hsk-title">{hskTitle}</p>
-              <p className="home-hsk-subtitle">
-                Based on {recognizedCount}{" "}
-                {recognizedCount === 1 ? "character" : "characters"} you are able
-                to recognize
-              </p>
+              <div className="home-hsk-title-row">
+                <p className="home-hsk-title">{hskTitle}</p>
+                <button
+                  type="button"
+                  className="home-hsk-info-button"
+                  aria-label="How HSK level is estimated"
+                  onClick={() => setIsHskInfoOpen(true)}
+                >
+                  <InfoIcon className="home-hsk-info-icon" />
+                </button>
+              </div>
               <div
                 className="home-hsk-progress-track"
                 role="progressbar"
@@ -169,6 +178,42 @@ export default function HomePage() {
                 </li>
               ))}
             </ul>
+          )}
+
+          {isHskInfoOpen && (
+            <div className="modal-overlay" onClick={() => setIsHskInfoOpen(false)}>
+              <div
+                className="modal-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="hsk-level-info-title"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <h2 id="hsk-level-info-title" className="modal-title">
+                  How HSK level is estimated
+                </h2>
+                <div className="character-words-modal-content">
+                  <p className="home-hsk-info-text">
+                    This HSK level is an estimate based on the characters you know.
+                    A level counts as reached when you know at least{" "}
+                    {completionPercent}% of all characters expected up to that
+                    level — for example, HSK 3 needs {completionPercent}% of HSK
+                    1, 2, and 3 combined. The missing-characters list includes gaps
+                    from earlier levels too, so you can fill those first. Less
+                    useful characters can wait while you learn more frequent ones.
+                  </p>
+                </div>
+                <div className="modal-actions">
+                  <button
+                    type="button"
+                    className="modal-button-cancel"
+                    onClick={() => setIsHskInfoOpen(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
 
           <MissingHskCharactersModal

@@ -1,4 +1,5 @@
 export const HSK_MAX_LEVEL = 7;
+export const HSK_LEVEL_COMPLETION_RATIO = 0.85;
 
 export type HskCharacterEntry = {
   character: string;
@@ -14,11 +15,15 @@ export type HskLevelStatus = {
   missingCharacters: string[];
 };
 
-function entriesForLevel(
+function entriesUpToLevel(
   vocabulary: HskCharacterEntry[],
   level: number,
 ): HskCharacterEntry[] {
-  return vocabulary.filter((entry) => entry.level === level);
+  return vocabulary.filter((entry) => entry.level <= level);
+}
+
+function requiredKnownCount(totalCharacters: number): number {
+  return Math.ceil(totalCharacters * HSK_LEVEL_COMPLETION_RATIO);
 }
 
 function isLevelComplete(
@@ -26,11 +31,15 @@ function isLevelComplete(
   vocabulary: HskCharacterEntry[],
   level: number,
 ): boolean {
-  const required = entriesForLevel(vocabulary, level);
-  return (
-    required.length > 0 &&
-    required.every((entry) => knownCharacters.has(entry.character))
-  );
+  const required = entriesUpToLevel(vocabulary, level);
+  if (required.length === 0) {
+    return false;
+  }
+
+  const knownUpToLevel = required.filter((entry) =>
+    knownCharacters.has(entry.character),
+  ).length;
+  return knownUpToLevel >= requiredKnownCount(required.length);
 }
 
 export function getHskLevelStatus(
@@ -58,19 +67,21 @@ export function getHskLevelStatus(
   }
 
   const nextLevel = currentLevel === null ? 1 : currentLevel + 1;
-  const required = entriesForLevel(vocabulary, nextLevel);
+  const required = entriesUpToLevel(vocabulary, nextLevel);
+  const targetKnown = requiredKnownCount(required.length);
   const missingEntries = required
     .filter((entry) => !known.has(entry.character))
     .sort((a, b) => a.frequency - b.frequency);
   const missingCharacters = missingEntries.map((entry) => entry.character);
   const knownForNext = required.length - missingCharacters.length;
+  const charactersToNextLevel = Math.max(0, targetKnown - knownForNext);
 
   return {
     currentLevel,
     nextLevel,
-    charactersToNextLevel: missingCharacters.length,
+    charactersToNextLevel,
     progressToNextLevel:
-      required.length === 0 ? 0 : (knownForNext / required.length) * 100,
+      targetKnown === 0 ? 0 : Math.min(100, (knownForNext / targetKnown) * 100),
     missingCharacters,
   };
 }

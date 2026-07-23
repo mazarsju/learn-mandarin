@@ -63,13 +63,35 @@ describe("HomePage", () => {
     expect(screen.getByText("Loading your progress...")).toBeInTheDocument();
 
     expect(await screen.findByText("Your HSK journey starts here")).toBeInTheDocument();
-    expect(
-      screen.getByText("Based on 2 characters you are able to recognize"),
-    ).toBeInTheDocument();
     expect(screen.getByText("1 character to reach HSK 1")).toBeInTheDocument();
     expect(screen.getByLabelText("HSK level")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "How HSK level is estimated" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("Characters you are able to recognize")).toBeInTheDocument();
     expect(screen.getByText("Characters you can write")).toBeInTheDocument();
+  });
+
+  it("explains how the HSK level is estimated", async () => {
+    const user = userEvent.setup();
+    render(<HomePage />);
+
+    await screen.findByText("Your HSK journey starts here");
+    await user.click(
+      screen.getByRole("button", { name: "How HSK level is estimated" }),
+    );
+
+    expect(
+      screen.getByRole("heading", { name: "How HSK level is estimated" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /know at least 85% of all characters expected up to that level/i,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/missing-characters list includes gaps from earlier levels/i),
+    ).toBeInTheDocument();
   });
 
   it("opens the missing characters list from the banner", async () => {

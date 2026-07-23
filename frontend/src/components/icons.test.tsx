@@ -3,6 +3,7 @@ import {
   ChatBubbleIcon,
   EyeIcon,
   HouseIcon,
+  InfoIcon,
   NotebookIcon,
   PenIcon,
   SettingsIcon,
@@ -20,6 +21,7 @@ describe("icons", () => {
     ["PenIcon", PenIcon],
     ["EyeIcon", EyeIcon],
     ["TrophyIcon", TrophyIcon],
+    ["InfoIcon", InfoIcon],
     ["ExportIcon", ExportIcon],
     ["ImportIcon", ImportIcon],
   ])("renders %s as an accessible decorative svg", (_name, Icon) => {
