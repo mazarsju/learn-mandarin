@@ -16,7 +16,7 @@ export default function ConfirmModal({
   }
 
   return (
-    <div className="modal-overlay" onClick={onCancel}>
+    <div className="modal-overlay modal-overlay--stacked" onClick={onCancel}>
       <div
         className="modal-dialog"
         role="dialog"

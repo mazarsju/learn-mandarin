@@ -4,6 +4,7 @@ from backend.chat_service import generate_chat_reply
 from backend.conversation_logs import (
     VALID_CHARACTER_IDS,
     append_message,
+    clear_conversation,
     load_conversation,
     should_append_user_message,
 )
@@ -84,3 +85,12 @@ def chat_history(character_id: str):
         return {"error": "Invalid character_id"}, 400
 
     return {"messages": load_conversation(character_id)}, 200
+
+
+@bp.delete("/chat/history/<character_id>")
+def delete_chat_history(character_id: str):
+    if character_id not in VALID_CHARACTER_IDS:
+        return {"error": "Invalid character_id"}, 400
+
+    clear_conversation(character_id)
+    return {"message": "Chat history cleared"}, 200

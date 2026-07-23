@@ -1,4 +1,4 @@
-import { fetchChatHistory, sendChatMessage } from "./chatApi";
+import { clearChatHistory, fetchChatHistory, sendChatMessage } from "./chatApi";
 
 describe("chatApi", () => {
   afterEach(() => {
@@ -39,5 +39,22 @@ describe("chatApi", () => {
     await expect(
       sendChatMessage("teacher-wang", [{ role: "user", content: "Hello" }]),
     ).resolves.toEqual({ role: "assistant", content: "你好" });
+  });
+
+  it("clears chat history", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: async () => ({ message: "Chat history cleared" }),
+        }),
+      ),
+    );
+
+    await expect(clearChatHistory("teacher-wang")).resolves.toBeUndefined();
+    expect(fetch).toHaveBeenCalledWith("/chat/history/teacher-wang", {
+      method: "DELETE",
+    });
   });
 });

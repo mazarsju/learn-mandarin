@@ -1,8 +1,14 @@
 import { useEffect, useState, type FormEvent } from "react";
 import type { ChatCharacter } from "./ChatCharacterCard";
 import ChatCharacterAvatar from "./ChatCharacterAvatar";
+import ConfirmModal from "./ConfirmModal";
+import { CloseIcon, SendIcon, TrashIcon } from "./icons";
 import type { ChatMessage } from "../types/chat";
-import { fetchChatHistory, sendChatMessage } from "../utils/chatApi";
+import {
+  clearChatHistory,
+  fetchChatHistory,
+  sendChatMessage,
+} from "../utils/chatApi";
 
 type ChatModalProps = {
   character: ChatCharacter | null;
@@ -13,6 +19,8 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isSending, setIsSending] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
+  const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,6 +35,8 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
     setMessages([]);
     setError(null);
     setIsSending(false);
+    setIsClearing(false);
+    setIsClearConfirmOpen(false);
     setIsLoadingHistory(true);
 
     void fetchChatHistory(character.id)
@@ -62,7 +72,7 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const trimmedMessage = message.trim();
-    if (trimmedMessage === "" || isSending) {
+    if (trimmedMessage === "" || isSending || isClearing) {
       return;
     }
 
@@ -92,95 +102,151 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
     }
   }
 
+  async function handleClearHistory() {
+    if (isClearing || isSending || messages.length === 0) {
+      return;
+    }
+
+    setIsClearConfirmOpen(false);
+    setIsClearing(true);
+    setError(null);
+
+    try {
+      await clearChatHistory(character.id);
+      setMessages([]);
+      setMessage("");
+    } catch (clearError) {
+      setError(
+        clearError instanceof Error
+          ? clearError.message
+          : "Failed to clear chat history.",
+      );
+    } finally {
+      setIsClearing(false);
+    }
+  }
+
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div
-        className="chat-modal-dialog"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="chat-modal-title"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <header className="chat-modal-header">
-          <div className="chat-modal-participant">
-            <ChatCharacterAvatar
-              variant={character.avatarVariant}
-              className="chat-character-avatar-image--compact"
-            />
-            <div className="chat-modal-participant-text">
-              <h2 id="chat-modal-title" className="chat-modal-participant-name">
-                {character.name}{" "}
-                <span className="chat-modal-participant-chinese-name">
-                  ({character.chineseName})
-                </span>
-              </h2>
+    <>
+      <div className="modal-overlay" onClick={onClose}>
+        <div
+          className="chat-modal-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="chat-modal-title"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <header className="chat-modal-header">
+            <div className="chat-modal-participant">
+              <ChatCharacterAvatar
+                variant={character.avatarVariant}
+                className="chat-character-avatar-image--compact"
+              />
+              <div className="chat-modal-participant-text">
+                <h2 id="chat-modal-title" className="chat-modal-participant-name">
+                  {character.name}{" "}
+                  <span className="chat-modal-participant-chinese-name">
+                    ({character.chineseName})
+                  </span>
+                </h2>
+              </div>
             </div>
+            <div className="chat-modal-header-actions">
+              <button
+                type="button"
+                className="chat-modal-clear-button"
+                disabled={
+                  isLoadingHistory ||
+                  isSending ||
+                  isClearing ||
+                  messages.length === 0
+                }
+                onClick={() => setIsClearConfirmOpen(true)}
+              >
+                <TrashIcon className="chat-modal-clear-icon" />
+                <span>{isClearing ? "Clearing..." : "Clear chat history"}</span>
+              </button>
+              <button
+                type="button"
+                className="chat-modal-close-button"
+                aria-label="Close chat"
+                onClick={onClose}
+              >
+                <CloseIcon className="chat-modal-close-icon" />
+              </button>
+            </div>
+          </header>
+
+          <div className="chat-modal-messages" aria-live="polite">
+            {isLoadingHistory ? (
+              <p className="chat-modal-empty-state">Loading conversation...</p>
+            ) : messages.length === 0 ? (
+              <p className="chat-modal-empty-state">
+                Start a conversation with {character.name}.
+              </p>
+            ) : (
+              <ul className="chat-message-list">
+                {messages.map((chatMessage, index) => (
+                  <li
+                    key={`${chatMessage.role}-${index}-${chatMessage.content}`}
+                    className={
+                      chatMessage.role === "user"
+                        ? "chat-message chat-message--user"
+                        : "chat-message chat-message--assistant"
+                    }
+                  >
+                    {chatMessage.content}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {isSending && (
+              <p className="chat-modal-typing-indicator">
+                {character.name} is typing...
+              </p>
+            )}
           </div>
-          <button
-            type="button"
-            className="chat-modal-close-button"
-            aria-label="Close chat"
-            onClick={onClose}
+
+          {error && <p className="chat-modal-error table-error">{error}</p>}
+
+          <form
+            className="chat-modal-composer"
+            onSubmit={(event) => void handleSubmit(event)}
           >
-            ×
-          </button>
-        </header>
-
-        <div className="chat-modal-messages" aria-live="polite">
-          {isLoadingHistory ? (
-            <p className="chat-modal-empty-state">Loading conversation...</p>
-          ) : messages.length === 0 ? (
-            <p className="chat-modal-empty-state">
-              Start a conversation with {character.name}.
-            </p>
-          ) : (
-            <ul className="chat-message-list">
-              {messages.map((chatMessage, index) => (
-                <li
-                  key={`${chatMessage.role}-${index}-${chatMessage.content}`}
-                  className={
-                    chatMessage.role === "user"
-                      ? "chat-message chat-message--user"
-                      : "chat-message chat-message--assistant"
-                  }
-                >
-                  {chatMessage.content}
-                </li>
-              ))}
-            </ul>
-          )}
-          {isSending && (
-            <p className="chat-modal-typing-indicator">
-              {character.name} is typing...
-            </p>
-          )}
-        </div>
-
-        {error && <p className="chat-modal-error table-error">{error}</p>}
-
-        <form className="chat-modal-composer" onSubmit={(event) => void handleSubmit(event)}>
-          <label className="chat-modal-composer-label" htmlFor="chat-message-input">
-            Message
-          </label>
-          <div className="chat-modal-composer-row">
-            <input
-              id="chat-message-input"
-              type="text"
-              value={message}
-              placeholder="Type your message..."
-              disabled={isSending}
-              onChange={(event) => setMessage(event.target.value)}
-            />
-            <button
-              type="submit"
-              className="page-add-button"
-              disabled={isSending || message.trim() === ""}
+            <label
+              className="chat-modal-composer-label"
+              htmlFor="chat-message-input"
             >
-              {isSending ? "Sending..." : "Send"}
-            </button>
-          </div>
-        </form>
+              Message
+            </label>
+            <div className="chat-modal-composer-row">
+              <input
+                id="chat-message-input"
+                type="text"
+                value={message}
+                placeholder="Type your message..."
+                disabled={isSending || isClearing}
+                onChange={(event) => setMessage(event.target.value)}
+              />
+              <button
+                type="submit"
+                className="chat-modal-send-button"
+                disabled={isSending || isClearing || message.trim() === ""}
+              >
+                <SendIcon className="chat-modal-send-icon" />
+                <span>{isSending ? "Sending..." : "Send"}</span>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+
+      <ConfirmModal
+        isOpen={isClearConfirmOpen}
+        message={`Clear all chat history with ${character.name}? This cannot be undone.`}
+        onConfirm={() => void handleClearHistory()}
+        onCancel={() => setIsClearConfirmOpen(false)}
+      />
+    </>
   );
 }

@@ -31,10 +31,15 @@ class TestChatEndpoint(unittest.TestCase):
         self.mock_load = self.load_patcher.start()
         self.addCleanup(self.load_patcher.stop)
 
+        self.clear_patcher = patch("backend.routes.chat.clear_conversation")
+        self.mock_clear = self.clear_patcher.start()
+        self.addCleanup(self.clear_patcher.stop)
+
         self.mock_generate.reset_mock()
         self.mock_append.reset_mock()
         self.mock_should_append.reset_mock()
         self.mock_load.reset_mock()
+        self.mock_clear.reset_mock()
         self.mock_should_append.return_value = True
 
     def test_chat_returns_assistant_message(self):
@@ -154,6 +159,22 @@ class TestChatEndpoint(unittest.TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.mock_load.assert_not_called()
+
+    def test_clear_chat_history_deletes_conversation(self):
+        response = self.client.delete("/chat/history/teacher-wang")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.get_json(),
+            {"message": "Chat history cleared"},
+        )
+        self.mock_clear.assert_called_once_with("teacher-wang")
+
+    def test_clear_chat_history_rejects_invalid_character_id(self):
+        response = self.client.delete("/chat/history/unknown")
+
+        self.assertEqual(response.status_code, 400)
+        self.mock_clear.assert_not_called()
 
 
 if __name__ == "__main__":

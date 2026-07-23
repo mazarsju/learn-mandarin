@@ -109,6 +109,103 @@ describe("ChatModal", () => {
     expect(screen.getByText("Earlier reply")).toBeInTheDocument();
   });
 
+  it("clears chat history after confirmation", async () => {
+    const user = userEvent.setup();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: RequestInfo, init?: RequestInit) => {
+        const url = String(input);
+        const method = init?.method ?? "GET";
+
+        if (url.endsWith("/chat/history/teacher-wang") && method === "GET") {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({
+              messages: [
+                { role: "user", content: "Earlier message" },
+                { role: "assistant", content: "Earlier reply" },
+              ],
+            }),
+          });
+        }
+
+        if (url.endsWith("/chat/history/teacher-wang") && method === "DELETE") {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({ message: "Chat history cleared" }),
+          });
+        }
+
+        return Promise.resolve({
+          ok: false,
+          json: async () => ({}),
+        });
+      }),
+    );
+
+    render(<ChatModal character={teacherWang} onClose={() => undefined} />);
+
+    expect(await screen.findByText("Earlier message")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Clear chat history" }));
+
+    expect(
+      screen.getByText(
+        "Clear all chat history with Teacher Wang? This cannot be undone.",
+      ),
+    ).toBeInTheDocument();
+    expect(fetch).not.toHaveBeenCalledWith("/chat/history/teacher-wang", {
+      method: "DELETE",
+    });
+
+    await user.click(screen.getByRole("button", { name: "Confirm" }));
+
+    expect(
+      await screen.findByText("Start a conversation with Teacher Wang."),
+    ).toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledWith("/chat/history/teacher-wang", {
+      method: "DELETE",
+    });
+  });
+
+  it("keeps chat history when clear confirmation is cancelled", async () => {
+    const user = userEvent.setup();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: RequestInfo, init?: RequestInit) => {
+        const url = String(input);
+        const method = init?.method ?? "GET";
+
+        if (url.endsWith("/chat/history/teacher-wang") && method === "GET") {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({
+              messages: [
+                { role: "user", content: "Earlier message" },
+                { role: "assistant", content: "Earlier reply" },
+              ],
+            }),
+          });
+        }
+
+        return Promise.resolve({
+          ok: false,
+          json: async () => ({}),
+        });
+      }),
+    );
+
+    render(<ChatModal character={teacherWang} onClose={() => undefined} />);
+
+    expect(await screen.findByText("Earlier message")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Clear chat history" }));
+    await user.click(screen.getByRole("button", { name: "Cancel" }));
+
+    expect(screen.getByText("Earlier message")).toBeInTheDocument();
+    expect(fetch).not.toHaveBeenCalledWith("/chat/history/teacher-wang", {
+      method: "DELETE",
+    });
+  });
+
   it("shows an error when the chat request fails", async () => {
     vi.stubGlobal(
       "fetch",

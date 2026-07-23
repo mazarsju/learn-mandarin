@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from backend.conversation_logs import (
     append_message,
+    clear_conversation,
     load_conversation,
     should_append_user_message,
 )
@@ -43,6 +44,19 @@ class TestConversationLogs(unittest.TestCase):
         )
 
     def test_load_conversation_returns_empty_list_when_file_missing(self):
+        self.assertEqual(load_conversation("xiao-ming"), [])
+
+    def test_clear_conversation_removes_log_file(self):
+        append_message("teacher-wang", "user", "你好")
+        append_message("teacher-wang", "assistant", "你好！")
+
+        clear_conversation("teacher-wang")
+
+        self.assertEqual(load_conversation("teacher-wang"), [])
+        self.assertFalse((self.logs_dir / "teacher-wang.txt").exists())
+
+    def test_clear_conversation_is_noop_when_file_missing(self):
+        clear_conversation("xiao-ming")
         self.assertEqual(load_conversation("xiao-ming"), [])
 
     def test_should_append_user_message_avoids_duplicate_user_entries(self):

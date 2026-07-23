@@ -79,6 +79,12 @@ def append_message(character_id: str, role: str, content: str) -> None:
         file.write(_format_line(role, content) + "\n")
 
 
+def clear_conversation(character_id: str) -> None:
+    log_file = get_log_file(character_id)
+    if log_file.is_file():
+        log_file.unlink()
+
+
 def should_append_user_message(
     character_id: str,
     user_message: dict[str, str],
