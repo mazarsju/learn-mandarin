@@ -21,8 +21,15 @@ class TestCreateCharacterEndpoint(unittest.TestCase):
         self.mock_character_cls = self.character_patcher.start()
         self.addCleanup(self.character_patcher.stop)
 
+        self.refresh_patcher = patch(
+            "backend.routes.create_character.refresh_current_hsk_level"
+        )
+        self.mock_refresh = self.refresh_patcher.start()
+        self.addCleanup(self.refresh_patcher.stop)
+
         self.mock_character_cls.reset_mock()
         self.mock_session.reset_mock()
+        self.mock_refresh.reset_mock()
         self.mock_character_cls.query.filter_by.return_value.first.return_value = None
 
     def test_create_character_adds_record(self):
@@ -57,6 +64,7 @@ class TestCreateCharacterEndpoint(unittest.TestCase):
         )
         self.mock_session.add.assert_called_once()
         self.mock_session.commit.assert_called_once()
+        self.mock_refresh.assert_called_once_with()
 
     def test_create_existing_character_returns_conflict(self):
         self.mock_character_cls.query.filter_by.return_value.first.return_value = (
@@ -72,6 +80,7 @@ class TestCreateCharacterEndpoint(unittest.TestCase):
         self.assertEqual(response.get_json(), {"error": "Character already exists"})
         self.mock_session.add.assert_not_called()
         self.mock_session.commit.assert_not_called()
+        self.mock_refresh.assert_not_called()
 
     def test_create_non_chinese_character_returns_error(self):
         response = self.client.post(
@@ -86,6 +95,7 @@ class TestCreateCharacterEndpoint(unittest.TestCase):
         )
         self.mock_session.add.assert_not_called()
         self.mock_session.commit.assert_not_called()
+        self.mock_refresh.assert_not_called()
 
 
 if __name__ == "__main__":

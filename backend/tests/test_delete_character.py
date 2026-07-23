@@ -21,8 +21,15 @@ class TestDeleteCharacterEndpoint(unittest.TestCase):
         self.mock_character_cls = self.character_patcher.start()
         self.addCleanup(self.character_patcher.stop)
 
+        self.refresh_patcher = patch(
+            "backend.routes.delete_character.refresh_current_hsk_level"
+        )
+        self.mock_refresh = self.refresh_patcher.start()
+        self.addCleanup(self.refresh_patcher.stop)
+
         self.mock_character_cls.reset_mock()
         self.mock_session.reset_mock()
+        self.mock_refresh.reset_mock()
 
     def test_delete_character_removes_record_and_links(self):
         char_record = MagicMock()
@@ -38,6 +45,7 @@ class TestDeleteCharacterEndpoint(unittest.TestCase):
         char_record.words.clear.assert_called_once_with()
         self.mock_session.delete.assert_called_once_with(char_record)
         self.mock_session.commit.assert_called_once()
+        self.mock_refresh.assert_called_once_with()
 
     def test_delete_missing_character_returns_not_found(self):
         self.mock_character_cls.query.filter_by.return_value.first.return_value = None
@@ -48,6 +56,7 @@ class TestDeleteCharacterEndpoint(unittest.TestCase):
         self.assertEqual(response.get_json(), {"error": "Character not found"})
         self.mock_session.delete.assert_not_called()
         self.mock_session.commit.assert_not_called()
+        self.mock_refresh.assert_not_called()
 
 
 if __name__ == "__main__":

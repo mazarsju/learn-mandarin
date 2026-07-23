@@ -1,0 +1,153 @@
+"""Estimate and persist the learner's HSK level from known characters."""
+
+from __future__ import annotations
+
+import math
+from typing import Protocol, TypedDict
+
+from backend.extensions import db
+from backend.models import Character, HskCharacter, LearnerProfile
+
+HSK_MAX_LEVEL = 7
+HSK_LEVEL_COMPLETION_RATIO = 0.85
+LEARNER_PROFILE_ID = 1
+
+
+class HskVocabularyEntry(Protocol):
+    character: str
+    level: int
+    frequency: int
+
+
+class HskLevelStatus(TypedDict):
+    current_level: int | None
+    next_level: int | None
+    characters_to_next_level: int | None
+    progress_to_next_level: float
+    missing_characters: list[str]
+    max_level: int
+    completion_ratio: float
+
+
+def _required_known_count(total_characters: int) -> int:
+    return math.ceil(total_characters * HSK_LEVEL_COMPLETION_RATIO)
+
+
+def _entries_up_to_level(
+    vocabulary: list[HskVocabularyEntry],
+    level: int,
+) -> list[HskVocabularyEntry]:
+    return [entry for entry in vocabulary if entry.level <= level]
+
+
+def _is_level_complete(
+    known_characters: set[str],
+    vocabulary: list[HskVocabularyEntry],
+    level: int,
+) -> bool:
+    required = _entries_up_to_level(vocabulary, level)
+    if not required:
+        return False
+
+    known_up_to_level = sum(
+        1 for entry in required if entry.character in known_characters
+    )
+    return known_up_to_level >= _required_known_count(len(required))
+
+
+def get_hsk_level_status(
+    known_characters: set[str] | None = None,
+    vocabulary: list[HskVocabularyEntry] | None = None,
+) -> HskLevelStatus:
+    """Return Home-page HSK progress from known characters and HSK vocabulary."""
+    if known_characters is None:
+        known_characters = {row.char for row in Character.query.all()}
+    if vocabulary is None:
+        vocabulary = list(HskCharacter.query.all())
+
+    current_level: int | None = None
+    for level in range(1, HSK_MAX_LEVEL + 1):
+        if not _is_level_complete(known_characters, vocabulary, level):
+            break
+        current_level = level
+
+    if current_level == HSK_MAX_LEVEL:
+        return {
+            "current_level": HSK_MAX_LEVEL,
+            "next_level": None,
+            "characters_to_next_level": None,
+            "progress_to_next_level": 100.0,
+            "missing_characters": [],
+            "max_level": HSK_MAX_LEVEL,
+            "completion_ratio": HSK_LEVEL_COMPLETION_RATIO,
+        }
+
+    next_level = 1 if current_level is None else current_level + 1
+    required = _entries_up_to_level(vocabulary, next_level)
+    target_known = _required_known_count(len(required))
+    missing_entries = sorted(
+        (entry for entry in required if entry.character not in known_characters),
+        key=lambda entry: entry.frequency,
+    )
+    missing_characters = [entry.character for entry in missing_entries]
+    known_for_next = len(required) - len(missing_characters)
+    characters_to_next_level = max(0, target_known - known_for_next)
+
+    return {
+        "current_level": current_level,
+        "next_level": next_level,
+        "characters_to_next_level": characters_to_next_level,
+        "progress_to_next_level": (
+            0.0
+            if target_known == 0
+            else min(100.0, (known_for_next / target_known) * 100)
+        ),
+        "missing_characters": missing_characters,
+        "max_level": HSK_MAX_LEVEL,
+        "completion_ratio": HSK_LEVEL_COMPLETION_RATIO,
+    }
+
+
+def compute_current_hsk_level(
+    known_characters: set[str] | None = None,
+    vocabulary: list[HskVocabularyEntry] | None = None,
+) -> int | None:
+    """Return the highest completed HSK level, or None if HSK 1 is incomplete."""
+    return get_hsk_level_status(known_characters, vocabulary)["current_level"]
+
+
+def get_or_create_learner_profile() -> LearnerProfile:
+    profile = db.session.get(LearnerProfile, LEARNER_PROFILE_ID)
+    if profile is None:
+        profile = LearnerProfile(id=LEARNER_PROFILE_ID, current_hsk_level=None)
+        db.session.add(profile)
+        db.session.flush()
+    return profile
+
+
+def refresh_current_hsk_level(*, commit: bool = True) -> int | None:
+    """Recompute HSK level from vocabulary and persist it on the learner profile."""
+    level = compute_current_hsk_level()
+    profile = get_or_create_learner_profile()
+    profile.current_hsk_level = level
+    if commit:
+        db.session.commit()
+    return level
+
+
+def get_stored_current_hsk_level() -> int | None:
+    profile = db.session.get(LearnerProfile, LEARNER_PROFILE_ID)
+    if profile is None:
+        return None
+    return profile.current_hsk_level
+
+
+def speaking_hsk_level_from_current(current_level: int | None) -> int:
+    """Chat agents speak one level above the completed level (capped at max)."""
+    if current_level is None:
+        return 1
+    return min(current_level + 1, HSK_MAX_LEVEL)
+
+
+def get_chat_speaking_hsk_level() -> int:
+    return speaking_hsk_level_from_current(get_stored_current_hsk_level())

@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 
 from backend.extensions import db
+from backend.hsk_level import refresh_current_hsk_level
 from backend.models import Character, utcnow
 
 bp = Blueprint("update_character", __name__)
@@ -35,6 +36,7 @@ def update_character(char: str):
     char_record.writting_known = writting_known
     char_record.updated_at = utcnow()
     db.session.commit()
+    refresh_current_hsk_level()
 
     return {
         "char": char_record.char,

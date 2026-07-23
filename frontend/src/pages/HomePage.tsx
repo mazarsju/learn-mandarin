@@ -3,13 +3,11 @@ import MissingHskCharactersModal from "../components/MissingHskCharactersModal";
 import { InfoIcon, TrophyIcon } from "../components/icons";
 import Page from "../components/Page";
 import type { Character } from "../types/character";
+import { getMotivationMessages } from "../utils/homeMotivation";
 import {
-  HSK_LEVEL_COMPLETION_RATIO,
-  HSK_MAX_LEVEL,
-  getHskLevelStatus,
-  getMotivationMessages,
-  type HskCharacterEntry,
-} from "../utils/homeMotivation";
+  fetchHskLevelStatus,
+  type HskLevelStatus,
+} from "../utils/hskLevelApi";
 
 async function fetchCharacters() {
   const response = await fetch("/characters", { method: "GET" });
@@ -21,19 +19,11 @@ async function fetchCharacters() {
   return (await response.json()) as Character[];
 }
 
-async function fetchHskCharacters() {
-  const response = await fetch("/hsk-characters", { method: "GET" });
-
-  if (!response.ok) {
-    throw new Error("Failed to load HSK characters.");
-  }
-
-  return (await response.json()) as HskCharacterEntry[];
-}
-
 export default function HomePage() {
   const [characters, setCharacters] = useState<Character[]>([]);
-  const [hskCharacters, setHskCharacters] = useState<HskCharacterEntry[]>([]);
+  const [hskLevelStatus, setHskLevelStatus] = useState<HskLevelStatus | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isMissingModalOpen, setIsMissingModalOpen] = useState(false);
@@ -42,11 +32,11 @@ export default function HomePage() {
   useEffect(() => {
     let isMounted = true;
 
-    void Promise.all([fetchCharacters(), fetchHskCharacters()])
-      .then(([loadedCharacters, loadedHskCharacters]) => {
+    void Promise.all([fetchCharacters(), fetchHskLevelStatus()])
+      .then(([loadedCharacters, loadedHskLevelStatus]) => {
         if (isMounted) {
           setCharacters(loadedCharacters);
-          setHskCharacters(loadedHskCharacters);
+          setHskLevelStatus(loadedHskLevelStatus);
         }
       })
       .catch((fetchError: unknown) => {
@@ -74,46 +64,47 @@ export default function HomePage() {
     () => characters.filter((character) => character.writting_known).length,
     [characters],
   );
-  const hskLevelStatus = useMemo(
-    () =>
-      getHskLevelStatus(
-        characters.map((character) => character.char),
-        hskCharacters,
-      ),
-    [characters, hskCharacters],
-  );
   const motivationMessages = useMemo(
     () => getMotivationMessages(recognizedCount),
     [recognizedCount],
   );
 
   const hskTitle =
-    hskLevelStatus.currentLevel === null
-      ? "Your HSK journey starts here"
-      : hskLevelStatus.currentLevel === HSK_MAX_LEVEL
-        ? `You've reached the top — HSK ${HSK_MAX_LEVEL}!`
-        : `You're at HSK ${hskLevelStatus.currentLevel}!`;
+    hskLevelStatus === null
+      ? ""
+      : hskLevelStatus.current_level === null
+        ? "Your HSK journey starts here"
+        : hskLevelStatus.current_level === hskLevelStatus.max_level
+          ? `You've reached the top — HSK ${hskLevelStatus.max_level}!`
+          : `You're at HSK ${hskLevelStatus.current_level}!`;
 
   const hskProgressLabel =
-    hskLevelStatus.nextLevel === null
-      ? "Maximum HSK level reached. Outstanding work!"
-      : `${hskLevelStatus.charactersToNextLevel} ${
-          hskLevelStatus.charactersToNextLevel === 1 ? "character" : "characters"
-        } to reach HSK ${hskLevelStatus.nextLevel}`;
+    hskLevelStatus === null
+      ? ""
+      : hskLevelStatus.next_level === null
+        ? "Maximum HSK level reached. Outstanding work!"
+        : `${hskLevelStatus.characters_to_next_level} ${
+            hskLevelStatus.characters_to_next_level === 1
+              ? "character"
+              : "characters"
+          } to reach HSK ${hskLevelStatus.next_level}`;
 
-  const completionPercent = Math.round(HSK_LEVEL_COMPLETION_RATIO * 100);
+  const completionPercent =
+    hskLevelStatus === null
+      ? 0
+      : Math.round(hskLevelStatus.completion_ratio * 100);
 
   return (
     <Page title="Home">
       {isLoading && <p>Loading your progress...</p>}
       {error && <p className="table-error">{error}</p>}
-      {!isLoading && !error && (
+      {!isLoading && !error && hskLevelStatus !== null && (
         <>
           <section className="home-hsk-card" aria-label="HSK level">
             <div className="home-hsk-badge">
               <span className="home-hsk-badge-label">HSK</span>
               <span className="home-hsk-badge-level">
-                {hskLevelStatus.currentLevel ?? "—"}
+                {hskLevelStatus.current_level ?? "—"}
               </span>
             </div>
             <div className="home-hsk-content">
@@ -131,19 +122,21 @@ export default function HomePage() {
               <div
                 className="home-hsk-progress-track"
                 role="progressbar"
-                aria-valuenow={Math.round(hskLevelStatus.progressToNextLevel)}
+                aria-valuenow={Math.round(hskLevelStatus.progress_to_next_level)}
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-label="Progress to next HSK level"
               >
                 <div
                   className="home-hsk-progress-fill"
-                  style={{ width: `${hskLevelStatus.progressToNextLevel}%` }}
+                  style={{
+                    width: `${hskLevelStatus.progress_to_next_level}%`,
+                  }}
                 />
               </div>
               <div className="home-hsk-progress-footer">
                 <p className="home-hsk-progress-label">{hskProgressLabel}</p>
-                {hskLevelStatus.nextLevel !== null && (
+                {hskLevelStatus.next_level !== null && (
                   <button
                     type="button"
                     className="home-hsk-missing-button"
@@ -218,8 +211,8 @@ export default function HomePage() {
 
           <MissingHskCharactersModal
             isOpen={isMissingModalOpen}
-            level={hskLevelStatus.nextLevel}
-            characters={hskLevelStatus.missingCharacters}
+            level={hskLevelStatus.next_level}
+            characters={hskLevelStatus.missing_characters}
             onClose={() => setIsMissingModalOpen(false)}
           />
         </>

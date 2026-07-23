@@ -25,9 +25,16 @@ class TestUpdateCharacterEndpoint(unittest.TestCase):
         self.mock_utcnow = self.utcnow_patcher.start()
         self.addCleanup(self.utcnow_patcher.stop)
 
+        self.refresh_patcher = patch(
+            "backend.routes.update_character.refresh_current_hsk_level"
+        )
+        self.mock_refresh = self.refresh_patcher.start()
+        self.addCleanup(self.refresh_patcher.stop)
+
         self.mock_character_cls.reset_mock()
         self.mock_session.reset_mock()
         self.mock_utcnow.reset_mock()
+        self.mock_refresh.reset_mock()
 
     def test_update_character_updates_record(self):
         updated_at = MagicMock(isoformat=MagicMock(return_value="2026-07-12T12:00:00+00:00"))
@@ -60,6 +67,7 @@ class TestUpdateCharacterEndpoint(unittest.TestCase):
         self.assertEqual(char_record.pinyin, "ai")
         self.assertTrue(char_record.writting_known)
         self.mock_session.commit.assert_called_once()
+        self.mock_refresh.assert_called_once_with()
 
     def test_update_missing_character_returns_not_found(self):
         self.mock_character_cls.query.filter_by.return_value.first.return_value = None
@@ -71,6 +79,7 @@ class TestUpdateCharacterEndpoint(unittest.TestCase):
 
         self.assertEqual(response.status_code, 404)
         self.mock_session.commit.assert_not_called()
+        self.mock_refresh.assert_not_called()
 
     def test_update_character_with_invalid_body_returns_error(self):
         response = self.client.patch("/characters/爱", json={"pinyin": "ai"})

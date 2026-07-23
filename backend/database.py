@@ -76,6 +76,16 @@ def _ensure_hsk_content_loaded() -> None:
     load_hsk_content()
 
 
+def _ensure_learner_profile() -> None:
+    from backend.hsk_level import refresh_current_hsk_level
+    from backend.models import LearnerProfile
+
+    if LearnerProfile.query.first() is not None:
+        return
+
+    refresh_current_hsk_level()
+
+
 def init_db(app: Flask) -> None:
     import backend.models  # noqa: F401
 
@@ -85,3 +95,4 @@ def init_db(app: Flask) -> None:
         _migrate_drop_legacy_hsk_vocabulary()
         _migrate_hsk_words_level()
         _ensure_hsk_content_loaded()
+        _ensure_learner_profile()

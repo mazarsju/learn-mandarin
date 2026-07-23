@@ -4,9 +4,9 @@ from unittest.mock import patch
 
 from flask import Flask
 
-from backend.database import _ensure_hsk_content_loaded
+from backend.database import _ensure_hsk_content_loaded, _ensure_learner_profile
 from backend.extensions import db
-from backend.models import HskWord
+from backend.models import HskWord, LearnerProfile
 
 
 class TestEnsureHskContentLoaded(unittest.TestCase):
@@ -38,6 +38,37 @@ class TestEnsureHskContentLoaded(unittest.TestCase):
             _ensure_hsk_content_loaded()
 
         mock_load.assert_not_called()
+
+
+class TestEnsureLearnerProfile(unittest.TestCase):
+    def setUp(self):
+        self.app = Flask(__name__)
+        self.app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+        self.app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+        db.init_app(self.app)
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
+
+    def test_refreshes_when_profile_missing(self):
+        with patch("backend.hsk_level.refresh_current_hsk_level") as mock_refresh:
+            _ensure_learner_profile()
+
+        mock_refresh.assert_called_once_with()
+
+    def test_skips_when_profile_exists(self):
+        db.session.add(LearnerProfile(id=1, current_hsk_level=2))
+        db.session.commit()
+
+        with patch("backend.hsk_level.refresh_current_hsk_level") as mock_refresh:
+            _ensure_learner_profile()
+
+        mock_refresh.assert_not_called()
 
 
 if __name__ == "__main__":

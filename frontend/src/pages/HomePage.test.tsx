@@ -17,11 +17,15 @@ const characters = [
   },
 ];
 
-const hskCharacters = [
-  { character: "爱", level: 1, frequency: 10 },
-  { character: "好", level: 1, frequency: 20 },
-  { character: "八", level: 1, frequency: 30 },
-];
+const hskLevelStatus = {
+  current_level: null,
+  next_level: 1,
+  characters_to_next_level: 1,
+  progress_to_next_level: (2 / 3) * 100,
+  missing_characters: ["八"],
+  max_level: 7,
+  completion_ratio: 0.85,
+};
 
 describe("HomePage", () => {
   beforeEach(() => {
@@ -37,10 +41,10 @@ describe("HomePage", () => {
           });
         }
 
-        if (url.endsWith("/hsk-characters")) {
+        if (url.endsWith("/hsk-level")) {
           return Promise.resolve({
             ok: true,
-            json: async () => hskCharacters,
+            json: async () => hskLevelStatus,
           });
         }
 

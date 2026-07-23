@@ -3,6 +3,7 @@ from datetime import datetime
 from flask import Blueprint, request
 
 from backend.extensions import db
+from backend.hsk_level import refresh_current_hsk_level
 from backend.models import Character, Word, utcnow
 
 bp = Blueprint("bulk_characters", __name__)
@@ -79,5 +80,6 @@ def bulk_characters():
                 word_record.updated_at = now
 
     db.session.commit()
+    refresh_current_hsk_level()
 
     return {"message": "File received"}, 200

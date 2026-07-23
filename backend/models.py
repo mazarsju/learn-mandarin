@@ -95,3 +95,12 @@ class HskCharacter(db.Model):
         secondary=hsk_word_character,
         back_populates="characters",
     )
+
+
+class LearnerProfile(db.Model):
+    """Singleton row storing derived learner state such as current HSK level."""
+
+    __tablename__ = "learner_profile"
+
+    id = db.Column(Integer, primary_key=True)
+    current_hsk_level = db.Column(Integer, nullable=True)

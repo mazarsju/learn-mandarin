@@ -23,8 +23,14 @@ CHAT_CHARACTERS = {
 
 
 def get_system_prompt(character_id: str) -> str:
+    from backend.hsk_level import get_chat_speaking_hsk_level
+
     character = CHAT_CHARACTERS.get(character_id)
     if character is None:
         raise ValueError(f"Unknown character id: {character_id}")
 
-    return character["system_prompt"]
+    speaking_level = get_chat_speaking_hsk_level()
+    return (
+        f"{character['system_prompt']} The Chinese you use should be "
+        f"understandable by an HSK {speaking_level} level student."
+    )

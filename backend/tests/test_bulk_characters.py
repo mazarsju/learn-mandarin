@@ -29,9 +29,16 @@ class TestBulkCharactersEndpoint(unittest.TestCase):
         self.mock_word_cls = self.word_patcher.start()
         self.addCleanup(self.word_patcher.stop)
 
+        self.refresh_patcher = patch(
+            "backend.routes.bulk_characters.refresh_current_hsk_level"
+        )
+        self.mock_refresh = self.refresh_patcher.start()
+        self.addCleanup(self.refresh_patcher.stop)
+
         self.mock_character_cls.reset_mock()
         self.mock_word_cls.reset_mock()
         self.mock_session.reset_mock()
+        self.mock_refresh.reset_mock()
 
         self.mock_character_cls.query.filter_by.return_value.first.return_value = None
         self.mock_word_cls.query.filter_by.return_value.first.return_value = None
@@ -153,6 +160,7 @@ class TestBulkCharactersEndpoint(unittest.TestCase):
 
         self.assertEqual(self.mock_session.add.call_count, 3)
         self.mock_session.commit.assert_called_once()
+        self.mock_refresh.assert_called_once_with()
 
     def test_legacy_five_column_format_still_works(self):
         created_characters = []
@@ -194,6 +202,7 @@ class TestBulkCharactersEndpoint(unittest.TestCase):
         )
         self.assertEqual(len(created_characters[0].words), 2)
         self.mock_session.commit.assert_called_once()
+        self.mock_refresh.assert_called_once_with()
 
 
 if __name__ == "__main__":

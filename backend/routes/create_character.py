@@ -2,6 +2,7 @@ from flask import Blueprint, request
 
 from backend.chinese_validation import is_han_character
 from backend.extensions import db
+from backend.hsk_level import refresh_current_hsk_level
 from backend.models import Character
 
 bp = Blueprint("create_character", __name__)
@@ -46,6 +47,7 @@ def create_character():
     )
     db.session.add(char_record)
     db.session.commit()
+    refresh_current_hsk_level()
 
     return {
         "char": char_record.char,
