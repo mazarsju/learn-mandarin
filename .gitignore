@@ -4,3 +4,4 @@ __pycache__/
 *.db
 .config.txt
 conversation_logs/
+.cursor/skills/update-app-screenshots/scripts/node_modules/
