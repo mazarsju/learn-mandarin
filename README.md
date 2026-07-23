@@ -232,7 +232,7 @@ A chatbot that speaks Chinese using only the characters you are supposed to know
 - [x] Minimalist UI to have a list of chats and navigate through them
 - [x] AI chatbot remembering the previous answer (non-persistent through sessions)
 - [x] AI chatbot remembering the previous answer (persistent through sessions)
-- [ ] Add constraint for the agent to use only the known vocabulary
+- [x] Add constraint for the agent to use only the known vocabulary
 
 ### 3. Multi-agent conversations for specific topics
 

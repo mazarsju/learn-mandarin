@@ -38,7 +38,10 @@ class TestChatEndpoint(unittest.TestCase):
         self.mock_should_append.return_value = True
 
     def test_chat_returns_assistant_message(self):
-        self.mock_generate.return_value = "你好，很高兴认识你。"
+        self.mock_generate.return_value = MagicMock(
+            content="你好，很高兴认识你。",
+            unknown_characters=[],
+        )
 
         response = self.client.post(
             "/chat",
@@ -67,6 +70,32 @@ class TestChatEndpoint(unittest.TestCase):
             "teacher-wang",
             "assistant",
             "你好，很高兴认识你。",
+        )
+
+    def test_chat_includes_unknown_characters_when_rephrase_fails(self):
+        self.mock_generate.return_value = MagicMock(
+            content="你好啊",
+            unknown_characters=[["世", "界"], ["啊"]],
+        )
+
+        response = self.client.post(
+            "/chat",
+            json={
+                "character_id": "teacher-wang",
+                "messages": [{"role": "user", "content": "你好"}],
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.get_json(),
+            {
+                "message": {
+                    "role": "assistant",
+                    "content": "你好啊",
+                },
+                "unknown_characters": [["世", "界"], ["啊"]],
+            },
         )
 
     def test_chat_rejects_invalid_character_id(self):

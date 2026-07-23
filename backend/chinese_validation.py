@@ -22,3 +22,7 @@ def is_han_character(char: str) -> bool:
 
 def is_han_text(text: str) -> bool:
     return bool(text) and bool(HAN_TEXT_PATTERN.fullmatch(text))
+
+
+def extract_han_characters(text: str) -> set[str]:
+    return {char for char in text if is_han_character(char)}

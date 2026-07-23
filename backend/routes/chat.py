@@ -60,18 +60,22 @@ def chat():
             append_message(character_id, "user", last_user_message["content"])
 
         reply = generate_chat_reply(character_id, normalized_messages)
-        append_message(character_id, "assistant", reply)
+        append_message(character_id, "assistant", reply.content)
     except ValueError as error:
         return {"error": str(error)}, 400
     except Exception:
         return {"error": "Failed to generate a chat response"}, 500
 
-    return {
+    response = {
         "message": {
             "role": "assistant",
-            "content": reply,
+            "content": reply.content,
         }
-    }, 200
+    }
+    if reply.unknown_characters:
+        response["unknown_characters"] = reply.unknown_characters
+
+    return response, 200
 
 
 @bp.get("/chat/history/<character_id>")

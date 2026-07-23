@@ -10,6 +10,7 @@ export type ChatRequest = {
 
 export type ChatResponse = {
   message: ChatMessage;
+  unknown_characters?: string[][];
 };
 
 export type ChatHistoryResponse = {

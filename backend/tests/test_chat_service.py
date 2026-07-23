@@ -7,15 +7,38 @@ import backend.database as database_module
 database_module.init_db = MagicMock()
 database_module.configure_database = MagicMock()
 
-from backend.chat_service import generate_chat_reply  # noqa: E402
+from backend.chat_service import (  # noqa: E402
+    ChatReplyResult,
+    find_unknown_characters,
+    generate_chat_reply,
+)
+
+
+class TestFindUnknownCharacters(unittest.TestCase):
+    def test_find_unknown_characters_returns_sorted_unknowns(self):
+        self.assertEqual(
+            find_unknown_characters("你好世界", {"你", "好"}),
+            ["世", "界"],
+        )
+
+    def test_find_unknown_characters_ignores_non_han(self):
+        self.assertEqual(
+            find_unknown_characters("Hello 你好!", {"你", "好"}),
+            [],
+        )
 
 
 class TestGenerateChatReply(unittest.TestCase):
+    @patch("backend.chat_service.Character")
     @patch("backend.hsk_level.get_chat_speaking_hsk_level", return_value=3)
     @patch("backend.chat_service.get_llm")
     def test_generate_chat_reply_returns_assistant_message(
-        self, mock_get_llm, _mock_speaking_level
+        self, mock_get_llm, _mock_speaking_level, mock_character_cls
     ):
+        mock_character_cls.query.all.return_value = [
+            MagicMock(char="你"),
+            MagicMock(char="好"),
+        ]
         mock_llm = MagicMock()
         mock_llm.invoke.return_value = MagicMock(content="你好！")
         mock_get_llm.return_value = mock_llm
@@ -25,7 +48,10 @@ class TestGenerateChatReply(unittest.TestCase):
             [{"role": "user", "content": "你好"}],
         )
 
-        self.assertEqual(reply, "你好！")
+        self.assertEqual(
+            reply,
+            ChatReplyResult(content="你好！", unknown_characters=[]),
+        )
         mock_llm.invoke.assert_called_once()
         invoked_messages = mock_llm.invoke.call_args.args[0]
         self.assertIn("Teacher Wang", invoked_messages[0].content)
@@ -34,6 +60,95 @@ class TestGenerateChatReply(unittest.TestCase):
             invoked_messages[0].content,
         )
         self.assertEqual(invoked_messages[1].content, "你好")
+
+    @patch("backend.chat_service.Character")
+    @patch("backend.hsk_level.get_chat_speaking_hsk_level", return_value=1)
+    @patch("backend.chat_service.get_llm")
+    def test_rephrases_when_reply_contains_unknown_characters(
+        self, mock_get_llm, _mock_speaking_level, mock_character_cls
+    ):
+        mock_character_cls.query.all.return_value = [
+            MagicMock(char="你"),
+            MagicMock(char="好"),
+        ]
+        mock_llm = MagicMock()
+        mock_llm.invoke.side_effect = [
+            MagicMock(content="你好世界"),
+            MagicMock(content="你好！"),
+        ]
+        mock_get_llm.return_value = mock_llm
+
+        reply = generate_chat_reply(
+            "xiao-ming",
+            [{"role": "user", "content": "你好"}],
+        )
+
+        self.assertEqual(
+            reply,
+            ChatReplyResult(content="你好！", unknown_characters=[]),
+        )
+        self.assertEqual(mock_llm.invoke.call_count, 2)
+        rephrase_prompt = mock_llm.invoke.call_args_list[1].args[0][-1].content
+        self.assertIn("世", rephrase_prompt)
+        self.assertIn("界", rephrase_prompt)
+
+    @patch("backend.hsk_level.get_chat_speaking_hsk_level", return_value=1)
+    @patch("backend.chat_service.get_llm")
+    def test_skips_retry_when_disabled_for_character(
+        self, mock_get_llm, _mock_speaking_level
+    ):
+        mock_llm = MagicMock()
+        mock_llm.invoke.return_value = MagicMock(content="你好世界")
+        mock_get_llm.return_value = mock_llm
+
+        reply = generate_chat_reply(
+            "teacher-wang",
+            [{"role": "user", "content": "你好"}],
+        )
+
+        self.assertEqual(
+            reply,
+            ChatReplyResult(content="你好世界", unknown_characters=[]),
+        )
+        mock_llm.invoke.assert_called_once()
+
+    @patch("backend.chat_service.Character")
+    @patch("backend.hsk_level.get_chat_speaking_hsk_level", return_value=1)
+    @patch("backend.chat_service.get_llm")
+    def test_ships_reply_with_fewest_unknowns_after_failed_rephrases(
+        self, mock_get_llm, _mock_speaking_level, mock_character_cls
+    ):
+        mock_character_cls.query.all.return_value = [
+            MagicMock(char="你"),
+            MagicMock(char="好"),
+        ]
+        mock_llm = MagicMock()
+        mock_llm.invoke.side_effect = [
+            MagicMock(content="你好世界"),  # 世, 界
+            MagicMock(content="你好啊"),  # 啊 — best
+            MagicMock(content="你好吗呢"),  # 吗, 呢
+            MagicMock(content="你好世界啊"),  # 世, 界, 啊
+        ]
+        mock_get_llm.return_value = mock_llm
+
+        reply = generate_chat_reply(
+            "xiao-ming",
+            [{"role": "user", "content": "你好"}],
+        )
+
+        self.assertEqual(
+            reply,
+            ChatReplyResult(
+                content="你好啊",
+                unknown_characters=[
+                    ["世", "界"],
+                    ["啊"],
+                    ["吗", "呢"],
+                    ["世", "啊", "界"],
+                ],
+            ),
+        )
+        self.assertEqual(mock_llm.invoke.call_count, 4)
 
     def test_generate_chat_reply_rejects_unknown_character(self):
         with self.assertRaises(ValueError):
