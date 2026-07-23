@@ -4,6 +4,7 @@ import {
   isValidPinyin,
   parsePinyinSyllable,
   parseTone,
+  suggestUmlautPinyin,
 } from "./pinyin";
 
 describe("parsePinyinSyllable", () => {
@@ -73,6 +74,25 @@ describe("isValidPinyin", () => {
     "rejects invalid pinyin %s",
     (value) => {
       expect(isValidPinyin(value)).toBe(false);
+    },
+  );
+});
+
+describe("suggestUmlautPinyin", () => {
+  it.each([
+    ["lue", "lüe"],
+    ["lue4", "lüe4"],
+    ["nue", "nüe"],
+    ["ue", "üe"],
+    ["  LUE3  ", "LÜE3"],
+  ])("suggests %s → %s", (value, expected) => {
+    expect(suggestUmlautPinyin(value)).toBe(expected);
+  });
+
+  it.each(["", "   ", "xyz", "invalid", "ai5", "ai4", "lu", "nu4", "lüe"])(
+    "returns null for %s",
+    (value) => {
+      expect(suggestUmlautPinyin(value)).toBeNull();
     },
   );
 });

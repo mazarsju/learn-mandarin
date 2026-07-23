@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { isValidCharacter, type Character } from "../types/character";
-import { isValidPinyin } from "../types/pinyin";
+import { isValidPinyin, suggestUmlautPinyin } from "../types/pinyin";
 
 export type CharacterFormValues = {
   char: string;
@@ -58,6 +58,11 @@ export default function CharacterFormModal({
   }
 
   const trimmedChar = char.trim();
+  const trimmedPinyin = pinyin.trim();
+  const umlautSuggestion =
+    trimmedPinyin !== "" && !isValidPinyin(pinyin)
+      ? suggestUmlautPinyin(pinyin)
+      : null;
   const isDuplicateCharacter =
     mode === "add" &&
     isValidCharacter(trimmedChar) &&
@@ -66,7 +71,10 @@ export default function CharacterFormModal({
     !isValidCharacter(char) || !isValidPinyin(pinyin) || isDuplicateCharacter;
   const showCharacterWarning = mode === "add" && char.length > 0 && !isValidCharacter(char);
   const showDuplicateCharacterWarning = isDuplicateCharacter;
-  const showPinyinWarning = pinyin.trim() !== "" && !isValidPinyin(pinyin);
+  const showPinyinWarning = trimmedPinyin !== "" && !isValidPinyin(pinyin);
+  const pinyinWarningMessage = umlautSuggestion
+    ? `Don't you mean ${umlautSuggestion}?`
+    : "Enter a valid pinyin.";
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -129,7 +137,7 @@ export default function CharacterFormModal({
           </label>
           {showPinyinWarning && (
             <p id="pinyin-warning" className="form-warning">
-              Enter a valid pinyin.
+              {pinyinWarningMessage}
             </p>
           )}
           <div className="modal-field modal-field-toggle">

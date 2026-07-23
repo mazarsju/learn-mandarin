@@ -591,3 +591,21 @@ export function parsePinyinSyllable(value: string): PinyinSyllable | null {
 export function isValidPinyin(value: string): boolean {
   return parsePinyinSyllable(value) !== null;
 }
+
+/**
+ * When `value` is not valid pinyin, but replacing ascii "u"/"U" with "ü"/"Ü"
+ * yields valid pinyin, return that suggestion. Otherwise return null.
+ */
+export function suggestUmlautPinyin(value: string): string | null {
+  const trimmed = value.trim();
+  if (trimmed === "" || isValidPinyin(trimmed)) {
+    return null;
+  }
+
+  const withUmlaut = trimmed.replace(/u/g, "ü").replace(/U/g, "Ü");
+  if (withUmlaut !== trimmed && isValidPinyin(withUmlaut)) {
+    return withUmlaut;
+  }
+
+  return null;
+}

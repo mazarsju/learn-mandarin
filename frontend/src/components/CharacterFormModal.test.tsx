@@ -143,4 +143,24 @@ describe("CharacterFormModal", () => {
       writting_known: true,
     });
   });
+
+  it("suggests ü pinyin when u-for-ü would make the value valid", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <CharacterFormModal
+        mode="add"
+        isOpen
+        prefilledChar="略"
+        onConfirm={() => {}}
+        onCancel={() => {}}
+      />,
+    );
+
+    await user.type(screen.getByLabelText("pinyin"), "lue4");
+
+    expect(screen.getByRole("button", { name: "Confirm" })).toBeDisabled();
+    expect(screen.getByText("Don't you mean lüe4?")).toBeInTheDocument();
+    expect(screen.queryByText("Enter a valid pinyin.")).not.toBeInTheDocument();
+  });
 });
