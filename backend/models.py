@@ -17,6 +17,19 @@ character_word = Table(
 )
 
 
+hsk_word_character = Table(
+    "hsk_word_character",
+    db.Model.metadata,
+    Column("word", String(32), ForeignKey("hsk_words.word"), primary_key=True),
+    Column(
+        "character",
+        String(1),
+        ForeignKey("hsk_characters.character"),
+        primary_key=True,
+    ),
+)
+
+
 class Character(db.Model):
     __tablename__ = "character"
 
@@ -56,8 +69,28 @@ class Word(db.Model):
     )
 
 
-class HskVocabulary(db.Model):
-    __tablename__ = "hsk_vocabulary"
+class HskWord(db.Model):
+    __tablename__ = "hsk_words"
+
+    word = db.Column(String(32), primary_key=True)
+    frequency = db.Column(Integer, nullable=False)
+
+    characters = db.relationship(
+        "HskCharacter",
+        secondary=hsk_word_character,
+        back_populates="words",
+    )
+
+
+class HskCharacter(db.Model):
+    __tablename__ = "hsk_characters"
 
     character = db.Column(String(1), primary_key=True)
     level = db.Column(Integer, nullable=False)
+    frequency = db.Column(Integer, nullable=False)
+
+    words = db.relationship(
+        "HskWord",
+        secondary=hsk_word_character,
+        back_populates="characters",
+    )

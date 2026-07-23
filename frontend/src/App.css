@@ -801,6 +801,14 @@ body {
   border-color: #d97706;
 }
 
+.home-missing-characters-hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  font-style: italic;
+  color: #4b5563;
+}
+
 .home-missing-characters-list {
   margin: 0;
   font-size: 1.25rem;

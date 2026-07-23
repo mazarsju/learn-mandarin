@@ -1,12 +1,9 @@
 import os
-from pathlib import Path
 
 from flask import Flask
 from sqlalchemy import inspect, text
 
 from backend.extensions import db
-
-HSK_CONTENT_DIR = Path(__file__).resolve().parent.parent / "preload" / "hsk-content"
 
 
 def configure_database(app: Flask) -> None:
@@ -42,14 +39,24 @@ def _migrate_updated_at_columns() -> None:
     db.session.commit()
 
 
-def _ensure_hsk_vocabulary_loaded() -> None:
-    from backend.hsk_vocabulary_loader import load_hsk_vocabulary
-    from backend.models import HskVocabulary
-
-    if HskVocabulary.query.first() is not None:
+def _migrate_drop_legacy_hsk_vocabulary() -> None:
+    """Drop the old hsk_vocabulary table so content reloads into the new schema."""
+    inspector = inspect(db.engine)
+    if "hsk_vocabulary" not in inspector.get_table_names():
         return
 
-    load_hsk_vocabulary(HSK_CONTENT_DIR)
+    db.session.execute(text("DROP TABLE hsk_vocabulary"))
+    db.session.commit()
+
+
+def _ensure_hsk_content_loaded() -> None:
+    from backend.hsk_content_loader import load_hsk_content
+    from backend.models import HskWord
+
+    if HskWord.query.first() is not None:
+        return
+
+    load_hsk_content()
 
 
 def init_db(app: Flask) -> None:
@@ -58,4 +65,5 @@ def init_db(app: Flask) -> None:
     with app.app_context():
         db.create_all()
         _migrate_updated_at_columns()
-        _ensure_hsk_vocabulary_loaded()
+        _migrate_drop_legacy_hsk_vocabulary()
+        _ensure_hsk_content_loaded()

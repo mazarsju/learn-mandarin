@@ -1,8 +1,9 @@
 export const HSK_MAX_LEVEL = 7;
 
-export type HskVocabularyEntry = {
+export type HskCharacterEntry = {
   character: string;
   level: number;
+  frequency: number;
 };
 
 export type HskLevelStatus = {
@@ -13,29 +14,28 @@ export type HskLevelStatus = {
   missingCharacters: string[];
 };
 
-function charactersForLevel(
-  vocabulary: HskVocabularyEntry[],
+function entriesForLevel(
+  vocabulary: HskCharacterEntry[],
   level: number,
-): string[] {
-  return vocabulary
-    .filter((entry) => entry.level === level)
-    .map((entry) => entry.character);
+): HskCharacterEntry[] {
+  return vocabulary.filter((entry) => entry.level === level);
 }
 
 function isLevelComplete(
   knownCharacters: Set<string>,
-  vocabulary: HskVocabularyEntry[],
+  vocabulary: HskCharacterEntry[],
   level: number,
 ): boolean {
-  const required = charactersForLevel(vocabulary, level);
+  const required = entriesForLevel(vocabulary, level);
   return (
-    required.length > 0 && required.every((character) => knownCharacters.has(character))
+    required.length > 0 &&
+    required.every((entry) => knownCharacters.has(entry.character))
   );
 }
 
 export function getHskLevelStatus(
   knownCharacters: Iterable<string>,
-  vocabulary: HskVocabularyEntry[],
+  vocabulary: HskCharacterEntry[],
 ): HskLevelStatus {
   const known = new Set(knownCharacters);
 
@@ -58,8 +58,11 @@ export function getHskLevelStatus(
   }
 
   const nextLevel = currentLevel === null ? 1 : currentLevel + 1;
-  const required = charactersForLevel(vocabulary, nextLevel);
-  const missingCharacters = required.filter((character) => !known.has(character));
+  const required = entriesForLevel(vocabulary, nextLevel);
+  const missingEntries = required
+    .filter((entry) => !known.has(entry.character))
+    .sort((a, b) => a.frequency - b.frequency);
+  const missingCharacters = missingEntries.map((entry) => entry.character);
   const knownForNext = required.length - missingCharacters.length;
 
   return {

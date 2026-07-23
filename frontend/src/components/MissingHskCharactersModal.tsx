@@ -33,7 +33,15 @@ export default function MissingHskCharactersModal({
               No missing characters — this level is complete.
             </p>
           ) : (
-            <p className="home-missing-characters-list">{characters.join("、")}</p>
+            <>
+              <p className="home-missing-characters-hint">
+                (those characters are ordered by frequency. If you want to learn
+                them, we are suggesting you to learn them in that order)
+              </p>
+              <p className="home-missing-characters-list">
+                {characters.join("、")}
+              </p>
+            </>
           )}
         </div>
         <div className="modal-actions">

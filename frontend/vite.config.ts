@@ -21,7 +21,7 @@ export default defineConfig({
       ],
     },
   },
-    server: {
+  server: {
     proxy: {
       "/health": "http://127.0.0.1:5000",
       "/characters": "http://127.0.0.1:5000",
@@ -29,7 +29,7 @@ export default defineConfig({
       "/words": "http://127.0.0.1:5000",
       "/llm-config": "http://127.0.0.1:5000",
       "/chat": "http://127.0.0.1:5000",
-      "/hsk-vocabulary": "http://127.0.0.1:5000",
+      "/hsk-characters": "http://127.0.0.1:5000",
     },
   },
 });

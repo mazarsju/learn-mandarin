@@ -17,10 +17,10 @@ const characters = [
   },
 ];
 
-const hskVocabulary = [
-  { character: "爱", level: 1 },
-  { character: "好", level: 1 },
-  { character: "八", level: 1 },
+const hskCharacters = [
+  { character: "爱", level: 1, frequency: 10 },
+  { character: "好", level: 1, frequency: 20 },
+  { character: "八", level: 1, frequency: 30 },
 ];
 
 describe("HomePage", () => {
@@ -37,10 +37,10 @@ describe("HomePage", () => {
           });
         }
 
-        if (url.endsWith("/hsk-vocabulary")) {
+        if (url.endsWith("/hsk-characters")) {
           return Promise.resolve({
             ok: true,
-            json: async () => hskVocabulary,
+            json: async () => hskCharacters,
           });
         }
 

@@ -1,15 +1,15 @@
 import { getHskLevelStatus, getMotivationMessages } from "./homeMotivation";
 
 const vocabulary = [
-  { character: "爱", level: 1 },
-  { character: "好", level: 1 },
-  { character: "八", level: 1 },
-  { character: "学", level: 2 },
-  { character: "习", level: 2 },
+  { character: "爱", level: 1, frequency: 30 },
+  { character: "好", level: 1, frequency: 10 },
+  { character: "八", level: 1, frequency: 20 },
+  { character: "学", level: 2, frequency: 40 },
+  { character: "习", level: 2, frequency: 50 },
 ];
 
 describe("getHskLevelStatus", () => {
-  it("returns pre-HSK 1 status when level 1 characters are missing", () => {
+  it("returns missing characters ordered by frequency ascending", () => {
     expect(getHskLevelStatus(["爱"], vocabulary)).toEqual({
       currentLevel: null,
       nextLevel: 1,
@@ -33,6 +33,7 @@ describe("getHskLevelStatus", () => {
     const completeVocabulary = [1, 2, 3, 4, 5, 6, 7].map((level) => ({
       character: ["一", "二", "三", "四", "五", "六", "七"][level - 1],
       level,
+      frequency: level,
     }));
     const known = completeVocabulary.map((entry) => entry.character);
 

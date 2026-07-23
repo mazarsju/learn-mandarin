@@ -7,7 +7,7 @@ import {
   HSK_MAX_LEVEL,
   getHskLevelStatus,
   getMotivationMessages,
-  type HskVocabularyEntry,
+  type HskCharacterEntry,
 } from "../utils/homeMotivation";
 
 async function fetchCharacters() {
@@ -20,19 +20,19 @@ async function fetchCharacters() {
   return (await response.json()) as Character[];
 }
 
-async function fetchHskVocabulary() {
-  const response = await fetch("/hsk-vocabulary", { method: "GET" });
+async function fetchHskCharacters() {
+  const response = await fetch("/hsk-characters", { method: "GET" });
 
   if (!response.ok) {
-    throw new Error("Failed to load HSK vocabulary.");
+    throw new Error("Failed to load HSK characters.");
   }
 
-  return (await response.json()) as HskVocabularyEntry[];
+  return (await response.json()) as HskCharacterEntry[];
 }
 
 export default function HomePage() {
   const [characters, setCharacters] = useState<Character[]>([]);
-  const [hskVocabulary, setHskVocabulary] = useState<HskVocabularyEntry[]>([]);
+  const [hskCharacters, setHskCharacters] = useState<HskCharacterEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isMissingModalOpen, setIsMissingModalOpen] = useState(false);
@@ -40,11 +40,11 @@ export default function HomePage() {
   useEffect(() => {
     let isMounted = true;
 
-    void Promise.all([fetchCharacters(), fetchHskVocabulary()])
-      .then(([loadedCharacters, loadedVocabulary]) => {
+    void Promise.all([fetchCharacters(), fetchHskCharacters()])
+      .then(([loadedCharacters, loadedHskCharacters]) => {
         if (isMounted) {
           setCharacters(loadedCharacters);
-          setHskVocabulary(loadedVocabulary);
+          setHskCharacters(loadedHskCharacters);
         }
       })
       .catch((fetchError: unknown) => {
@@ -76,9 +76,9 @@ export default function HomePage() {
     () =>
       getHskLevelStatus(
         characters.map((character) => character.char),
-        hskVocabulary,
+        hskCharacters,
       ),
-    [characters, hskVocabulary],
+    [characters, hskCharacters],
   );
   const motivationMessages = useMemo(
     () => getMotivationMessages(recognizedCount),

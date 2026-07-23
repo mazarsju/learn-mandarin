@@ -34,7 +34,9 @@ learn-mandarin/
 │   ├── llm_config.py       # Read/write LLM settings in .config.txt
 │   ├── chat_agents.py      # Chat character prompts
 │   ├── chat_service.py     # LLM chat reply generation
-│   ├── models.py           # Character, Word, and association tables
+│   ├── models.py           # Character, Word, HskWord, HskCharacter, and association tables
+│   ├── hsk_content/        # Download complete-hsk JSON helpers
+│   ├── hsk_content_loader.py  # Load HSK words/characters from upstream JSON
 │   ├── routes/             # One endpoint per file (Flask blueprints)
 │   ├── learn_mandarin.db   # SQLite database (created on first run)
 │   └── requirements.txt    # Python dependencies
@@ -98,7 +100,9 @@ On first start, a SQLite database is created at `backend/learn_mandarin.db` with
 | `character` | `char` (PK), `pinyin` (max 6 chars), `writting_known` (boolean), `updated_at` (datetime) |
 | `words` | `word` (PK, max 10 chars), `definition` (max 100 chars, nullable), `updated_at` (datetime) |
 | `character_word` | many-to-many link between `character` and `words` |
-| `hsk_vocabulary` | `character` (PK, single Han character), `level` (integer, HSK 3.0 level 1–7) |
+| `hsk_words` | `word` (PK), `frequency` (integer) |
+| `hsk_characters` | `character` (PK, single Han character), `level` (integer, HSK 3.0 level 1–7), `frequency` (integer) |
+| `hsk_word_character` | many-to-many link between `hsk_words` and `hsk_characters` |
 
 Override the database file path with the `DATABASE_PATH` environment variable if needed.
 
@@ -139,7 +143,7 @@ curl -X POST -F "file=@db.txt" http://127.0.0.1:5000/characters/bulk
 | `POST` | `/chat` | Send a chat message to the selected AI character |
 | `GET` | `/characters` | List all characters |
 | `POST` | `/characters` | Create a new character |
-| `GET` | `/hsk-vocabulary` | List HSK vocabulary characters and levels |
+| `GET` | `/hsk-characters` | List HSK characters with level and frequency |
 | `POST` | `/words` | Create a new word and link it to existing characters |
 | `PATCH` | `/characters/<char>` | Update a character's `pinyin` and `writting_known` |
 | `DELETE` | `/characters/<char>` | Delete a character and its `character_word` links |
