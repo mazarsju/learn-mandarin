@@ -36,7 +36,7 @@ describe("MissingHskCharactersModal", () => {
     expect(
       await screen.findByRole("heading", { name: "爱" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Related HSK 1 words:")).toBeInTheDocument();
+    expect(screen.getByText("Related HSK words (up to level 1):")).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByText("爱好")).toBeInTheDocument();
     });

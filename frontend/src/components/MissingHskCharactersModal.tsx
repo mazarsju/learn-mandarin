@@ -159,7 +159,7 @@ export default function MissingHskCharactersModal({
             </h2>
             <div className="character-words-modal-content">
               <p className="character-words-modal-heading">
-                Related HSK {level} words:
+                Related HSK words (up to level {level}):
               </p>
               {isLoadingWords && <p>Loading words...</p>}
               {wordsError && <p className="table-error">{wordsError}</p>}

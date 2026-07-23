@@ -14,7 +14,7 @@ def list_hsk_character_words(character: str):
     level = request.args.get("level", type=int)
     words = entry.words
     if level is not None:
-        words = [word for word in words if word.level == level]
+        words = [word for word in words if word.level <= level]
 
     words = sorted(words, key=lambda word: (word.frequency, word.word))
     return [
