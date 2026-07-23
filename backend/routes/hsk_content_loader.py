@@ -2,8 +2,8 @@ from sqlalchemy.dialects.sqlite import insert
 
 from backend.chinese_validation import is_han_character
 from backend.extensions import db
-from backend.hsk_content.source import load_complete_hsk_entries, words_by_new_level
 from backend.models import HskCharacter, HskWord, hsk_word_character
+from backend.routes.hsk_source import load_complete_hsk_entries, words_by_new_level
 
 
 def load_hsk_content(entries: list[dict] | None = None) -> dict[str, int]:

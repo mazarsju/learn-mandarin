@@ -34,10 +34,9 @@ learn-mandarin/
 │   ├── llm_config.py       # Read/write LLM settings in .config.txt
 │   ├── chat_agents.py      # Chat character prompts
 │   ├── chat_service.py     # LLM chat reply generation
+│   ├── hsk.json            # Bundled HSK fallback (new-X only) if GitHub download fails
 │   ├── models.py           # Character, Word, HskWord, HskCharacter, and association tables
-│   ├── hsk_content/        # Download complete-hsk JSON helpers
-│   ├── hsk_content_loader.py  # Load HSK words/characters from upstream JSON
-│   ├── routes/             # One endpoint per file (Flask blueprints)
+│   ├── routes/             # One endpoint per file (Flask blueprints); HSK load helpers
 │   ├── learn_mandarin.db   # SQLite database (created on first run)
 │   └── requirements.txt    # Python dependencies
 ├── frontend/

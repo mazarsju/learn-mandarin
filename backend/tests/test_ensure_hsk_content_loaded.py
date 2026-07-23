@@ -25,7 +25,7 @@ class TestEnsureHskContentLoaded(unittest.TestCase):
         self.app_context.pop()
 
     def test_loads_when_table_is_empty(self):
-        with patch("backend.hsk_content_loader.load_hsk_content") as mock_load:
+        with patch("backend.routes.hsk_content_loader.load_hsk_content") as mock_load:
             _ensure_hsk_content_loaded()
 
         mock_load.assert_called_once_with()
@@ -34,7 +34,7 @@ class TestEnsureHskContentLoaded(unittest.TestCase):
         db.session.add(HskWord(word="爱", frequency=10))
         db.session.commit()
 
-        with patch("backend.hsk_content_loader.load_hsk_content") as mock_load:
+        with patch("backend.routes.hsk_content_loader.load_hsk_content") as mock_load:
             _ensure_hsk_content_loaded()
 
         mock_load.assert_not_called()

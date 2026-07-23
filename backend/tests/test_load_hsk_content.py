@@ -8,18 +8,20 @@ from unittest.mock import MagicMock, patch
 from flask import Flask
 
 from backend.extensions import db
-from backend.hsk_content.source import (
+from backend.models import HskCharacter, HskWord, hsk_word_character  # noqa: F401
+from backend.routes.hsk_content_loader import load_hsk_content, reload_hsk_content
+from backend.routes.hsk_source import (
     COMPLETE_HSK_JSON_URL,
+    HSK_FALLBACK_PATH,
     fetch_complete_hsk_entries,
     load_complete_hsk_entries,
+    load_fallback_hsk_entries,
     words_by_new_level,
 )
-from backend.hsk_content_loader import load_hsk_content, reload_hsk_content
-from backend.models import HskCharacter, HskWord, hsk_word_character  # noqa: F401
 
 FIXTURE_PATH = (
     Path(__file__).resolve().parents[1]
-    / "hsk_content"
+    / "routes"
     / "fixtures"
     / "sample-complete.json"
 )
@@ -51,7 +53,7 @@ class TestHskSource(unittest.TestCase):
         mock_response.__exit__.return_value = None
 
         with patch(
-            "backend.hsk_content.source.urlopen",
+            "backend.routes.hsk_source.urlopen",
             return_value=mock_response,
         ) as mock_urlopen:
             entries = fetch_complete_hsk_entries()
@@ -64,6 +66,27 @@ class TestHskSource(unittest.TestCase):
             path = Path(temp_dir) / "complete.json"
             path.write_text(json.dumps(self.entries), encoding="utf-8")
             self.assertEqual(load_complete_hsk_entries(path), self.entries)
+
+    def test_falls_back_to_bundled_hsk_json_when_download_fails(self) -> None:
+        with patch(
+            "backend.routes.hsk_source.fetch_complete_hsk_entries",
+            side_effect=OSError("network down"),
+        ):
+            entries = load_complete_hsk_entries()
+
+        self.assertGreater(len(entries), 0)
+        self.assertEqual(
+            set(entries[0]),
+            {"simplified", "level", "frequency"},
+        )
+        self.assertTrue(
+            all(
+                level.startswith("new-")
+                for entry in entries
+                for level in entry["level"]
+            )
+        )
+        self.assertEqual(entries, load_fallback_hsk_entries(HSK_FALLBACK_PATH))
 
 
 class TestLoadHskContent(unittest.TestCase):
@@ -123,7 +146,7 @@ class TestLoadHskContent(unittest.TestCase):
 
     def test_load_downloads_when_entries_omitted(self) -> None:
         with patch(
-            "backend.hsk_content_loader.load_complete_hsk_entries",
+            "backend.routes.hsk_content_loader.load_complete_hsk_entries",
             return_value=self.entries,
         ) as mock_load:
             counts = load_hsk_content()

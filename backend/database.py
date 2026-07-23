@@ -50,8 +50,8 @@ def _migrate_drop_legacy_hsk_vocabulary() -> None:
 
 
 def _ensure_hsk_content_loaded() -> None:
-    from backend.hsk_content_loader import load_hsk_content
     from backend.models import HskWord
+    from backend.routes.hsk_content_loader import load_hsk_content
 
     if HskWord.query.first() is not None:
         return

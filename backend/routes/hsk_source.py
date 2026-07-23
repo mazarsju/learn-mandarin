@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 from pathlib import Path
 from urllib.request import urlopen
@@ -10,7 +11,10 @@ from urllib.request import urlopen
 COMPLETE_HSK_JSON_URL = (
     "https://raw.githubusercontent.com/drkameleon/complete-hsk-vocabulary/main/complete.json"
 )
+HSK_FALLBACK_PATH = Path(__file__).resolve().parents[1] / "hsk.json"
 NEW_LEVEL_PATTERN = re.compile(r"^new-(\d+)$")
+
+logger = logging.getLogger(__name__)
 
 
 def fetch_complete_hsk_entries(url: str = COMPLETE_HSK_JSON_URL) -> list[dict]:
@@ -19,13 +23,29 @@ def fetch_complete_hsk_entries(url: str = COMPLETE_HSK_JSON_URL) -> list[dict]:
         return json.loads(response.read().decode("utf-8"))
 
 
-def load_complete_hsk_entries(source: str | Path | None = None) -> list[dict]:
-    """Load entries from a local path, or download from GitHub when omitted."""
-    if source is None:
-        return fetch_complete_hsk_entries()
-
-    path = Path(source)
+def load_fallback_hsk_entries(path: Path = HSK_FALLBACK_PATH) -> list[dict]:
+    """Load the bundled lightweight HSK JSON fallback."""
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load_complete_hsk_entries(source: str | Path | None = None) -> list[dict]:
+    """Load entries from a local path, or download from GitHub when omitted.
+
+    When downloading fails for any reason, falls back to ``backend/hsk.json``.
+    """
+    if source is not None:
+        path = Path(source)
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    try:
+        return fetch_complete_hsk_entries()
+    except Exception:
+        logger.exception(
+            "Failed to download %s; using fallback %s",
+            COMPLETE_HSK_JSON_URL,
+            HSK_FALLBACK_PATH,
+        )
+        return load_fallback_hsk_entries()
 
 
 def words_by_new_level(
