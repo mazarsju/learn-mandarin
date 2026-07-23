@@ -99,7 +99,7 @@ On first start, a SQLite database is created at `backend/learn_mandarin.db` with
 | `character` | `char` (PK), `pinyin` (max 6 chars), `writting_known` (boolean), `updated_at` (datetime) |
 | `words` | `word` (PK, max 10 chars), `definition` (max 100 chars, nullable), `updated_at` (datetime) |
 | `character_word` | many-to-many link between `character` and `words` |
-| `hsk_words` | `word` (PK), `frequency` (integer) |
+| `hsk_words` | `word` (PK), `level` (integer, HSK 3.0 level 1–7), `frequency` (integer) |
 | `hsk_characters` | `character` (PK, single Han character), `level` (integer, HSK 3.0 level 1–7), `frequency` (integer) |
 | `hsk_word_character` | many-to-many link between `hsk_words` and `hsk_characters` |
 
@@ -143,6 +143,7 @@ curl -X POST -F "file=@db.txt" http://127.0.0.1:5000/characters/bulk
 | `GET` | `/characters` | List all characters |
 | `POST` | `/characters` | Create a new character |
 | `GET` | `/hsk-characters` | List HSK characters with level and frequency |
+| `GET` | `/hsk-characters/<character>/words` | List HSK words linked to a character |
 | `POST` | `/words` | Create a new word and link it to existing characters |
 | `PATCH` | `/characters/<char>` | Update a character's `pinyin` and `writting_known` |
 | `DELETE` | `/characters/<char>` | Delete a character and its `character_word` links |

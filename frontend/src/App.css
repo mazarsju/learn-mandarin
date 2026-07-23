@@ -816,6 +816,33 @@ body {
   word-break: break-word;
 }
 
+.page-content .home-missing-character-button {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.page-content .home-missing-character-button:hover,
+.page-content .home-missing-character-button:focus-visible {
+  background: transparent;
+  color: #2563eb;
+  text-decoration: underline;
+  outline: none;
+}
+
 .home-metric-card {
   padding: 1.25rem;
   border: 1px solid #e5e7eb;

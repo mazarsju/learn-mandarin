@@ -26,7 +26,7 @@ def load_hsk_content(entries: list[dict] | None = None) -> dict[str, int]:
 
             db.session.execute(
                 insert(HskWord)
-                .values(word=word, frequency=frequency)
+                .values(word=word, level=level, frequency=frequency)
                 .on_conflict_do_nothing(index_elements=["word"])
             )
 

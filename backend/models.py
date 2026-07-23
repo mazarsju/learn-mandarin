@@ -73,6 +73,7 @@ class HskWord(db.Model):
     __tablename__ = "hsk_words"
 
     word = db.Column(String(32), primary_key=True)
+    level = db.Column(Integer, nullable=False)
     frequency = db.Column(Integer, nullable=False)
 
     characters = db.relationship(

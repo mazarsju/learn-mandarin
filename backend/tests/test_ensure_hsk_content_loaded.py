@@ -31,7 +31,7 @@ class TestEnsureHskContentLoaded(unittest.TestCase):
         mock_load.assert_called_once_with()
 
     def test_skips_when_table_has_rows(self):
-        db.session.add(HskWord(word="爱", frequency=10))
+        db.session.add(HskWord(word="爱", level=1, frequency=10))
         db.session.commit()
 
         with patch("backend.routes.hsk_content_loader.load_hsk_content") as mock_load:

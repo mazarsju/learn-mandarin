@@ -120,6 +120,7 @@ class TestLoadHskContent(unittest.TestCase):
         self.assertEqual(good.frequency, 100)
 
         hobby = HskWord.query.filter_by(word="爱好").one()
+        self.assertEqual(hobby.level, 1)
         self.assertEqual({char.character for char in hobby.characters}, {"爱", "好"})
 
     def test_load_rejects_non_han(self) -> None:
@@ -129,7 +130,7 @@ class TestLoadHskContent(unittest.TestCase):
             )
 
     def test_reload_clears_existing_rows(self) -> None:
-        db.session.add(HskWord(word="旧词", frequency=1))
+        db.session.add(HskWord(word="旧词", level=3, frequency=1))
         db.session.add(HskCharacter(character="旧", level=3, frequency=99))
         db.session.commit()
 

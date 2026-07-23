@@ -49,6 +49,23 @@ def _migrate_drop_legacy_hsk_vocabulary() -> None:
     db.session.commit()
 
 
+def _migrate_hsk_words_level() -> None:
+    """Add level to hsk_words and clear HSK tables so they reload with values."""
+    inspector = inspect(db.engine)
+    if "hsk_words" not in inspector.get_table_names():
+        return
+
+    column_names = {column["name"] for column in inspector.get_columns("hsk_words")}
+    if "level" in column_names:
+        return
+
+    db.session.execute(text("ALTER TABLE hsk_words ADD COLUMN level INTEGER"))
+    db.session.execute(text("DELETE FROM hsk_word_character"))
+    db.session.execute(text("DELETE FROM hsk_words"))
+    db.session.execute(text("DELETE FROM hsk_characters"))
+    db.session.commit()
+
+
 def _ensure_hsk_content_loaded() -> None:
     from backend.models import HskWord
     from backend.routes.hsk_content_loader import load_hsk_content
@@ -66,4 +83,5 @@ def init_db(app: Flask) -> None:
         db.create_all()
         _migrate_updated_at_columns()
         _migrate_drop_legacy_hsk_vocabulary()
+        _migrate_hsk_words_level()
         _ensure_hsk_content_loaded()
