@@ -12,8 +12,6 @@
 ![Backend-Functions](.github/badges/backend-coverage-functions.svg)
 ![Backend-Lines](.github/badges/backend-coverage-lines.svg)
 
-
-
 An app to learn Mandarin.
 
 ## Technologies
@@ -34,21 +32,26 @@ learn-mandarin/
 │   ├── llm_config.py       # Read/write LLM settings in .config.txt
 │   ├── chat_agents.py      # Chat character prompts
 │   ├── chat_service.py     # LLM chat reply generation
-│   ├── hsk.json            # Bundled HSK fallback (new-X only) if GitHub download fails
+│   ├── conversation_logs.py
+│   ├── hsk.json            # Bundled HSK fallback if GitHub download fails
 │   ├── models.py           # Character, Word, HskWord, HskCharacter, and association tables
 │   ├── routes/             # One endpoint per file (Flask blueprints); HSK load helpers
 │   ├── learn_mandarin.db   # SQLite database (created on first run)
-│   └── requirements.txt    # Python dependencies
+│   └── requirements.txt
 ├── frontend/
 │   ├── index.html
 │   ├── package.json
 │   ├── src/
-│   │   ├── App.tsx         # Main React component
+│   │   ├── App.tsx         # App shell and page routing
 │   │   ├── main.tsx        # React entry point
-│   │   └── vite-env.d.ts
+│   │   ├── pages/          # Home, Knowledge base, Chat, Preferences
+│   │   ├── components/
+│   │   ├── types/
+│   │   └── utils/
 │   ├── tsconfig.json
 │   ├── tsconfig.node.json
 │   └── vite.config.ts      # Vite dev server and proxy config
+├── docs/screenshots/       # UI screenshots used in this README
 ├── agent.md
 └── README.md
 ```
@@ -92,7 +95,7 @@ The coverage report is written to `backend/coverage/` (open `coverage/index.html
 
 #### Database
 
-On first start, a SQLite database is created at `backend/learn_mandarin.db` with four tables:
+On first start, a SQLite database is created at `backend/learn_mandarin.db` with the following tables:
 
 | Table | Columns |
 | --- | --- |
@@ -104,6 +107,12 @@ On first start, a SQLite database is created at `backend/learn_mandarin.db` with
 | `hsk_word_character` | many-to-many link between `hsk_words` and `hsk_characters` |
 
 Override the database file path with the `DATABASE_PATH` environment variable if needed.
+
+You can preload characters and words with the bulk upload endpoint (see below), for example:
+
+```bash
+curl -X POST -F "file=@db.txt" http://127.0.0.1:5000/characters/bulk
+```
 
 #### LLM configuration
 
@@ -125,13 +134,6 @@ curl -X POST http://127.0.0.1:5000/llm-config \
   -d '{"LLM_API_KEY":"your-api-key","LLM_MODEL":"gpt-4o-mini"}'
 ```
 
-You can use the /character/bulk endpoint to preload the database
-
-Ex:
-```
-curl -X POST -F "file=@db.txt" http://127.0.0.1:5000/characters/bulk
-```
-
 #### API endpoints
 
 | Method | Route | Description |
@@ -140,14 +142,19 @@ curl -X POST -F "file=@db.txt" http://127.0.0.1:5000/characters/bulk
 | `GET` | `/llm-config` | Read LLM API key and model from `.config.txt` |
 | `POST` | `/llm-config` | Update LLM API key and/or model in `.config.txt` |
 | `POST` | `/chat` | Send a chat message to the selected AI character |
+| `GET` | `/chat/history/<character_id>` | Load persisted chat history for a character |
 | `GET` | `/characters` | List all characters |
 | `POST` | `/characters` | Create a new character |
-| `GET` | `/hsk-characters` | List HSK characters with level and frequency |
-| `GET` | `/hsk-characters/<character>/words` | List HSK words linked to a character |
-| `POST` | `/words` | Create a new word and link it to existing characters |
 | `PATCH` | `/characters/<char>` | Update a character's `pinyin` and `writting_known` |
 | `DELETE` | `/characters/<char>` | Delete a character and its `character_word` links |
 | `POST` | `/characters/bulk` | Upload a `.txt` file (`multipart/form-data`, field name `file`) |
+| `GET` | `/words` | List all words |
+| `POST` | `/words` | Create a new word and link it to existing characters |
+| `PATCH` | `/words/<word>` | Update a word's `definition` |
+| `DELETE` | `/words/<word>` | Delete a word and its `character_word` links |
+| `GET` | `/hsk-characters` | List HSK characters with level and frequency |
+| `GET` | `/hsk-characters/<character>/words` | List HSK words linked to a character |
+| `POST` | `/database/export` | Export the knowledge base to a `.txt` file |
 
 ### Frontend
 
@@ -161,7 +168,7 @@ npm run dev
 
 The app runs at `http://localhost:5173`. Vite proxies API requests to the backend during development.
 
-**Tests**
+#### Tests
 
 From the `frontend/` directory:
 
@@ -192,7 +199,7 @@ Browse every character you know, grouped by pinyin, for a motivating snapshot of
 
 ![Knowledge base view](docs/screenshots/02-knowledge-base-view.png)
 
-### Practice your skills with IA agents
+### Practice your skills with AI agents
 
 After connecting the application with your favourite LLM, discuss with predefined
 chat agents to practice your level.
@@ -211,7 +218,7 @@ An overall view of the characters you know, sorted by pinyin.
 
 - [x] Simple frontend connected with backend
 - [x] Database structure for characters, and loading the DB with characters you already know
-- [x] Create different tabs in the frontend: Landing page, Knowledge base, Chat, Preferences
+- [x] Create different tabs in the frontend: Home, Knowledge base, Chat, Preferences
 - [x] Simple CRUD interface to manage characters
 - [x] Visualization of characters by pinyin
 - [x] UI polish with additional options: different color for the tones, a toggle to show or hide characters you only recognize (not write), mouse hover effect...
@@ -222,9 +229,9 @@ An overall view of the characters you know, sorted by pinyin.
 A chatbot that speaks Chinese using only the characters you are supposed to know.
 
 - [x] LLM integration with config management
-- [x] Minimalist UI to have a list of chat and navigate through them
-- [X] AI chatbot remembering the previous answer (non-persistent throught sessions)
-- [x] AI chatbot remembering the previous answer (persistent throught sessions)
+- [x] Minimalist UI to have a list of chats and navigate through them
+- [x] AI chatbot remembering the previous answer (non-persistent through sessions)
+- [x] AI chatbot remembering the previous answer (persistent through sessions)
 - [ ] Add constraint for the agent to use only the known vocabulary
 
 ### 3. Multi-agent conversations for specific topics

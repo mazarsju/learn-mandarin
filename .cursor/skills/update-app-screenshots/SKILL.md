@@ -126,7 +126,7 @@ grouped by pinyin to have a motivation visualization of your progress.]
 
 ![Knowledge base view](docs/screenshots/02-knowledge-base-view.png)
 
-### Practice your skills with IA agents
+### Practice your skills with AI agents
 
 After connecting the application with your favourite LLM, discuss with predefined
 chat agents to practice your level.
