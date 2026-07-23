@@ -18,6 +18,7 @@ An app to learn Mandarin.
 
 - **Backend:** Python, Flask, SQLAlchemy, SQLite
 - **Frontend:** React, TypeScript, Vite
+- **AI:** LangChain (`langchain-core`, `langchain-openai`), OpenAI-compatible chat models via `ChatOpenAI`
 
 ## Project structure
 
