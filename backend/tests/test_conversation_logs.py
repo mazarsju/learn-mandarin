@@ -6,8 +6,11 @@ from unittest.mock import patch
 
 from backend.conversation_logs import (
     append_message,
+    append_thread_message,
     clear_conversation,
+    create_correction_thread,
     load_conversation,
+    load_thread,
     should_append_user_message,
 )
 
@@ -43,17 +46,123 @@ class TestConversationLogs(unittest.TestCase):
             "me: 你好\nagent: 你好！\n",
         )
 
+    def test_append_and_load_user_message_with_correction_thread(self):
+        thread_id, thread_messages = create_correction_thread(
+            "xiao-ming",
+            "Say 我很好 instead of 我是很好.",
+        )
+        append_message(
+            "xiao-ming",
+            "user",
+            "我是很好",
+            correction_thread_id=thread_id,
+        )
+        append_message("xiao-ming", "assistant", "我也很好！")
+
+        loaded = load_conversation("xiao-ming")
+        self.assertEqual(loaded[0]["role"], "user")
+        self.assertEqual(loaded[0]["content"], "我是很好")
+        self.assertEqual(loaded[0]["correctionThreadId"], thread_id)
+        self.assertEqual(loaded[0]["correctionThread"], thread_messages)
+        self.assertEqual(
+            loaded[0]["correctionAnswer"],
+            "Say 我很好 instead of 我是很好.",
+        )
+        self.assertEqual(
+            loaded[1],
+            {"role": "assistant", "content": "我也很好！"},
+        )
+        self.assertEqual(
+            load_thread("xiao-ming", thread_id),
+            thread_messages,
+        )
+
+    def test_append_thread_message_extends_correction_thread(self):
+        thread_id, _ = create_correction_thread(
+            "xiao-ming",
+            "Say 我很好 instead of 我是很好.",
+        )
+        append_thread_message("xiao-ming", thread_id, "user", "Why?")
+        append_thread_message(
+            "xiao-ming",
+            thread_id,
+            "assistant",
+            "Because 是 is not used that way.",
+        )
+
+        self.assertEqual(
+            load_thread("xiao-ming", thread_id),
+            [
+                {
+                    "role": "assistant",
+                    "content": "Say 我很好 instead of 我是很好.",
+                },
+                {"role": "user", "content": "Why?"},
+                {
+                    "role": "assistant",
+                    "content": "Because 是 is not used that way.",
+                },
+            ],
+        )
+
+        # Thread chat must not appear in Teacher Wang's standalone history.
+        self.assertEqual(load_conversation("teacher-wang"), [])
+
+    def test_migrates_legacy_correction_lines_into_threads(self):
+        log_file = self.logs_dir / "xiao-ming.txt"
+        log_file.write_text(
+            "me: 我是很好\n"
+            "correction: Say 我很好 instead of 我是很好.\n"
+            "agent: 我也很好！\n",
+            encoding="utf-8",
+        )
+
+        loaded = load_conversation("xiao-ming")
+        thread_id = loaded[0]["correctionThreadId"]
+        self.assertTrue(thread_id)
+        self.assertEqual(
+            loaded[0]["correctionThread"],
+            [
+                {
+                    "role": "assistant",
+                    "content": "Say 我很好 instead of 我是很好.",
+                }
+            ],
+        )
+        rewritten = log_file.read_text(encoding="utf-8")
+        self.assertIn(f"correction-thread: {thread_id}", rewritten)
+        self.assertNotIn("correction: ", rewritten)
+
+    def test_append_message_rejects_thread_on_assistant(self):
+        with self.assertRaisesRegex(
+            ValueError,
+            "Only user messages can link a correction thread",
+        ):
+            append_message(
+                "xiao-ming",
+                "assistant",
+                "你好",
+                correction_thread_id="abc123",
+            )
+
     def test_load_conversation_returns_empty_list_when_file_missing(self):
         self.assertEqual(load_conversation("xiao-ming"), [])
 
-    def test_clear_conversation_removes_log_file(self):
-        append_message("teacher-wang", "user", "你好")
-        append_message("teacher-wang", "assistant", "你好！")
+    def test_clear_conversation_removes_log_file_and_threads(self):
+        thread_id, _ = create_correction_thread("xiao-ming", "Fix this.")
+        append_message(
+            "xiao-ming",
+            "user",
+            "坏句子",
+            correction_thread_id=thread_id,
+        )
+        append_message("xiao-ming", "assistant", "好的")
 
-        clear_conversation("teacher-wang")
+        clear_conversation("xiao-ming")
 
-        self.assertEqual(load_conversation("teacher-wang"), [])
-        self.assertFalse((self.logs_dir / "teacher-wang.txt").exists())
+        self.assertEqual(load_conversation("xiao-ming"), [])
+        self.assertFalse((self.logs_dir / "xiao-ming.txt").exists())
+        self.assertFalse((self.logs_dir / "xiao-ming").exists())
 
     def test_clear_conversation_is_noop_when_file_missing(self):
         clear_conversation("xiao-ming")

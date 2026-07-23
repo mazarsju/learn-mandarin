@@ -16,6 +16,8 @@ An app to learn Mandarin.
 
 ## Technologies
 
+This project was intentionally developed using Cursor AI and coding agents. My objective was not only to build an AI product, but also to explore modern AI-assisted software engineering workflows.
+
 - **Backend:** Python, Flask, SQLAlchemy, SQLite
 - **Frontend:** React, TypeScript, Vite
 - **AI:** LangChain (`langchain-core`, `langchain-openai`), OpenAI-compatible chat models via `ChatOpenAI`
@@ -239,5 +241,11 @@ A chatbot that speaks Chinese using only the characters you are supposed to know
 
 Several agents collaborating around focused learning scenarios.
 
-- [ ] Add a grammar checker for each conversation, explaining the mistakes to the user in a separate thread
+- [x] Add a grammar checker for each conversation, explaining the mistakes to the user in a separate thread
 - [ ] Conversation scenarios with a defined goal to achieve
+
+### 4. Anki integration
+
+- [ ] Add a connection to Anki in the setting section
+- [ ] Make it possible to load your Anki collection to your current database (way "in")
+- [ ] Make it possible to add new characters / words to your Anki collection (way "out")

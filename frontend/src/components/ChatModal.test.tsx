@@ -109,6 +109,65 @@ describe("ChatModal", () => {
     expect(screen.getByText("Earlier reply")).toBeInTheDocument();
   });
 
+  it("restores grammar warning from saved chat history", async () => {
+    const user = userEvent.setup();
+    const xiaoMing: ChatCharacter = {
+      id: "xiao-ming",
+      name: "Xiao Ming",
+      chineseName: "小明",
+      description: "Your native Chinese friend",
+      avatarVariant: "friend",
+    };
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: RequestInfo, init?: RequestInit) => {
+        const url = String(input);
+        const method = init?.method ?? "GET";
+
+        if (url.endsWith("/chat/history/xiao-ming") && method === "GET") {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({
+              messages: [
+                {
+                  role: "user",
+                  content: "我是很好",
+                  correctionAnswer: "Say 我很好 instead of 我是很好.",
+                  correctionThreadId: "thread123",
+                  correctionThread: [
+                    {
+                      role: "assistant",
+                      content: "Say 我很好 instead of 我是很好.",
+                    },
+                  ],
+                },
+                { role: "assistant", content: "我也很好！" },
+              ],
+            }),
+          });
+        }
+
+        return Promise.resolve({
+          ok: false,
+          json: async () => ({}),
+        });
+      }),
+    );
+
+    render(<ChatModal character={xiaoMing} onClose={() => undefined} />);
+
+    expect(await screen.findByText("我是很好")).toBeInTheDocument();
+    await user.click(
+      screen.getByRole("button", {
+        name: "Open grammar correction with Teacher Wang",
+      }),
+    );
+    expect(
+      screen.getByText("Say 我很好 instead of 我是很好."),
+    ).toBeInTheDocument();
+  });
+
   it("clears chat history after confirmation", async () => {
     const user = userEvent.setup();
     vi.stubGlobal(
@@ -238,5 +297,80 @@ describe("ChatModal", () => {
       await screen.findByText("LLM_API_KEY must be set"),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Message")).toHaveValue("Hello");
+  });
+
+  it("opens a Teacher Wang correction chat from the grammar warning", async () => {
+    const user = userEvent.setup();
+    const xiaoMing: ChatCharacter = {
+      id: "xiao-ming",
+      name: "Xiao Ming",
+      chineseName: "小明",
+      description: "Your native Chinese friend",
+      avatarVariant: "friend",
+    };
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: RequestInfo, init?: RequestInit) => {
+        const url = String(input);
+        const method = init?.method ?? "GET";
+
+        if (url.endsWith("/chat/history/xiao-ming") && method === "GET") {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({ messages: [] }),
+          });
+        }
+
+        if (url.endsWith("/chat") && method === "POST") {
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({
+              message: {
+                role: "assistant",
+                content: "我也很好！",
+              },
+              correction: {
+                correct: false,
+                answer: "Say 我很好 instead of 我是很好.",
+                thread_id: "thread123",
+                thread_messages: [
+                  {
+                    role: "assistant",
+                    content: "Say 我很好 instead of 我是很好.",
+                  },
+                ],
+              },
+            }),
+          });
+        }
+
+        return Promise.resolve({
+          ok: false,
+          json: async () => ({}),
+        });
+      }),
+    );
+
+    render(<ChatModal character={xiaoMing} onClose={() => undefined} />);
+
+    await user.type(screen.getByLabelText("Message"), "我是很好");
+    await user.click(screen.getByRole("button", { name: "Send" }));
+
+    expect(await screen.findByText("我是很好")).toBeInTheDocument();
+    expect(screen.getByText("我也很好！")).toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Open grammar correction with Teacher Wang",
+      }),
+    );
+
+    expect(
+      screen.getByRole("heading", { name: /Teacher Wang/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Say 我很好 instead of 我是很好."),
+    ).toBeInTheDocument();
   });
 });

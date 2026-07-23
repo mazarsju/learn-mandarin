@@ -229,24 +229,22 @@ export function CloseIcon({ className }: IconProps) {
   );
 }
 
-export function SendIcon({ className }: IconProps) {
+export function WarningIcon({ className }: IconProps) {
   return (
     <svg
       className={className}
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
       <path
-        d="M3.4 20.6L21 12 3.4 3.4l2.8 7.6L17 12l-10.8 1z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        fill="currentColor"
+        d="M12 3.2 2.4 20.1a.9.9 0 0 0 .78 1.35h17.64a.9.9 0 0 0 .78-1.35L12 3.2z"
       />
+      <rect x="11" y="9" width="2" height="5.5" rx="1" fill="#fff" />
+      <circle cx="12" cy="17.2" r="1.15" fill="#fff" />
     </svg>
   );
 }

@@ -2,20 +2,62 @@ import { useEffect, useState, type FormEvent } from "react";
 import type { ChatCharacter } from "./ChatCharacterCard";
 import ChatCharacterAvatar from "./ChatCharacterAvatar";
 import ConfirmModal from "./ConfirmModal";
-import { CloseIcon, SendIcon, TrashIcon } from "./icons";
-import type { ChatMessage } from "../types/chat";
+import { CloseIcon, TrashIcon, WarningIcon } from "./icons";
+import { TEACHER_WANG } from "../data/chatCharacters";
+import type { ChatMessage, ChatThreadContext } from "../types/chat";
 import {
   clearChatHistory,
   fetchChatHistory,
   sendChatMessage,
 } from "../utils/chatApi";
 
+type CorrectionThreadState = {
+  messageIndex: number;
+  threadId: string;
+  messages: ChatMessage[];
+};
+
 type ChatModalProps = {
   character: ChatCharacter | null;
   onClose: () => void;
+  initialMessages?: ChatMessage[];
+  loadHistory?: boolean;
+  stacked?: boolean;
+  allowClearHistory?: boolean;
+  thread?: ChatThreadContext;
+  onThreadMessagesChange?: (messages: ChatMessage[]) => void;
 };
 
-export default function ChatModal({ character, onClose }: ChatModalProps) {
+function hasCorrectionThread(message: ChatMessage): boolean {
+  return Boolean(
+    message.correctionThreadId ||
+      (message.correctionThread && message.correctionThread.length > 0) ||
+      message.correctionAnswer,
+  );
+}
+
+function getCorrectionThreadMessages(message: ChatMessage): ChatMessage[] {
+  if (message.correctionThread && message.correctionThread.length > 0) {
+    return message.correctionThread;
+  }
+
+  if (message.correctionAnswer) {
+    return [{ role: "assistant", content: message.correctionAnswer }];
+  }
+
+  return [];
+}
+
+export default function ChatModal({
+  character,
+  onClose,
+  initialMessages,
+  loadHistory = true,
+  stacked = false,
+  allowClearHistory = true,
+  thread,
+  onThreadMessagesChange,
+}: ChatModalProps) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isSending, setIsSending] = useState(false);
@@ -23,6 +65,8 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
   const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeCorrection, setActiveCorrection] =
+    useState<CorrectionThreadState | null>(null);
 
   useEffect(() => {
     if (character === null) {
@@ -32,11 +76,19 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
     let isMounted = true;
 
     setMessage("");
-    setMessages([]);
     setError(null);
     setIsSending(false);
     setIsClearing(false);
     setIsClearConfirmOpen(false);
+    setActiveCorrection(null);
+
+    if (!loadHistory) {
+      setMessages(initialMessages ?? []);
+      setIsLoadingHistory(false);
+      return;
+    }
+
+    setMessages([]);
     setIsLoadingHistory(true);
 
     void fetchChatHistory(character.id)
@@ -63,7 +115,9 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
     return () => {
       isMounted = false;
     };
-  }, [character]);
+    // initialMessages is only applied when loadHistory is false on mount/open.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [character, loadHistory, thread?.threadId]);
 
   if (character === null) {
     return null;
@@ -76,10 +130,8 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
       return;
     }
 
-    const nextMessages: ChatMessage[] = [
-      ...messages,
-      { role: "user", content: trimmedMessage },
-    ];
+    const userMessage: ChatMessage = { role: "user", content: trimmedMessage };
+    const nextMessages: ChatMessage[] = [...messages, userMessage];
 
     setMessages(nextMessages);
     setMessage("");
@@ -87,8 +139,43 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
     setIsSending(true);
 
     try {
-      const assistantMessage = await sendChatMessage(character.id, nextMessages);
-      setMessages((current) => [...current, assistantMessage]);
+      const response = await sendChatMessage(
+        character.id,
+        nextMessages,
+        thread,
+      );
+      const updatedMessages = (() => {
+        if (thread) {
+          return [...nextMessages, response.message];
+        }
+
+        const withCorrection =
+          response.correction &&
+          response.correction.correct === false &&
+          response.correction.answer
+            ? nextMessages.map((entry, index) =>
+                index === nextMessages.length - 1 && entry.role === "user"
+                  ? {
+                      ...entry,
+                      correctionAnswer: response.correction?.answer,
+                      correctionThreadId: response.correction?.thread_id,
+                      correctionThread:
+                        response.correction?.thread_messages ?? [
+                          {
+                            role: "assistant" as const,
+                            content: response.correction?.answer ?? "",
+                          },
+                        ],
+                    }
+                  : entry,
+              )
+            : nextMessages;
+
+        return [...withCorrection, response.message];
+      })();
+
+      setMessages(updatedMessages);
+      onThreadMessagesChange?.(updatedMessages);
     } catch (sendError) {
       setMessages(messages);
       setMessage(trimmedMessage);
@@ -103,7 +190,7 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
   }
 
   async function handleClearHistory() {
-    if (isClearing || isSending || messages.length === 0) {
+    if (isClearing || isSending || messages.length === 0 || !allowClearHistory) {
       return;
     }
 
@@ -126,9 +213,34 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
     }
   }
 
+  function openCorrectionThread(messageIndex: number, chatMessage: ChatMessage) {
+    const threadMessages = getCorrectionThreadMessages(chatMessage);
+    if (threadMessages.length === 0) {
+      return;
+    }
+
+    if (!chatMessage.correctionThreadId) {
+      setError(
+        "This grammar note can’t continue as a saved thread. Send a new message to create one.",
+      );
+      return;
+    }
+
+    setActiveCorrection({
+      messageIndex,
+      threadId: chatMessage.correctionThreadId,
+      messages: threadMessages,
+    });
+  }
+
   return (
     <>
-      <div className="modal-overlay" onClick={onClose}>
+      <div
+        className={
+          stacked ? "modal-overlay modal-overlay--stacked" : "modal-overlay"
+        }
+        onClick={onClose}
+      >
         <div
           className="chat-modal-dialog"
           role="dialog"
@@ -152,20 +264,24 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
               </div>
             </div>
             <div className="chat-modal-header-actions">
-              <button
-                type="button"
-                className="chat-modal-clear-button"
-                disabled={
-                  isLoadingHistory ||
-                  isSending ||
-                  isClearing ||
-                  messages.length === 0
-                }
-                onClick={() => setIsClearConfirmOpen(true)}
-              >
-                <TrashIcon className="chat-modal-clear-icon" />
-                <span>{isClearing ? "Clearing..." : "Clear chat history"}</span>
-              </button>
+              {allowClearHistory && (
+                <button
+                  type="button"
+                  className="chat-modal-clear-button"
+                  disabled={
+                    isLoadingHistory ||
+                    isSending ||
+                    isClearing ||
+                    messages.length === 0
+                  }
+                  onClick={() => setIsClearConfirmOpen(true)}
+                >
+                  <TrashIcon className="chat-modal-clear-icon" />
+                  <span>
+                    {isClearing ? "Clearing..." : "Clear chat history"}
+                  </span>
+                </button>
+              )}
               <button
                 type="button"
                 className="chat-modal-close-button"
@@ -191,11 +307,41 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
                     key={`${chatMessage.role}-${index}-${chatMessage.content}`}
                     className={
                       chatMessage.role === "user"
-                        ? "chat-message chat-message--user"
-                        : "chat-message chat-message--assistant"
+                        ? "chat-message-row chat-message-row--user"
+                        : "chat-message-row chat-message-row--assistant"
                     }
                   >
-                    {chatMessage.content}
+                    <div
+                      className={
+                        chatMessage.role === "user"
+                          ? "chat-message-shell chat-message-shell--user"
+                          : "chat-message-shell"
+                      }
+                    >
+                      {chatMessage.role === "user" &&
+                        hasCorrectionThread(chatMessage) && (
+                          <button
+                            type="button"
+                            className="chat-message-warning-button"
+                            aria-label="Open grammar correction with Teacher Wang"
+                            title="Grammar issue — ask Teacher Wang"
+                            onClick={() =>
+                              openCorrectionThread(index, chatMessage)
+                            }
+                          >
+                            <WarningIcon className="chat-message-warning-icon" />
+                          </button>
+                        )}
+                      <div
+                        className={
+                          chatMessage.role === "user"
+                            ? "chat-message chat-message--user"
+                            : "chat-message chat-message--assistant"
+                        }
+                      >
+                        {chatMessage.content}
+                      </div>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -215,13 +361,13 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
           >
             <label
               className="chat-modal-composer-label"
-              htmlFor="chat-message-input"
+              htmlFor={`chat-message-input-${character.id}-${stacked ? "stacked" : "main"}`}
             >
               Message
             </label>
             <div className="chat-modal-composer-row">
               <input
-                id="chat-message-input"
+                id={`chat-message-input-${character.id}-${stacked ? "stacked" : "main"}`}
                 type="text"
                 value={message}
                 placeholder="Type your message..."
@@ -230,23 +376,64 @@ export default function ChatModal({ character, onClose }: ChatModalProps) {
               />
               <button
                 type="submit"
-                className="chat-modal-send-button"
+                className="page-add-button"
                 disabled={isSending || isClearing || message.trim() === ""}
               >
-                <SendIcon className="chat-modal-send-icon" />
-                <span>{isSending ? "Sending..." : "Send"}</span>
+                {isSending ? "Sending..." : "Send"}
               </button>
             </div>
           </form>
         </div>
       </div>
 
-      <ConfirmModal
-        isOpen={isClearConfirmOpen}
-        message={`Clear all chat history with ${character.name}? This cannot be undone.`}
-        onConfirm={() => void handleClearHistory()}
-        onCancel={() => setIsClearConfirmOpen(false)}
-      />
+      {allowClearHistory && (
+        <ConfirmModal
+          isOpen={isClearConfirmOpen}
+          message={`Clear all chat history with ${character.name}? This cannot be undone.`}
+          onConfirm={() => void handleClearHistory()}
+          onCancel={() => setIsClearConfirmOpen(false)}
+        />
+      )}
+
+      {activeCorrection !== null && (
+        <ChatModal
+          key={activeCorrection.threadId}
+          character={TEACHER_WANG}
+          onClose={() => setActiveCorrection(null)}
+          initialMessages={activeCorrection.messages}
+          loadHistory={false}
+          stacked
+          allowClearHistory={false}
+          thread={{
+            parentCharacterId: character.id,
+            threadId: activeCorrection.threadId,
+          }}
+          onThreadMessagesChange={(threadMessages) => {
+            setActiveCorrection((current) =>
+              current
+                ? {
+                    ...current,
+                    messages: threadMessages,
+                  }
+                : current,
+            );
+            setMessages((current) =>
+              current.map((entry, index) =>
+                index === activeCorrection.messageIndex
+                  ? {
+                      ...entry,
+                      correctionThread: threadMessages,
+                      correctionAnswer:
+                        threadMessages.find(
+                          (threadMessage) => threadMessage.role === "assistant",
+                        )?.content ?? entry.correctionAnswer,
+                    }
+                  : entry,
+              ),
+            );
+          }}
+        />
+      )}
     </>
   );
 }

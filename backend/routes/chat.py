@@ -1,15 +1,57 @@
 from flask import Blueprint, request
 
-from backend.chat_service import generate_chat_reply
+from backend.chat_service import (
+    TEACHER_CHARACTER_ID,
+    check_user_grammar,
+    generate_chat_reply,
+)
 from backend.conversation_logs import (
     VALID_CHARACTER_IDS,
     append_message,
+    append_thread_message,
     clear_conversation,
+    create_correction_thread,
     load_conversation,
+    should_append_thread_user_message,
     should_append_user_message,
+    thread_exists,
 )
 
 bp = Blueprint("chat", __name__)
+
+
+def _normalize_messages(messages: list) -> tuple[list[dict[str, str]] | None, tuple | None]:
+    if not isinstance(messages, list) or len(messages) == 0:
+        return None, ({"error": "messages must be a non-empty array"}, 400)
+
+    normalized_messages = []
+    for message in messages:
+        if not isinstance(message, dict):
+            return None, ({"error": "Each message must be an object"}, 400)
+
+        role = message.get("role")
+        content = message.get("content")
+
+        if role not in {"user", "assistant"}:
+            return None, ({"error": "Each message role must be user or assistant"}, 400)
+
+        if not isinstance(content, str) or content.strip() == "":
+            return None, (
+                {"error": "Each message content must be a non-empty string"},
+                400,
+            )
+
+        normalized_messages.append(
+            {
+                "role": role,
+                "content": content.strip(),
+            }
+        )
+
+    if normalized_messages[-1]["role"] != "user":
+        return None, ({"error": "The last message must be from the user"}, 400)
+
+    return normalized_messages, None
 
 
 @bp.post("/chat")
@@ -23,42 +65,120 @@ def chat():
 
     character_id = data.get("character_id")
     messages = data.get("messages")
+    parent_character_id = data.get("parent_character_id")
+    thread_id = data.get("thread_id")
 
     if not isinstance(character_id, str) or character_id not in VALID_CHARACTER_IDS:
         return {"error": "Invalid character_id"}, 400
 
-    if not isinstance(messages, list) or len(messages) == 0:
-        return {"error": "messages must be a non-empty array"}, 400
+    normalized_messages, error_response = _normalize_messages(messages)
+    if error_response is not None:
+        return error_response
+    assert normalized_messages is not None
 
-    normalized_messages = []
-    for message in messages:
-        if not isinstance(message, dict):
-            return {"error": "Each message must be an object"}, 400
+    is_thread_chat = parent_character_id is not None or thread_id is not None
+    if is_thread_chat:
+        if character_id != TEACHER_CHARACTER_ID:
+            return {"error": "Correction threads must use Teacher Wang"}, 400
 
-        role = message.get("role")
-        content = message.get("content")
+        if not isinstance(parent_character_id, str) or (
+            parent_character_id not in VALID_CHARACTER_IDS
+        ):
+            return {"error": "Invalid parent_character_id"}, 400
 
-        if role not in {"user", "assistant"}:
-            return {"error": "Each message role must be user or assistant"}, 400
+        if parent_character_id == TEACHER_CHARACTER_ID:
+            return {"error": "parent_character_id cannot be Teacher Wang"}, 400
 
-        if not isinstance(content, str) or content.strip() == "":
-            return {"error": "Each message content must be a non-empty string"}, 400
+        if not isinstance(thread_id, str) or not thread_exists(
+            parent_character_id, thread_id
+        ):
+            return {"error": "Invalid thread_id"}, 400
 
-        normalized_messages.append(
-            {
-                "role": role,
-                "content": content.strip(),
-            }
+        return _handle_thread_chat(
+            parent_character_id,
+            thread_id,
+            character_id,
+            normalized_messages,
         )
 
-    if normalized_messages[-1]["role"] != "user":
-        return {"error": "The last message must be from the user"}, 400
+    return _handle_main_chat(character_id, normalized_messages)
 
+
+def _handle_thread_chat(
+    parent_character_id: str,
+    thread_id: str,
+    character_id: str,
+    normalized_messages: list[dict[str, str]],
+):
     last_user_message = normalized_messages[-1]
 
     try:
+        if should_append_thread_user_message(
+            parent_character_id, thread_id, last_user_message
+        ):
+            append_thread_message(
+                parent_character_id,
+                thread_id,
+                "user",
+                last_user_message["content"],
+            )
+
+        reply = generate_chat_reply(character_id, normalized_messages)
+        append_thread_message(
+            parent_character_id,
+            thread_id,
+            "assistant",
+            reply.content,
+        )
+    except ValueError as error:
+        return {"error": str(error)}, 400
+    except Exception:
+        return {"error": "Failed to generate a chat response"}, 500
+
+    response = {
+        "message": {
+            "role": "assistant",
+            "content": reply.content,
+        }
+    }
+    if reply.unknown_characters:
+        response["unknown_characters"] = reply.unknown_characters
+
+    return response, 200
+
+
+def _handle_main_chat(character_id: str, normalized_messages: list[dict[str, str]]):
+    last_user_message = normalized_messages[-1]
+
+    try:
+        correction = None
+        correction_payload = None
+        correction_thread_id = None
+
+        if character_id != TEACHER_CHARACTER_ID:
+            correction = check_user_grammar(last_user_message["content"])
+            if (
+                correction is not None
+                and not correction.correct
+                and correction.answer
+            ):
+                correction_thread_id, thread_messages = create_correction_thread(
+                    character_id,
+                    correction.answer,
+                )
+                correction_payload = {
+                    **correction.to_dict(),
+                    "thread_id": correction_thread_id,
+                    "thread_messages": thread_messages,
+                }
+
         if should_append_user_message(character_id, last_user_message):
-            append_message(character_id, "user", last_user_message["content"])
+            append_message(
+                character_id,
+                "user",
+                last_user_message["content"],
+                correction_thread_id=correction_thread_id,
+            )
 
         reply = generate_chat_reply(character_id, normalized_messages)
         append_message(character_id, "assistant", reply.content)
@@ -75,6 +195,8 @@ def chat():
     }
     if reply.unknown_characters:
         response["unknown_characters"] = reply.unknown_characters
+    if correction is not None:
+        response["correction"] = correction_payload or correction.to_dict()
 
     return response, 200
 

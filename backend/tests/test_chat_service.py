@@ -9,6 +9,8 @@ database_module.configure_database = MagicMock()
 
 from backend.chat_service import (  # noqa: E402
     ChatReplyResult,
+    GrammarCorrection,
+    check_user_grammar,
     find_unknown_characters,
     generate_chat_reply,
 )
@@ -161,6 +163,47 @@ class TestGenerateChatReply(unittest.TestCase):
                 "xiao-ming",
                 [{"role": "assistant", "content": "你好"}],
             )
+
+
+class TestCheckUserGrammar(unittest.TestCase):
+    @patch("backend.hsk_level.get_chat_speaking_hsk_level", return_value=2)
+    @patch("backend.chat_service.get_llm")
+    def test_check_user_grammar_returns_correct(self, mock_get_llm, _mock_level):
+        mock_llm = MagicMock()
+        mock_llm.invoke.return_value = MagicMock(content='{"correct": true}')
+        mock_get_llm.return_value = mock_llm
+
+        result = check_user_grammar("你好")
+
+        self.assertEqual(result, GrammarCorrection(correct=True))
+        invoked_messages = mock_llm.invoke.call_args.args[0]
+        self.assertIn("Teacher Wang", invoked_messages[0].content)
+        self.assertIn("JSON object", invoked_messages[0].content)
+        self.assertEqual(invoked_messages[1].content, "你好")
+
+    @patch("backend.hsk_level.get_chat_speaking_hsk_level", return_value=2)
+    @patch("backend.chat_service.get_llm")
+    def test_check_user_grammar_returns_answer_when_incorrect(
+        self, mock_get_llm, _mock_level
+    ):
+        mock_llm = MagicMock()
+        mock_llm.invoke.return_value = MagicMock(
+            content=(
+                '```json\n{"correct": false, "answer": "Use 我很好 instead."}\n```'
+            )
+        )
+        mock_get_llm.return_value = mock_llm
+
+        result = check_user_grammar("我是很好")
+
+        self.assertEqual(
+            result,
+            GrammarCorrection(correct=False, answer="Use 我很好 instead."),
+        )
+        self.assertEqual(
+            result.to_dict(),
+            {"correct": False, "answer": "Use 我很好 instead."},
+        )
 
 
 if __name__ == "__main__":

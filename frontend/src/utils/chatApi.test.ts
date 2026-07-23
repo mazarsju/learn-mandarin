@@ -38,7 +38,45 @@ describe("chatApi", () => {
 
     await expect(
       sendChatMessage("teacher-wang", [{ role: "user", content: "Hello" }]),
-    ).resolves.toEqual({ role: "assistant", content: "你好" });
+    ).resolves.toEqual({
+      message: { role: "assistant", content: "你好" },
+    });
+  });
+
+  it("sends a chat message in a parent correction thread", async () => {
+    const fetchMock = vi.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: async () => ({
+          message: { role: "assistant", content: "Because 是 is wrong here." },
+        }),
+      }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      sendChatMessage(
+        "teacher-wang",
+        [{ role: "user", content: "Why?" }],
+        { parentCharacterId: "xiao-ming", threadId: "thread123" },
+      ),
+    ).resolves.toEqual({
+      message: {
+        role: "assistant",
+        content: "Because 是 is wrong here.",
+      },
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        character_id: "teacher-wang",
+        messages: [{ role: "user", content: "Why?" }],
+        parent_character_id: "xiao-ming",
+        thread_id: "thread123",
+      }),
+    });
   });
 
   it("clears chat history", async () => {

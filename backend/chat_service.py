@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+import json
+import re
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
@@ -9,12 +11,32 @@ from backend.models import Character
 
 VALID_ROLES = {"user", "assistant"}
 MAX_REPHRASE_ATTEMPTS = 3
+TEACHER_CHARACTER_ID = "teacher-wang"
+GRAMMAR_CHECK_INSTRUCTION = (
+    "Check whether the learner's Chinese message is grammatically correct. "
+    "Reply with ONLY a JSON object and no other text. "
+    'If the grammar is correct, respond exactly: {"correct": true}. '
+    "If the grammar is incorrect, respond exactly: "
+    '{"correct": false, "answer": "<brief correction and explanation>"}.'
+)
 
 
 @dataclass(frozen=True)
 class ChatReplyResult:
     content: str
     unknown_characters: list[list[str]]
+
+
+@dataclass(frozen=True)
+class GrammarCorrection:
+    correct: bool
+    answer: str | None = None
+
+    def to_dict(self) -> dict:
+        payload: dict = {"correct": self.correct}
+        if not self.correct and self.answer is not None:
+            payload["answer"] = self.answer
+        return payload
 
 
 def _llm_response_text(response) -> str:
@@ -69,6 +91,57 @@ def _best_attempt(
         key=lambda index: (len(attempts[index][1]), index),
     )
     return attempts[best_index]
+
+
+def _extract_json_object(text: str) -> dict:
+    stripped = text.strip()
+    fenced = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", stripped, re.DOTALL)
+    if fenced:
+        stripped = fenced.group(1).strip()
+    else:
+        start = stripped.find("{")
+        end = stripped.rfind("}")
+        if start != -1 and end != -1 and end > start:
+            stripped = stripped[start : end + 1]
+
+    parsed = json.loads(stripped)
+    if not isinstance(parsed, dict):
+        raise ValueError("Grammar check response must be a JSON object")
+    return parsed
+
+
+def check_user_grammar(user_message: str) -> GrammarCorrection:
+    """Ask Teacher Wang whether the learner's message is grammatically correct."""
+    content = user_message.strip()
+    if content == "":
+        raise ValueError("Message content must be a non-empty string")
+
+    messages = [
+        SystemMessage(
+            content=(
+                f"{get_system_prompt(TEACHER_CHARACTER_ID)} "
+                f"{GRAMMAR_CHECK_INSTRUCTION}"
+            )
+        ),
+        HumanMessage(content=content),
+    ]
+    raw = _llm_response_text(get_llm().invoke(messages))
+    parsed = _extract_json_object(raw)
+
+    correct = parsed.get("correct")
+    if not isinstance(correct, bool):
+        raise ValueError("Grammar check response must include boolean 'correct'")
+
+    if correct:
+        return GrammarCorrection(correct=True)
+
+    answer = parsed.get("answer")
+    if not isinstance(answer, str) or answer.strip() == "":
+        raise ValueError(
+            "Grammar check response must include non-empty 'answer' when incorrect"
+        )
+
+    return GrammarCorrection(correct=False, answer=answer.strip())
 
 
 def generate_chat_reply(

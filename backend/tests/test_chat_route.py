@@ -21,11 +21,33 @@ class TestChatEndpoint(unittest.TestCase):
         self.mock_append = self.append_patcher.start()
         self.addCleanup(self.append_patcher.stop)
 
+        self.append_thread_patcher = patch(
+            "backend.routes.chat.append_thread_message"
+        )
+        self.mock_append_thread = self.append_thread_patcher.start()
+        self.addCleanup(self.append_thread_patcher.stop)
+
+        self.create_thread_patcher = patch(
+            "backend.routes.chat.create_correction_thread"
+        )
+        self.mock_create_thread = self.create_thread_patcher.start()
+        self.addCleanup(self.create_thread_patcher.stop)
+
+        self.thread_exists_patcher = patch("backend.routes.chat.thread_exists")
+        self.mock_thread_exists = self.thread_exists_patcher.start()
+        self.addCleanup(self.thread_exists_patcher.stop)
+
         self.should_append_patcher = patch(
             "backend.routes.chat.should_append_user_message"
         )
         self.mock_should_append = self.should_append_patcher.start()
         self.addCleanup(self.should_append_patcher.stop)
+
+        self.should_append_thread_patcher = patch(
+            "backend.routes.chat.should_append_thread_user_message"
+        )
+        self.mock_should_append_thread = self.should_append_thread_patcher.start()
+        self.addCleanup(self.should_append_thread_patcher.stop)
 
         self.load_patcher = patch("backend.routes.chat.load_conversation")
         self.mock_load = self.load_patcher.start()
@@ -35,12 +57,28 @@ class TestChatEndpoint(unittest.TestCase):
         self.mock_clear = self.clear_patcher.start()
         self.addCleanup(self.clear_patcher.stop)
 
+        self.grammar_patcher = patch("backend.routes.chat.check_user_grammar")
+        self.mock_grammar = self.grammar_patcher.start()
+        self.addCleanup(self.grammar_patcher.stop)
+
         self.mock_generate.reset_mock()
         self.mock_append.reset_mock()
+        self.mock_append_thread.reset_mock()
+        self.mock_create_thread.reset_mock()
+        self.mock_thread_exists.reset_mock()
         self.mock_should_append.reset_mock()
+        self.mock_should_append_thread.reset_mock()
         self.mock_load.reset_mock()
         self.mock_clear.reset_mock()
+        self.mock_grammar.reset_mock()
         self.mock_should_append.return_value = True
+        self.mock_should_append_thread.return_value = True
+        self.mock_thread_exists.return_value = True
+        self.mock_grammar.return_value = MagicMock(
+            correct=True,
+            answer=None,
+            to_dict=MagicMock(return_value={"correct": True}),
+        )
 
     def test_chat_returns_assistant_message(self):
         self.mock_generate.return_value = MagicMock(
@@ -70,12 +108,145 @@ class TestChatEndpoint(unittest.TestCase):
             "teacher-wang",
             [{"role": "user", "content": "你好"}],
         )
-        self.mock_append.assert_any_call("teacher-wang", "user", "你好")
+        self.mock_append.assert_any_call(
+            "teacher-wang",
+            "user",
+            "你好",
+            correction_thread_id=None,
+        )
         self.mock_append.assert_any_call(
             "teacher-wang",
             "assistant",
             "你好，很高兴认识你。",
         )
+        self.mock_grammar.assert_not_called()
+        self.mock_create_thread.assert_not_called()
+
+    def test_chat_includes_correction_thread_for_non_teacher_chats(self):
+        self.mock_generate.return_value = MagicMock(
+            content="我也很好！",
+            unknown_characters=[],
+        )
+        self.mock_grammar.return_value = MagicMock(
+            correct=False,
+            answer="Say 我很好 instead of 我是很好.",
+            to_dict=MagicMock(
+                return_value={
+                    "correct": False,
+                    "answer": "Say 我很好 instead of 我是很好.",
+                }
+            ),
+        )
+        thread_messages = [
+            {
+                "role": "assistant",
+                "content": "Say 我很好 instead of 我是很好.",
+            }
+        ]
+        self.mock_create_thread.return_value = ("thread123", thread_messages)
+
+        response = self.client.post(
+            "/chat",
+            json={
+                "character_id": "xiao-ming",
+                "messages": [{"role": "user", "content": "我是很好"}],
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.get_json(),
+            {
+                "message": {
+                    "role": "assistant",
+                    "content": "我也很好！",
+                },
+                "correction": {
+                    "correct": False,
+                    "answer": "Say 我很好 instead of 我是很好.",
+                    "thread_id": "thread123",
+                    "thread_messages": thread_messages,
+                },
+            },
+        )
+        self.mock_grammar.assert_called_once_with("我是很好")
+        self.mock_create_thread.assert_called_once_with(
+            "xiao-ming",
+            "Say 我很好 instead of 我是很好.",
+        )
+        self.mock_append.assert_any_call(
+            "xiao-ming",
+            "user",
+            "我是很好",
+            correction_thread_id="thread123",
+        )
+        self.mock_append.assert_any_call(
+            "xiao-ming",
+            "assistant",
+            "我也很好！",
+        )
+        self.assertEqual(self.mock_append.call_count, 2)
+
+    def test_thread_chat_stores_messages_under_parent_conversation(self):
+        self.mock_generate.return_value = MagicMock(
+            content="Because 是 is not used that way.",
+            unknown_characters=[],
+        )
+
+        response = self.client.post(
+            "/chat",
+            json={
+                "character_id": "teacher-wang",
+                "parent_character_id": "xiao-ming",
+                "thread_id": "thread123",
+                "messages": [
+                    {
+                        "role": "assistant",
+                        "content": "Say 我很好 instead of 我是很好.",
+                    },
+                    {"role": "user", "content": "Why?"},
+                ],
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.get_json(),
+            {
+                "message": {
+                    "role": "assistant",
+                    "content": "Because 是 is not used that way.",
+                }
+            },
+        )
+        self.mock_grammar.assert_not_called()
+        self.mock_append.assert_not_called()
+        self.mock_append_thread.assert_any_call(
+            "xiao-ming",
+            "thread123",
+            "user",
+            "Why?",
+        )
+        self.mock_append_thread.assert_any_call(
+            "xiao-ming",
+            "thread123",
+            "assistant",
+            "Because 是 is not used that way.",
+        )
+
+    def test_thread_chat_rejects_non_teacher_character(self):
+        response = self.client.post(
+            "/chat",
+            json={
+                "character_id": "xiao-ming",
+                "parent_character_id": "xiao-ming",
+                "thread_id": "thread123",
+                "messages": [{"role": "user", "content": "Why?"}],
+            },
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.mock_generate.assert_not_called()
 
     def test_chat_includes_unknown_characters_when_rephrase_fails(self):
         self.mock_generate.return_value = MagicMock(
@@ -132,7 +303,12 @@ class TestChatEndpoint(unittest.TestCase):
             response.get_json(),
             {"error": "LLM_API_KEY must be set"},
         )
-        self.mock_append.assert_called_once_with("xiao-ming", "user", "你好")
+        self.mock_append.assert_called_once_with(
+            "xiao-ming",
+            "user",
+            "你好",
+            correction_thread_id=None,
+        )
 
     def test_chat_history_returns_saved_messages(self):
         self.mock_load.return_value = [

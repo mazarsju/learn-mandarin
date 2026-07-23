@@ -12,7 +12,7 @@ import {
   ImportIcon,
   TrashIcon,
   CloseIcon,
-  SendIcon,
+  WarningIcon,
 } from "./icons";
 
 describe("icons", () => {
@@ -29,7 +29,7 @@ describe("icons", () => {
     ["ImportIcon", ImportIcon],
     ["TrashIcon", TrashIcon],
     ["CloseIcon", CloseIcon],
-    ["SendIcon", SendIcon],
+    ["WarningIcon", WarningIcon],
   ])("renders %s as an accessible decorative svg", (_name, Icon) => {
     const { container } = render(<Icon className="navbar-icon" />);
 

@@ -3,6 +3,7 @@ import type {
   ChatMessage,
   ChatRequest,
   ChatResponse,
+  ChatThreadContext,
 } from "../types/chat";
 
 export async function fetchChatHistory(
@@ -27,14 +28,22 @@ export async function fetchChatHistory(
 export async function sendChatMessage(
   characterId: string,
   messages: ChatMessage[],
-): Promise<ChatMessage> {
+  thread?: ChatThreadContext,
+): Promise<ChatResponse> {
+  const body: ChatRequest = {
+    character_id: characterId,
+    messages: messages.map(({ role, content }) => ({ role, content })),
+  };
+
+  if (thread) {
+    body.parent_character_id = thread.parentCharacterId;
+    body.thread_id = thread.threadId;
+  }
+
   const response = await fetch("/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      character_id: characterId,
-      messages,
-    } satisfies ChatRequest),
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {
@@ -44,8 +53,7 @@ export async function sendChatMessage(
     throw new Error(data?.error ?? "Failed to send chat message.");
   }
 
-  const data = (await response.json()) as ChatResponse;
-  return data.message;
+  return (await response.json()) as ChatResponse;
 }
 
 export async function clearChatHistory(characterId: string): Promise<void> {
