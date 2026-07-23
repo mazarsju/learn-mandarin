@@ -174,6 +174,35 @@ The coverage report is written to `frontend/coverage/` (open `coverage/index.htm
 
 To enable the hosted report, go to **Settings → Pages** and set **Build and deployment → Source** to **Deploy from a branch**, then choose branch **`gh-pages`** and folder **`/ (root)`**. The workflow creates and updates that branch automatically.
 
+## Feature
+
+### Track your progress
+
+See at a glance where you stand on the HSK ladder—and exactly which characters still stand between you and the next level.
+
+![Home](docs/screenshots/01-home.png)
+
+### Update your knowledge base
+
+Add characters and words in a clean edit view, then switch to a pinyin grid that turns your vocabulary into a visual map of progress.
+
+![Knowledge base edit](docs/screenshots/03-knowledge-base-edit.png)
+
+Browse every character you know, grouped by pinyin, for a motivating snapshot of how far you've come.
+
+![Knowledge base view](docs/screenshots/02-knowledge-base-view.png)
+
+### Practice your skills with IA agents
+
+After connecting the application with your favourite LLM, discuss with predefined
+chat agents to practice your level.
+
+![Preferences](docs/screenshots/06-preferences.png)
+
+![Chat](docs/screenshots/04-chat.png)
+
+![Chat with Xiao Ming](docs/screenshots/05-chat-xiao-ming.png)
+
 ## Roadmap
 
 ### 1. Character overview ordered by pinyin
